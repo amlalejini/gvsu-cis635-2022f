@@ -10,7 +10,7 @@ R markdown documents are a way to interweave [markdown](https://www.markdownguid
 
 Find examples of compiled R markdown documents here: <https://rmarkdown.rstudio.com/gallery.html>
 
-In fact, this page is generated with R Markdown!
+In fact, this page is generated with R Markdown! Source code for this page [here](https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/rmd-getting-started).
 
 ## Dependencies
 
@@ -57,7 +57,7 @@ There are three basic components in an R Markdown document: the metadata, text, 
 
 Here's the contents for a minimal R Markdown document (from <https://bookdown.org/yihui/rmarkdown/basics.html>):
 
-
+![](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/rmd-getting-started/media/minimal-rmd-example.png)
 
 An R Markdown document should be a plain text file (i.e., don't try to write one in google docs or microsoft word!) and conventionally has the `.Rmd` file extension. 
 
