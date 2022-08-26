@@ -1,0 +1,23 @@
+---
+title: "R Markdown demo!"
+author: "Alexander Lalejini"
+date: "2022-08-24"
+---
+
+Some overview text that introduces this very interesting document. 
+
+## This is a heading!
+
+You should use headings to differentiate sections of your R markdown document. 
+
+Here's a code chunk:
+```{r}
+price <- 500
+tax <- 0.06
+```
+
+The price of the thing we want to buy is `r price`, and the tax rate is `r tax`.
+
+```{r}
+total <- price + (tax*price)
+```
