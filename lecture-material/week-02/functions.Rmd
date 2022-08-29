@@ -1,0 +1,142 @@
+---
+title: "Functions in R"
+author: "Alexander Lalejini"
+---
+
+You can download the R Markdown file used to generate this document (or webpage) [here](https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-02/functions.Rmd).
+I would encourage you to download that Rmd file, open it own your own computer in RStudio, and run the code chunks on your own (and modify things as you wish!).
+
+# Argument order and default values
+
+As you encountered last week, R has many built-in functions (e.g., `abs`, `round`, etc), and all of R packages that you install provide even more functions that you can use.
+_Using_ an existing function is simple.
+Write the name of the function you want to use followed by the requisite arguments in parentheses.
+For example,
+
+```{r}
+value <- -15
+abs(value)
+```
+
+or,
+
+```{r}
+log(4, base=2)
+```
+
+If you look at the documentation for `abs` (enter `?abs` into your R console), there's only one argument (`x`), and `x` is _required_ (i.e., notice that it has no default values).
+
+In contrast, run `?log` function in your R console.
+Notice that there are two possible arguments for `log`, `x` and `base`.
+`x` is required, as it has no default value, but `base` is optional, defaulting to `exp(1)` if not provided.
+
+Let's say we want to take the $log_3$ of 27.
+To do so, we'll need to specify both the `x` and `base` arguments, but there are a few ways that we can do that.
+
+For example, we could call `log` with each argument in the correct position:
+
+```{r}
+log(27, 3)
+```
+
+We could call `log` as I did above with `log(4, base=2)`:
+
+```{r}
+log(27, base=3)
+```
+
+In this case, R relies on argument position to deduce which argument is which up until the first named variable.
+
+We could also specify all arguments using their names:
+
+```{r}
+log(x=27, base=3)
+```
+
+If you specify arguments this way (using their names), argument order doesn't matter.
+
+```{r}
+log(base=3, x=27)
+```
+
+When calling a function with multiple arguments, **I strongly encourage you to specify arguments by name.**
+
+# Writing your own functions
+
+To write a function in R, the general structure is as follows:
+
+```{r}
+my_function <- function(parameters) {
+  # Perform some actions using the given parameters.
+  # Optionally, return some value
+}
+```
+
+We can write a function that rolls a die for us like so:
+
+```{r}
+# This function rolls a six-sided die.
+# Run ?sample in your console if you're curious about how the sample function
+# works.
+roll <- function() {
+  result <- sample(x = 1:6, size = 1, replace = TRUE)
+  return(result)
+}
+```
+
+Currently, `roll_d6` will always simulate rolling a six-sided die.
+We could modify our function definition to add an argument that specifies the size of the die:
+
+```{r}
+# This function simulates rolling a die with a given number of sides.
+roll <- function(sides) {
+  result <- sample(x = 1:sides, size = 1, replace = TRUE)
+  return(result)
+}
+```
+
+Note that when we run the code chunk above, we are redefining our `roll` function.
+
+**Challenge question:** Try writing your own roll function that rolls an argument-specified number of dice (where the number of sides of each die is specified by an argument) and then returns the sum of those rolls.
+
+## Return values
+
+In the `roll` functions that we wrote, we explicitly specified what the functions should return.
+However, if you do not use `return()` to specify what should be returned, the last evaluated expression is returned automatically.
+If the last evaluated expression doesn't produce a value, your function will not return a value.
+
+I generally prefer to use explicit return statements because it lets me quickly identify what my functions are returning.
+
+Here's a silly function:
+
+```{r}
+silly_function <- function(a) {
+ if (a == 1) {
+  a + 100
+ } else if (a == 2) {
+  200
+ } else if (a == 3) {
+  return(300)
+ } else {
+ }
+}
+```
+
+Try calling `silly_function` with different inputs to see what it returns.
+
+## Default argument values
+
+Just like many built-in functions have some arguments with defualt values, you can define your functions such their arguments have default values.
+All you need to do is specify the default value of an argument when you define the function.
+
+For example, if we wrote a function that calculates the price something with a sales tax included, we might specify a default tax rate for convenience.
+```{r}
+price_with_tax <- function(price, tax_rate=0.06) {
+ return(price+(price*tax_rate))
+}
+```
+
+# Resources
+
+- [Hands-on Programming with R (2.3, 2.4)](https://rstudio-education.github.io/hopr/basics.html#functions)
+- [Software carpentry lesson on writing functions in R](https://swcarpentry.github.io/r-novice-gapminder/10-functions/index.html)
