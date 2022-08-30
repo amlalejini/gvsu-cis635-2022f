@@ -1,0 +1,57 @@
+---
+title: "Reading and Writing Data"
+author: "Alexander Lalejini"
+---
+
+In this tutorial:
+
+- I'll walk you through how to write data stored in a dataframe as a `.csv` file.
+- And, I'll show you how to load data saved in a `.csv` file into a dataframe.
+
+# Writing data
+
+R comes preloaded with many datasets (for a complete list run `library(help="datasets")`).
+For example, `Orange` is a small data set that gives growth data for 5 orange trees.
+
+```{r}
+head(Orange)
+```
+
+If we wanted to write this dataset out to a csv file, we could use the `write.csv` function.
+
+```{r}
+write.csv(x=Orange, file="orange_trees.csv", row.names=FALSE)
+```
+
+If you run the above R code, where did `orange_trees.csv` get saved? (hint: in your current working directory)
+
+`write.csv` has many options. Run `?write.csv` in your R console to read the documentation.
+
+`write.csv` will be very useful when you want to clean up or transform a dataset that you'll be analyzing/working with.
+If your dataset is large and/or the preprocessing operations you perform are expensive, you don't want do those operations every time you load your dataset.
+Instead, write a script to process the dataset and save the processed dataset.
+
+# Loading data
+
+Loading data from a csv file is straightfoward. You'll use the `read.csv` function.
+
+```{r, relative-path}
+pokemon_df <- read.csv(file="data/pokemon.csv")
+head(pokemon_df)
+```
+
+One slightly tricky thing to keep in mind about loading data is where R will look for the data you're loading.
+This affects how you specify the `file` argument when you call `read.csv`.
+You can always specify the complete file path, for example (on _my_ computer):
+
+```{r, absolute-path}
+pokemon_df <- read.csv(file="/Users/lalejina/class_ws/CIS635-f22/gvsu-cis635-2022f/lecture-material/week-02/data/pokemon.csv")
+head(pokemon_df)
+```
+
+Often, it'll be easier to specify a _relative_ path.
+In RStudio, when you do not specify a complete path, paths are relative to your current working directory.
+Run `getwd()` to see what your current working directory is set to.
+Use `setwd` to change your working directory.
+Read more about project management and R working directories here: <https://r4ds.had.co.nz/workflow-projects.html>
+
