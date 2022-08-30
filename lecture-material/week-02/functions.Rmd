@@ -1,6 +1,10 @@
 ---
 title: "Functions in R"
 author: "Alexander Lalejini"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: true
 ---
 
 You can download the R Markdown file used to generate this document (or webpage) [here](https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-02/functions.Rmd).

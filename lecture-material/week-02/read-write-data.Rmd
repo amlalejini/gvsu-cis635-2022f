@@ -1,6 +1,10 @@
 ---
 title: "Reading and Writing Data"
 author: "Alexander Lalejini"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: true
 ---
 
 In this tutorial:
