@@ -1,12 +1,14 @@
----
+<!-- ---
 title: "Getting Started with R Markdown"
-output: 
+output:
     html_document:
         toc: true
         toc_float: true
----
+--- -->
 
-R markdown documents are a way to interweave [markdown](https://www.markdownguide.org/) with R. This enables us to write nicely formatted documents with R code (and output from your R code) embedded directly in the document. 
+# Getting Started with R Markdown
+
+R markdown documents are a way to interweave [markdown](https://www.markdownguide.org/) with R. This enables us to write nicely formatted documents with R code (and output from your R code) embedded directly in the document.
 
 Find examples of compiled R markdown documents here: <https://rmarkdown.rstudio.com/gallery.html>
 
@@ -14,13 +16,13 @@ In fact, this page is generated with R Markdown! Source code for this page [here
 
 ## Dependencies
 
-To use R markdown, you'll need to install the following packages: `markdown` and `rmarkdown`. You should also want to go ahead and install the `tinytex` package (+ install TinyTex) to be able generate PDF output from your R Markdown documents. See the instructions below! 
+To use R markdown, you'll need to install the following packages: `markdown` and `rmarkdown`. You should also want to go ahead and install the `tinytex` package (+ install TinyTex) to be able generate PDF output from your R Markdown documents. See the instructions below!
 
 ### Installing R packages
 
 As previously mentioned, there are _many_ R packages (> 18,000!) with all sorts of useful functionality.
-To install an R package, use the `install.packages` function in your R console (e.g., in RStudio). 
-Run `?install.packages` in your R console to read its help page. 
+To install an R package, use the `install.packages` function in your R console (e.g., in RStudio).
+Run `?install.packages` in your R console to read its help page.
 
 To install the `markdown` and `rmarkdown` packages, run the following command in your R console:
 
@@ -39,57 +41,57 @@ For this class, you'll also need to be able to generate PDF output from your R M
 
 ```
 install.packages('tinytex')
-tinytex::install_tinytex() 
+tinytex::install_tinytex()
 ```
 
 ## Create a new R Markdown document in RStudio
 
-Click the new file button in the top right of the RStudio window, and select R Markdown. 
+Click the new file button in the top right of the RStudio window, and select R Markdown.
 
 In RStudio, you should get a pop-up for creating a new r markdown document. For now, there are two relevant options:
 
-1. Click the "Create Empty Document" in the bottom left of the popup. This will create an empty R markdown file for you. 
+1. Click the "Create Empty Document" in the bottom left of the popup. This will create an empty R markdown file for you.
 2. Fill out the title, author (you!), and date fields and press "Okay". This will create a new R markdown file, but RStudio will initialize your file with a bunch of stuff (this stuff is helpful information, but you will want to delete it all for any assignments in this class).
 
 ## Anatomy of an R Markdown document
 
-There are three basic components in an R Markdown document: the metadata, text, and code. 
+There are three basic components in an R Markdown document: the metadata, text, and code.
 
 Here's the contents for a minimal R Markdown document (from <https://bookdown.org/yihui/rmarkdown/basics.html>):
 
 ![](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/rmd-getting-started/media/minimal-rmd-example.png)
 
-An R Markdown document should be a plain text file (i.e., don't try to write one in google docs or microsoft word!) and conventionally has the `.Rmd` file extension. 
+An R Markdown document should be a plain text file (i.e., don't try to write one in google docs or microsoft word!) and conventionally has the `.Rmd` file extension.
 
 
-### Frontmatter (metadata) 
+### Frontmatter (metadata)
 
-The metadata (or the frontmatter) specifies how your R Markdown should be compiled. E.g., the output file type, whether to include a table of contents, etc. 
+The metadata (or the frontmatter) specifies how your R Markdown should be compiled. E.g., the output file type, whether to include a table of contents, etc.
 
 The metadata should be written between a pair of three dashes `---` at the top of your document (see minimal example).
 
-For now, don't worry too much about what you should include in your document metadata. For the most part, you can just use what RStudio includes in your document. 
+For now, don't worry too much about what you should include in your document metadata. For the most part, you can just use what RStudio includes in your document.
 
 ### Text
 
-The body of your document follows the metadata. Any text (i.e., everything that isn't code) you include in your document should follow markdown syntax. 
+The body of your document follows the metadata. Any text (i.e., everything that isn't code) you include in your document should follow markdown syntax.
 
-If you're not already familiar with markdown, read over this: <https://www.markdownguide.org/getting-started>. 
+If you're not already familiar with markdown, read over this: <https://www.markdownguide.org/getting-started>.
 
-- For basic markdown syntax, see: <https://www.markdownguide.org/basic-syntax/>. Being familiar with basic syntax should be just about everything you need for your homework assignments in this class. 
-- For more advanced markdown syntax, see: <https://www.markdownguide.org/extended-syntax/>. 
-- You can also refer to [Section 2.5 in R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/markdown-syntax.html#markdown-syntax) for more info on markdown.  
+- For basic markdown syntax, see: <https://www.markdownguide.org/basic-syntax/>. Being familiar with basic syntax should be just about everything you need for your homework assignments in this class.
+- For more advanced markdown syntax, see: <https://www.markdownguide.org/extended-syntax/>.
+- You can also refer to [Section 2.5 in R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/markdown-syntax.html#markdown-syntax) for more info on markdown.
 
 ### Code
 
 In general, you can include code in your R Markdown documents in two ways:
 
-- Inline code begin with `` `r `` and end with a `` ` ``. E.g., `` `r log(4, base=2)` `` would render the result of `log(4, base=2)` inline. 
-- You can include a "code chunk" inside your R Markdown document. A code chunk begins with three backticks `` ```{r} `` and end with three backticks (see minimal example above for an example). There are many options tha tyou can specify in the `{}` at the beginning of a code chunk. See <https://yihui.org/knitr/options/> for details. 
+- Inline code begin with `` `r `` and end with a `` ` ``. E.g., `` `r log(4, base=2)` `` would render the result of `log(4, base=2)` inline.
+- You can include a "code chunk" inside your R Markdown document. A code chunk begins with three backticks `` ```{r} `` and end with three backticks (see minimal example above for an example). There are many options tha tyou can specify in the `{}` at the beginning of a code chunk. See <https://yihui.org/knitr/options/> for details.
 
-## "Knitting" 
+## "Knitting"
 
-To compile an R Markdown document into a PDF or HTML file, you need to "Knit" it. In RStudio, this is pretty straightforward. Just click the "Knit" button on your document in RStudio. 
+To compile an R Markdown document into a PDF or HTML file, you need to "Knit" it. In RStudio, this is pretty straightforward. Just click the "Knit" button on your document in RStudio.
 
 ## Resources
 
