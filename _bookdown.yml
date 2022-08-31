@@ -1,0 +1,17 @@
+book_filename: "demo"
+language:
+  ui:
+    chapter_name: "Chapter "
+delete_merged_file: true
+rmd_files: [
+  "index.Rmd",
+  "lecture-material/rmd-getting-started/week-01.md",
+  "lecture-material/rmd-getting-started/rmarkdown-getting-started.Rmd",
+  "homework/homework-01/homework-01.Rmd",
+  "lecture-material/week-02/week-02.md",
+  "lecture-material/week-02/functions.Rmd",
+  "lecture-material/week-02/read-write-data.Rmd",
+  "lecture-material/week-02/tidyverse.md",
+  "lecture-material/week-02/dplyr.Rmd",
+  "tail.Rmd"
+]

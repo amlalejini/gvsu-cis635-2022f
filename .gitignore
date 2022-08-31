@@ -40,3 +40,9 @@ vignettes/*.pdf
 
 # Editor config
 .vscode
+
+# Bookdown
+_book/
+
+# Local files
+orange_trees.csv
