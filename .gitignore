@@ -46,3 +46,6 @@ _book/
 
 # Local files
 orange_trees.csv
+
+# mac files
+.DS_Store

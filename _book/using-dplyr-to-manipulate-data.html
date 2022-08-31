@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Using dplyr to manipulate data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 8 Using dplyr to manipulate data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Using dplyr to manipulate data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Using dplyr to manipulate data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  
+  
+  
+
+<meta name="author" content="Instructor: Dr. Alexander Lalejini" />
+
+
+<meta name="date" content="2022-08-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="tidyverse.html"/>
+<link rel="next" href="using-tidyr-to-create-tidy-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">CIS 635 (Fall 2022)</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="part"><span><b>Week 01</b></span></li>
+<li class="chapter" data-level="2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html"><i class="fa fa-check"></i><b>2</b> Getting Started with R Markdown</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#dependencies"><i class="fa fa-check"></i><b>2.1</b> Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#installing-r-packages"><i class="fa fa-check"></i><b>2.1.1</b> Installing R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#create-a-new-r-markdown-document-in-rstudio"><i class="fa fa-check"></i><b>2.2</b> Create a new R Markdown document in RStudio</a></li>
+<li class="chapter" data-level="2.3" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#anatomy-of-an-r-markdown-document"><i class="fa fa-check"></i><b>2.3</b> Anatomy of an R Markdown document</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#frontmatter-metadata"><i class="fa fa-check"></i><b>2.3.1</b> Frontmatter (metadata)</a></li>
+<li class="chapter" data-level="2.3.2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#text"><i class="fa fa-check"></i><b>2.3.2</b> Text</a></li>
+<li class="chapter" data-level="2.3.3" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#code"><i class="fa fa-check"></i><b>2.3.3</b> Code</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#knitting"><i class="fa fa-check"></i><b>2.4</b> “Knitting”</a></li>
+<li class="chapter" data-level="2.5" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#resources"><i class="fa fa-check"></i><b>2.5</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="homework-1.html"><a href="homework-1.html"><i class="fa fa-check"></i><b>3</b> Homework 1</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="homework-1.html"><a href="homework-1.html#setup"><i class="fa fa-check"></i><b>3.1</b> Setup</a></li>
+<li class="chapter" data-level="3.2" data-path="homework-1.html"><a href="homework-1.html#part-a.-use-r-as-a-calculator"><i class="fa fa-check"></i><b>3.2</b> Part A. Use R as a calculator</a></li>
+<li class="chapter" data-level="3.3" data-path="homework-1.html"><a href="homework-1.html#part-b.-built-in-functions"><i class="fa fa-check"></i><b>3.3</b> Part B. Built-in Functions</a></li>
+<li class="chapter" data-level="3.4" data-path="homework-1.html"><a href="homework-1.html#part-c.-creating-vectors"><i class="fa fa-check"></i><b>3.4</b> Part C. Creating vectors</a></li>
+<li class="chapter" data-level="3.5" data-path="homework-1.html"><a href="homework-1.html#part-d.-subsetting-vectors"><i class="fa fa-check"></i><b>3.5</b> Part D. Subsetting vectors</a></li>
+<li class="chapter" data-level="3.6" data-path="homework-1.html"><a href="homework-1.html#part-e.-types-of-data"><i class="fa fa-check"></i><b>3.6</b> Part E. Types of data</a></li>
+</ul></li>
+<li class="part"><span><b>Week 02</b></span></li>
+<li class="chapter" data-level="4" data-path="week-02---overview.html"><a href="week-02---overview.html"><i class="fa fa-check"></i><b>4</b> Week 02 - Overview</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="week-02---overview.html"><a href="week-02---overview.html#dependencies-1"><i class="fa fa-check"></i><b>4.1</b> Dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>5</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="functions-in-r.html"><a href="functions-in-r.html#argument-order-and-default-values"><i class="fa fa-check"></i><b>5.1</b> Argument order and default values</a></li>
+<li class="chapter" data-level="5.2" data-path="functions-in-r.html"><a href="functions-in-r.html#writing-your-own-functions"><i class="fa fa-check"></i><b>5.2</b> Writing your own functions</a></li>
+<li class="chapter" data-level="5.3" data-path="functions-in-r.html"><a href="functions-in-r.html#return-values"><i class="fa fa-check"></i><b>5.3</b> Return values</a></li>
+<li class="chapter" data-level="5.4" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>5.4</b> Default argument values</a></li>
+<li class="chapter" data-level="5.5" data-path="functions-in-r.html"><a href="functions-in-r.html#resources-1"><i class="fa fa-check"></i><b>5.5</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html"><i class="fa fa-check"></i><b>6</b> Reading and Writing Data</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html#writing-data"><i class="fa fa-check"></i><b>6.1</b> Writing data</a></li>
+<li class="chapter" data-level="6.2" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html#loading-data"><i class="fa fa-check"></i><b>6.2</b> Loading data</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="tidyverse.html"><a href="tidyverse.html"><i class="fa fa-check"></i><b>7</b> tidyverse</a></li>
+<li class="chapter" data-level="8" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html"><i class="fa fa-check"></i><b>8</b> Using dplyr to manipulate data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#setup-1"><i class="fa fa-check"></i><b>8.1</b> Setup</a></li>
+<li class="chapter" data-level="8.2" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#overview"><i class="fa fa-check"></i><b>8.2</b> Overview</a></li>
+<li class="chapter" data-level="8.3" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#the-pipe-operator"><i class="fa fa-check"></i><b>8.3</b> The pipe operator</a></li>
+<li class="chapter" data-level="8.4" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#data"><i class="fa fa-check"></i><b>8.4</b> Data</a></li>
+<li class="chapter" data-level="8.5" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#filter-rows-with-filter"><i class="fa fa-check"></i><b>8.5</b> Filter rows with <code>filter()</code></a></li>
+<li class="chapter" data-level="8.6" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#arrange-rows-with-arrange"><i class="fa fa-check"></i><b>8.6</b> Arrange rows with <code>arrange()</code></a></li>
+<li class="chapter" data-level="8.7" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#choose-rows-using-their-position-with-slice"><i class="fa fa-check"></i><b>8.7</b> Choose rows using their position with <code>slice()</code></a></li>
+<li class="chapter" data-level="8.8" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#select-columns-with-select"><i class="fa fa-check"></i><b>8.8</b> Select columns with <code>select()</code></a></li>
+<li class="chapter" data-level="8.9" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#rename-columns-with-rename"><i class="fa fa-check"></i><b>8.9</b> Rename columns with <code>rename()</code></a></li>
+<li class="chapter" data-level="8.10" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#add-new-columns-with-mutate"><i class="fa fa-check"></i><b>8.10</b> Add new columns with <code>mutate()</code></a></li>
+<li class="chapter" data-level="8.11" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#change-column-order-with-relocate"><i class="fa fa-check"></i><b>8.11</b> Change column order with <code>relocate()</code></a></li>
+<li class="chapter" data-level="8.12" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#summarize-groups-of-rows-using-summarise"><i class="fa fa-check"></i><b>8.12</b> Summarize groups of rows using <code>summarise()</code></a></li>
+<li class="chapter" data-level="8.13" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#dplyr-cheat-sheet"><i class="fa fa-check"></i><b>8.13</b> dplyr cheat sheet</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html"><i class="fa fa-check"></i><b>9</b> Using tidyr to create tidy data</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#overview-1"><i class="fa fa-check"></i><b>9.2</b> Overview</a></li>
+<li class="chapter" data-level="9.3" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#what-is-tidy-data"><i class="fa fa-check"></i><b>9.3</b> What is tidy data?</a></li>
+<li class="chapter" data-level="9.4" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#making-data-tidy"><i class="fa fa-check"></i><b>9.4</b> Making data tidy</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#column-headers-are-values-not-variables"><i class="fa fa-check"></i><b>9.4.1</b> Column headers are values, not variables</a></li>
+<li class="chapter" data-level="9.4.2" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#multiple-variables-are-stored-in-one-column"><i class="fa fa-check"></i><b>9.4.2</b> Multiple variables are stored in one column</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="creating-graphics-with-ggplot2.html"><a href="creating-graphics-with-ggplot2.html"><i class="fa fa-check"></i><b>10</b> Creating graphics with ggplot2</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="creating-graphics-with-ggplot2.html"><a href="creating-graphics-with-ggplot2.html#resources-for-using-ggplot2"><i class="fa fa-check"></i><b>10.1</b> Resources for using ggplot2</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="homework-2.html"><a href="homework-2.html"><i class="fa fa-check"></i><b>11</b> Homework 2</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="homework-2.html"><a href="homework-2.html#overview-2"><i class="fa fa-check"></i><b>11.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="homework-2.html"><a href="homework-2.html#objectives"><i class="fa fa-check"></i><b>11.1.1</b> Objectives</a></li>
+<li class="chapter" data-level="11.1.2" data-path="homework-2.html"><a href="homework-2.html#grading"><i class="fa fa-check"></i><b>11.1.2</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="homework-2.html"><a href="homework-2.html#setup-3"><i class="fa fa-check"></i><b>11.2</b> Setup</a></li>
+<li class="chapter" data-level="11.3" data-path="homework-2.html"><a href="homework-2.html#part-a.-loading-data-in-r"><i class="fa fa-check"></i><b>11.3</b> Part A. Loading data in R</a></li>
+<li class="chapter" data-level="11.4" data-path="homework-2.html"><a href="homework-2.html#part-b.-visualizing-data-with-ggplot2"><i class="fa fa-check"></i><b>11.4</b> Part B. Visualizing data with ggplot2</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with ❤ and bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="using-dplyr-to-manipulate-data" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Using dplyr to manipulate data<a href="using-dplyr-to-manipulate-data.html#using-dplyr-to-manipulate-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Goals:</p>
+<ul>
+<li>Learn about solving common data manipulation challenges with dplyr</li>
+<li>Learn to use the pipe operator (<code>%&gt;%</code>)</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://dplyr.tidyverse.org/articles/dplyr.html">Introduction to dplyr</a></li>
+<li><a href="https://r4ds.had.co.nz/transform.html">R for Data Science</a></li>
+<li><a href="https://dplyr.tidyverse.org/">dplyr documentation</a></li>
+<li><a href="https://swcarpentry.github.io/r-novice-gapminder/13-dplyr/index.html">Software carpentry lesson on dplyr</a></li>
+</ul>
+<div id="setup-1" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Setup<a href="using-dplyr-to-manipulate-data.html#setup-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You should have already installed the <code>tidyverse</code> collection of packages, which includes the dplyr package.
+But, if you haven’t, go ahead and run:</p>
+<pre><code>install.packages(&quot;tidyverse&quot;)</code></pre>
+<p>With the tidyverse packages installed, you’ll need to load the dplyr library to use it.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using-dplyr-to-manipulate-data.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+</div>
+<div id="overview" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Overview<a href="using-dplyr-to-manipulate-data.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This document will cover key dplyr functions that solve the most common data manipulation challenges.
+The examples and explanations here non-exhaustive (dplyr has a lot of functionality and each of these functions are very flexible).
+Instead, I’d like you to start building a sense of the broad category of data manipulations that are possible with each of the dplyr functions below.
+As you encounter challenges with manipulating data, you should have a solid idea of which functions you will need to do what you want to do.
+Then, you can use those functions’ documentation to work out the specific details.</p>
+<p>dplyr’s functions for basic data manipulation can be divided into three categories based on the component of the dataset that they work with (descriptions pulled from <a href="https://dplyr.tidyverse.org/articles/dplyr.html">dplyr documentation</a>):</p>
+<ul>
+<li>Rows
+<ul>
+<li><code>filter()</code> - choose rows in your data based on their column values</li>
+<li><code>slice()</code> - choose rows in your data based on their location (index) in the dataset</li>
+<li><code>arrange()</code> - change the ordering of rows in your data</li>
+</ul></li>
+<li>Columns
+<ul>
+<li><code>select()</code> - changes whether or not a column is included</li>
+<li><code>rename()</code> - changes the names of columns</li>
+<li><code>mutate()</code> - changes the values of columns and can create new columns that are functions of existing columns</li>
+<li><code>relocate()</code> - changes the order of columns</li>
+</ul></li>
+<li>Groups of rows
+<ul>
+<li><code>summarise()</code> - collapses a group of rows into a single row</li>
+</ul></li>
+</ul>
+<p>These functions can be used in combination with <code>group_by()</code>, which allows you to perform these functions on particular groups of rows, instead of the entire dataset.</p>
+<p>Note that the above list of functions is non-exhaustive.
+I refer you to the <a href="https://dplyr.tidyverse.org/reference/index.html">dplyr documentation</a> for an exhaustive list.
+Additionally, I’d encourage you to look over (and save) the cheat sheet linked at the end of this document.</p>
+</div>
+<div id="the-pipe-operator" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> The pipe operator<a href="using-dplyr-to-manipulate-data.html#the-pipe-operator" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Most dplyr functions take a dataframe (or tibble) as their first argument.
+dplyr provides the pipe operator (<code>%&gt;%</code>), which lets you conveniently compose multiple dplyr functions in a single line (instead of needing to save intermediate states of your dataset).
+The pipe operator “pipes” the results of the left side of the pipe into the first argument of the right side of the pipe.</p>
+<p>Here’s an example:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="using-dplyr-to-manipulate-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb41-2"><a href="using-dplyr-to-manipulate-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">+</span> b)</span>
+<span id="cb41-3"><a href="using-dplyr-to-manipulate-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-4"><a href="using-dplyr-to-manipulate-data.html#cb41-4" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb41-5"><a href="using-dplyr-to-manipulate-data.html#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">*</span> b)</span>
+<span id="cb41-6"><a href="using-dplyr-to-manipulate-data.html#cb41-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-7"><a href="using-dplyr-to-manipulate-data.html#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="using-dplyr-to-manipulate-data.html#cb41-8" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb41-9"><a href="using-dplyr-to-manipulate-data.html#cb41-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb41-10"><a href="using-dplyr-to-manipulate-data.html#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="using-dplyr-to-manipulate-data.html#cb41-11" aria-hidden="true" tabindex="-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">f</span>(y) <span class="co"># Is the same as f(x,y)</span></span></code></pre></div>
+<pre><code>## [1] 102</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using-dplyr-to-manipulate-data.html#cb43-1" aria-hidden="true" tabindex="-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">f</span>(y) <span class="sc">%&gt;%</span> <span class="fu">g</span>(y) <span class="co"># Is the same as g(f(x,y), y)</span></span></code></pre></div>
+<pre><code>## [1] 10200</code></pre>
+</div>
+<div id="data" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Data<a href="using-dplyr-to-manipulate-data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll use the <code>starwars</code> dataset to demonstrate the basic data manipulation functions provided by dplyr.
+You don’t need to download anything, the <code>starwars</code> dataset is loaded when you load the dplyr package.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="using-dplyr-to-manipulate-data.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(starwars)</span></code></pre></div>
+<pre><code>## [1] 87 14</code></pre>
+<p>This dataset has 87 rows and 14 columns where each row represents a character from Star Wars, and each column is a particular attribute.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="using-dplyr-to-manipulate-data.html#cb47-1" aria-hidden="true" tabindex="-1"></a>starwars</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 14
+##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+##  1 Luke Skywa…    172    77 blond   fair    blue       19   male  mascu… Tatooi…
+##  2 C-3PO          167    75 &lt;NA&gt;    gold    yellow    112   none  mascu… Tatooi…
+##  3 R2-D2           96    32 &lt;NA&gt;    white,… red        33   none  mascu… Naboo  
+##  4 Darth Vader    202   136 none    white   yellow     41.9 male  mascu… Tatooi…
+##  5 Leia Organa    150    49 brown   light   brown      19   fema… femin… Aldera…
+##  6 Owen Lars      178   120 brown,… light   blue       52   male  mascu… Tatooi…
+##  7 Beru White…    165    75 brown   light   blue       47   fema… femin… Tatooi…
+##  8 R5-D4           97    32 &lt;NA&gt;    white,… red        NA   none  mascu… Tatooi…
+##  9 Biggs Dark…    183    84 black   light   brown      24   male  mascu… Tatooi…
+## 10 Obi-Wan Ke…    182    77 auburn… fair    blue-g…    57   male  mascu… Stewjon
+## # … with 77 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>If you look closely at the above output, you’ll notice that the <code>starwars</code> dataset is represented as a tibble.
+A tibble is a more modern version of the dataframe type, and for the most part, anywhere you could use a dataframe, you can use a tibble.
+You can convert a data frame to tibbles with the <code>as_tible()</code> function.
+Read more about tibbles here: <a href="https://tibble.tidyverse.org/" class="uri">https://tibble.tidyverse.org/</a>.</p>
+</div>
+<div id="filter-rows-with-filter" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> Filter rows with <code>filter()</code><a href="using-dplyr-to-manipulate-data.html#filter-rows-with-filter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>filter()</code> allows you to choose rows in a data frame based on their column values.</p>
+<p>For example, if we wanted to create a new data frame that only contained droids, we could:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="using-dplyr-to-manipulate-data.html#cb49-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species<span class="sc">==</span><span class="st">&quot;Droid&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 14
+##   name   height  mass hair_color skin_color eye_c…¹ birth…² sex   gender homew…³
+##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 C-3PO     167    75 &lt;NA&gt;       gold       yellow      112 none  mascu… Tatooi…
+## 2 R2-D2      96    32 &lt;NA&gt;       white, bl… red          33 none  mascu… Naboo  
+## 3 R5-D4      97    32 &lt;NA&gt;       white, red red          NA none  mascu… Tatooi…
+## 4 IG-88     200   140 none       metal      red          15 none  mascu… &lt;NA&gt;   
+## 5 R4-P17     96    NA none       silver, r… red, b…      NA none  femin… &lt;NA&gt;   
+## 6 BB8        NA    NA none       none       black        NA none  mascu… &lt;NA&gt;   
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​eye_color, ²​birth_year,
+## #   ³​homeworld</code></pre>
+<p>We can also filter rows based on more complex conditions:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="using-dplyr-to-manipulate-data.html#cb51-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">&quot;Droid&quot;</span> <span class="sc">&amp;</span> height <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 14
+##   name  height  mass hair_color skin_color eye_co…¹ birth…² sex   gender homew…³
+##   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 C-3PO    167    75 &lt;NA&gt;       gold       yellow       112 none  mascu… Tatooi…
+## 2 IG-88    200   140 none       metal      red           15 none  mascu… &lt;NA&gt;   
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​eye_color, ²​birth_year,
+## #   ³​homeworld</code></pre>
+<p>What if we wanted all droids, Wookiees, and Hutts?</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="using-dplyr-to-manipulate-data.html#cb53-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">&quot;Droid&quot;</span> <span class="sc">|</span> species <span class="sc">==</span> <span class="st">&quot;Wookiee&quot;</span> <span class="sc">|</span> species <span class="sc">==</span> <span class="st">&quot;Hutt&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 9 × 14
+##   name         height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##   &lt;chr&gt;         &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 C-3PO           167    75 &lt;NA&gt;    gold    yellow      112 none  mascu… Tatooi…
+## 2 R2-D2            96    32 &lt;NA&gt;    white,… red          33 none  mascu… Naboo  
+## 3 R5-D4            97    32 &lt;NA&gt;    white,… red          NA none  mascu… Tatooi…
+## 4 Chewbacca       228   112 brown   unknown blue        200 male  mascu… Kashyy…
+## 5 Jabba Desil…    175  1358 &lt;NA&gt;    green-… orange      600 herm… mascu… Nal Hu…
+## 6 IG-88           200   140 none    metal   red          15 none  mascu… &lt;NA&gt;   
+## 7 R4-P17           96    NA none    silver… red, b…      NA none  femin… &lt;NA&gt;   
+## 8 Tarfful         234   136 brown   brown   blue         NA male  mascu… Kashyy…
+## 9 BB8              NA    NA none    none    black        NA none  mascu… &lt;NA&gt;   
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
+## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>Even more simply with the <code>%in%</code> operator,</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="using-dplyr-to-manipulate-data.html#cb55-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Droid&quot;</span>, <span class="st">&quot;Wookiee&quot;</span>, <span class="st">&quot;Hutt&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 9 × 14
+##   name         height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##   &lt;chr&gt;         &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 C-3PO           167    75 &lt;NA&gt;    gold    yellow      112 none  mascu… Tatooi…
+## 2 R2-D2            96    32 &lt;NA&gt;    white,… red          33 none  mascu… Naboo  
+## 3 R5-D4            97    32 &lt;NA&gt;    white,… red          NA none  mascu… Tatooi…
+## 4 Chewbacca       228   112 brown   unknown blue        200 male  mascu… Kashyy…
+## 5 Jabba Desil…    175  1358 &lt;NA&gt;    green-… orange      600 herm… mascu… Nal Hu…
+## 6 IG-88           200   140 none    metal   red          15 none  mascu… &lt;NA&gt;   
+## 7 R4-P17           96    NA none    silver… red, b…      NA none  femin… &lt;NA&gt;   
+## 8 Tarfful         234   136 brown   brown   blue         NA male  mascu… Kashyy…
+## 9 BB8              NA    NA none    none    black        NA none  mascu… &lt;NA&gt;   
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
+## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>Notice that the original <code>starwars</code> dataset is never modified by any of the filter functions.
+None of the dplyr functions modify the dataset passed to them with the <code>data</code> argument.
+Instead, they return a new data frame with the appropriate manipulations.</p>
+</div>
+<div id="arrange-rows-with-arrange" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Arrange rows with <code>arrange()</code><a href="using-dplyr-to-manipulate-data.html#arrange-rows-with-arrange" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>arrange()</code> reorders rows in the given data frame.
+It takes a data frame and a set of columns names to reorder by.
+If you give more than one column name, additional column names are used to break ties in the values of proceeding column names.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="using-dplyr-to-manipulate-data.html#cb57-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(mass, height)</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 14
+##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+##  1 Ratts Tyer…     79    15 none    grey, … unknown      NA male  mascu… Aleen …
+##  2 Yoda            66    17 white   green   brown       896 male  mascu… &lt;NA&gt;   
+##  3 Wicket Sys…     88    20 brown   brown   brown         8 male  mascu… Endor  
+##  4 R2-D2           96    32 &lt;NA&gt;    white,… red          33 none  mascu… Naboo  
+##  5 R5-D4           97    32 &lt;NA&gt;    white,… red          NA none  mascu… Tatooi…
+##  6 Sebulba        112    40 none    grey, … orange       NA male  mascu… Malast…
+##  7 Dud Bolt        94    45 none    blue, … yellow       NA male  mascu… Vulpter
+##  8 Padmé Amid…    165    45 brown   light   brown        46 fema… femin… Naboo  
+##  9 Sly Moore      178    48 none    pale    white        NA &lt;NA&gt;  &lt;NA&gt;   Umbara 
+## 10 Wat Tambor     193    48 none    green,… unknown      NA male  mascu… Skako  
+## # … with 77 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>You can use <code>desc()</code> to order in descending order.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="using-dplyr-to-manipulate-data.html#cb59-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(mass))</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 14
+##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+##  1 Jabba Desi…    175  1358 &lt;NA&gt;    green-… orange    600   herm… mascu… Nal Hu…
+##  2 Grievous       216   159 none    brown,… green,…    NA   male  mascu… Kalee  
+##  3 IG-88          200   140 none    metal   red        15   none  mascu… &lt;NA&gt;   
+##  4 Darth Vader    202   136 none    white   yellow     41.9 male  mascu… Tatooi…
+##  5 Tarfful        234   136 brown   brown   blue       NA   male  mascu… Kashyy…
+##  6 Owen Lars      178   120 brown,… light   blue       52   male  mascu… Tatooi…
+##  7 Bossk          190   113 none    green   red        53   male  mascu… Trando…
+##  8 Chewbacca      228   112 brown   unknown blue      200   male  mascu… Kashyy…
+##  9 Jek Tono P…    180   110 brown   fair    blue       NA   male  mascu… Bestin…
+## 10 Dexter Jet…    198   102 none    brown   yellow     NA   male  mascu… Ojom   
+## # … with 77 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+</div>
+<div id="choose-rows-using-their-position-with-slice" class="section level2 hasAnchor" number="8.7">
+<h2><span class="header-section-number">8.7</span> Choose rows using their position with <code>slice()</code><a href="using-dplyr-to-manipulate-data.html#choose-rows-using-their-position-with-slice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Use slice to choose rows by their position.</p>
+<p>For example, to choose the character in the second row of the data frame:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="using-dplyr-to-manipulate-data.html#cb61-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 14
+##   name  height  mass hair_color skin_color eye_co…¹ birth…² sex   gender homew…³
+##   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 C-3PO    167    75 &lt;NA&gt;       gold       yellow       112 none  mascu… Tatooi…
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​eye_color, ²​birth_year,
+## #   ³​homeworld</code></pre>
+<p>The first, tenth, and twentieth rows of the data frame,</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="using-dplyr-to-manipulate-data.html#cb63-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">20</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 14
+##   name         height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##   &lt;chr&gt;         &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 Luke Skywal…    172    77 blond   fair    blue         19 male  mascu… Tatooi…
+## 2 Obi-Wan Ken…    182    77 auburn… fair    blue-g…      57 male  mascu… Stewjon
+## 3 Palpatine       170    75 grey    pale    yellow       82 male  mascu… Naboo  
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
+## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>The odd rows of the data frame,</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="using-dplyr-to-manipulate-data.html#cb65-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(starwars), <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 44 × 14
+##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+##  1 Luke Skywa…    172    77 blond   fair    blue       19   male  mascu… Tatooi…
+##  2 R2-D2           96    32 &lt;NA&gt;    white,… red        33   none  mascu… Naboo  
+##  3 Leia Organa    150    49 brown   light   brown      19   fema… femin… Aldera…
+##  4 Beru White…    165    75 brown   light   blue       47   fema… femin… Tatooi…
+##  5 Biggs Dark…    183    84 black   light   brown      24   male  mascu… Tatooi…
+##  6 Anakin Sky…    188    84 blond   fair    blue       41.9 male  mascu… Tatooi…
+##  7 Chewbacca      228   112 brown   unknown blue      200   male  mascu… Kashyy…
+##  8 Greedo         173    74 &lt;NA&gt;    green   black      44   male  mascu… Rodia  
+##  9 Wedge Anti…    170    77 brown   fair    hazel      21   male  mascu… Corell…
+## 10 Yoda            66    17 white   green   brown     896   male  mascu… &lt;NA&gt;   
+## # … with 34 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>Combine with <code>arrange()</code> to quickly get the character with the largest height,</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="using-dplyr-to-manipulate-data.html#cb67-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(height)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 14
+##   name        height  mass hair_c…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##   &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+## 1 Yarael Poof    264    NA none     white   yellow       NA male  mascu… Quermia
+## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
+## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>There are a few convenient helper versions of the slice function:</p>
+<ul>
+<li><code>slice_head</code></li>
+<li><code>slice_tail</code></li>
+<li><code>slice_sample</code></li>
+<li><code>slice_min</code></li>
+<li><code>slice_max</code></li>
+</ul>
+<p>I’ll leave it to you to pull up the help page for those functions.</p>
+</div>
+<div id="select-columns-with-select" class="section level2 hasAnchor" number="8.8">
+<h2><span class="header-section-number">8.8</span> Select columns with <code>select()</code><a href="using-dplyr-to-manipulate-data.html#select-columns-with-select" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When you’re working with large datasets, sometimes you want to drop all of the columns you’re not using or interested in.</p>
+<p>For example, if you only wanted the species column:</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="using-dplyr-to-manipulate-data.html#cb69-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">select</span>(species)</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 1
+##    species
+##    &lt;chr&gt;  
+##  1 Human  
+##  2 Droid  
+##  3 Droid  
+##  4 Human  
+##  5 Human  
+##  6 Human  
+##  7 Human  
+##  8 Droid  
+##  9 Human  
+## 10 Human  
+## # … with 77 more rows</code></pre>
+<p>Or, if you wanted name, species, and homeworld:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="using-dplyr-to-manipulate-data.html#cb71-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">select</span>(name, species, homeworld)</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 3
+##    name               species homeworld
+##    &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt;    
+##  1 Luke Skywalker     Human   Tatooine 
+##  2 C-3PO              Droid   Tatooine 
+##  3 R2-D2              Droid   Naboo    
+##  4 Darth Vader        Human   Tatooine 
+##  5 Leia Organa        Human   Alderaan 
+##  6 Owen Lars          Human   Tatooine 
+##  7 Beru Whitesun lars Human   Tatooine 
+##  8 R5-D4              Droid   Tatooine 
+##  9 Biggs Darklighter  Human   Tatooine 
+## 10 Obi-Wan Kenobi     Human   Stewjon  
+## # … with 77 more rows</code></pre>
+<p>What if you wanted all columns with the letter m in the column name?</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="using-dplyr-to-manipulate-data.html#cb73-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">&quot;m&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 4
+##    name                mass homeworld films    
+##    &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;     &lt;list&gt;   
+##  1 Luke Skywalker        77 Tatooine  &lt;chr [5]&gt;
+##  2 C-3PO                 75 Tatooine  &lt;chr [6]&gt;
+##  3 R2-D2                 32 Naboo     &lt;chr [7]&gt;
+##  4 Darth Vader          136 Tatooine  &lt;chr [4]&gt;
+##  5 Leia Organa           49 Alderaan  &lt;chr [5]&gt;
+##  6 Owen Lars            120 Tatooine  &lt;chr [3]&gt;
+##  7 Beru Whitesun lars    75 Tatooine  &lt;chr [3]&gt;
+##  8 R5-D4                 32 Tatooine  &lt;chr [1]&gt;
+##  9 Biggs Darklighter     84 Tatooine  &lt;chr [1]&gt;
+## 10 Obi-Wan Kenobi        77 Stewjon   &lt;chr [6]&gt;
+## # … with 77 more rows</code></pre>
+<p>See <a href="https://tidyselect.r-lib.org/reference/starts_with.html">the tidyselect documentation</a> for more selection helpers (like contains).</p>
+</div>
+<div id="rename-columns-with-rename" class="section level2 hasAnchor" number="8.9">
+<h2><span class="header-section-number">8.9</span> Rename columns with <code>rename()</code><a href="using-dplyr-to-manipulate-data.html#rename-columns-with-rename" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>rename()</code> lets you rename columns.</p>
+<p>For example, if you wanted to rename the column “homeworld” to “home_world”:</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="using-dplyr-to-manipulate-data.html#cb75-1" aria-hidden="true" tabindex="-1"></a>renamed_starwars <span class="ot">&lt;-</span> starwars <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">home_world=</span>homeworld)</span>
+<span id="cb75-2"><a href="using-dplyr-to-manipulate-data.html#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(starwars)</span></code></pre></div>
+<pre><code>##  [1] &quot;name&quot;       &quot;height&quot;     &quot;mass&quot;       &quot;hair_color&quot; &quot;skin_color&quot;
+##  [6] &quot;eye_color&quot;  &quot;birth_year&quot; &quot;sex&quot;        &quot;gender&quot;     &quot;homeworld&quot; 
+## [11] &quot;species&quot;    &quot;films&quot;      &quot;vehicles&quot;   &quot;starships&quot;</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="using-dplyr-to-manipulate-data.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(renamed_starwars)</span></code></pre></div>
+<pre><code>##  [1] &quot;name&quot;       &quot;height&quot;     &quot;mass&quot;       &quot;hair_color&quot; &quot;skin_color&quot;
+##  [6] &quot;eye_color&quot;  &quot;birth_year&quot; &quot;sex&quot;        &quot;gender&quot;     &quot;home_world&quot;
+## [11] &quot;species&quot;    &quot;films&quot;      &quot;vehicles&quot;   &quot;starships&quot;</code></pre>
+</div>
+<div id="add-new-columns-with-mutate" class="section level2 hasAnchor" number="8.10">
+<h2><span class="header-section-number">8.10</span> Add new columns with <code>mutate()</code><a href="using-dplyr-to-manipulate-data.html#add-new-columns-with-mutate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Often, it is useful to add new columns that are functions of existing columns.</p>
+<p>For example, we could add a new column to each row that is the product of that row’s height and mass values.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="using-dplyr-to-manipulate-data.html#cb79-1" aria-hidden="true" tabindex="-1"></a>starwars_new_col <span class="ot">&lt;-</span> starwars <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">heightXmass =</span> height <span class="sc">*</span> mass)</span>
+<span id="cb79-2"><a href="using-dplyr-to-manipulate-data.html#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(starwars_new_col)</span></code></pre></div>
+<pre><code>##  [1] &quot;name&quot;        &quot;height&quot;      &quot;mass&quot;        &quot;hair_color&quot;  &quot;skin_color&quot; 
+##  [6] &quot;eye_color&quot;   &quot;birth_year&quot;  &quot;sex&quot;         &quot;gender&quot;      &quot;homeworld&quot;  
+## [11] &quot;species&quot;     &quot;films&quot;       &quot;vehicles&quot;    &quot;starships&quot;   &quot;heightXmass&quot;</code></pre>
+</div>
+<div id="change-column-order-with-relocate" class="section level2 hasAnchor" number="8.11">
+<h2><span class="header-section-number">8.11</span> Change column order with <code>relocate()</code><a href="using-dplyr-to-manipulate-data.html#change-column-order-with-relocate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Relocate let’s you move columns around in your data set.</p>
+<p>For example, to move the name column after the height column, you can:</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="using-dplyr-to-manipulate-data.html#cb81-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">relocate</span>(name, <span class="at">.after=</span>height)</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 14
+##    height name         mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##     &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+##  1    172 Luke Skywa…    77 blond   fair    blue       19   male  mascu… Tatooi…
+##  2    167 C-3PO          75 &lt;NA&gt;    gold    yellow    112   none  mascu… Tatooi…
+##  3     96 R2-D2          32 &lt;NA&gt;    white,… red        33   none  mascu… Naboo  
+##  4    202 Darth Vader   136 none    white   yellow     41.9 male  mascu… Tatooi…
+##  5    150 Leia Organa    49 brown   light   brown      19   fema… femin… Aldera…
+##  6    178 Owen Lars     120 brown,… light   blue       52   male  mascu… Tatooi…
+##  7    165 Beru White…    75 brown   light   blue       47   fema… femin… Tatooi…
+##  8     97 R5-D4          32 &lt;NA&gt;    white,… red        NA   none  mascu… Tatooi…
+##  9    183 Biggs Dark…    84 black   light   brown      24   male  mascu… Tatooi…
+## 10    182 Obi-Wan Ke…    77 auburn… fair    blue-g…    57   male  mascu… Stewjon
+## # … with 77 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+</div>
+<div id="summarize-groups-of-rows-using-summarise" class="section level2 hasAnchor" number="8.12">
+<h2><span class="header-section-number">8.12</span> Summarize groups of rows using <code>summarise()</code><a href="using-dplyr-to-manipulate-data.html#summarize-groups-of-rows-using-summarise" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>summarise()</code> collapses a dataset into a single row.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="using-dplyr-to-manipulate-data.html#cb83-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##    mass
+##   &lt;dbl&gt;
+## 1  97.3</code></pre>
+<p><code>summarise()</code> is particularly useful in combination with the <code>group_by</code> function.</p>
+<p>For example, to get the average mass of characters in each species,</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="using-dplyr-to-manipulate-data.html#cb85-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mass=</span><span class="fu">mean</span>(mass, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 38 × 2
+##    species    mass
+##    &lt;chr&gt;     &lt;dbl&gt;
+##  1 Aleena     15  
+##  2 Besalisk  102  
+##  3 Cerean     82  
+##  4 Chagrian  NaN  
+##  5 Clawdite   55  
+##  6 Droid      69.8
+##  7 Dug        40  
+##  8 Ewok       20  
+##  9 Geonosian  80  
+## 10 Gungan     74  
+## # … with 28 more rows</code></pre>
+<p>Or, if we wanted to count the number of characters of each species,</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="using-dplyr-to-manipulate-data.html#cb87-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">count=</span><span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 38 × 2
+##    species   count
+##    &lt;chr&gt;     &lt;int&gt;
+##  1 Aleena        1
+##  2 Besalisk      1
+##  3 Cerean        1
+##  4 Chagrian      1
+##  5 Clawdite      1
+##  6 Droid         6
+##  7 Dug           1
+##  8 Ewok          1
+##  9 Geonosian     1
+## 10 Gungan        3
+## # … with 28 more rows</code></pre>
+</div>
+<div id="dplyr-cheat-sheet" class="section level2 hasAnchor" number="8.13">
+<h2><span class="header-section-number">8.13</span> dplyr cheat sheet<a href="using-dplyr-to-manipulate-data.html#dplyr-cheat-sheet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Download pdf here: <a href="https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf" class="uri">https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf</a></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="tidyverse.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="using-tidyr-to-create-tidy-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/lecture-material/week-02/dplyr.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

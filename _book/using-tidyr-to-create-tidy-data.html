@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 9 Using tidyr to create tidy data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 9 Using tidyr to create tidy data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 9 Using tidyr to create tidy data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 9 Using tidyr to create tidy data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  
+  
+  
+
+<meta name="author" content="Instructor: Dr. Alexander Lalejini" />
+
+
+<meta name="date" content="2022-08-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="using-dplyr-to-manipulate-data.html"/>
+<link rel="next" href="creating-graphics-with-ggplot2.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">CIS 635 (Fall 2022)</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="part"><span><b>Week 01</b></span></li>
+<li class="chapter" data-level="2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html"><i class="fa fa-check"></i><b>2</b> Getting Started with R Markdown</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#dependencies"><i class="fa fa-check"></i><b>2.1</b> Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#installing-r-packages"><i class="fa fa-check"></i><b>2.1.1</b> Installing R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#create-a-new-r-markdown-document-in-rstudio"><i class="fa fa-check"></i><b>2.2</b> Create a new R Markdown document in RStudio</a></li>
+<li class="chapter" data-level="2.3" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#anatomy-of-an-r-markdown-document"><i class="fa fa-check"></i><b>2.3</b> Anatomy of an R Markdown document</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#frontmatter-metadata"><i class="fa fa-check"></i><b>2.3.1</b> Frontmatter (metadata)</a></li>
+<li class="chapter" data-level="2.3.2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#text"><i class="fa fa-check"></i><b>2.3.2</b> Text</a></li>
+<li class="chapter" data-level="2.3.3" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#code"><i class="fa fa-check"></i><b>2.3.3</b> Code</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#knitting"><i class="fa fa-check"></i><b>2.4</b> “Knitting”</a></li>
+<li class="chapter" data-level="2.5" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#resources"><i class="fa fa-check"></i><b>2.5</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="homework-1.html"><a href="homework-1.html"><i class="fa fa-check"></i><b>3</b> Homework 1</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="homework-1.html"><a href="homework-1.html#setup"><i class="fa fa-check"></i><b>3.1</b> Setup</a></li>
+<li class="chapter" data-level="3.2" data-path="homework-1.html"><a href="homework-1.html#part-a.-use-r-as-a-calculator"><i class="fa fa-check"></i><b>3.2</b> Part A. Use R as a calculator</a></li>
+<li class="chapter" data-level="3.3" data-path="homework-1.html"><a href="homework-1.html#part-b.-built-in-functions"><i class="fa fa-check"></i><b>3.3</b> Part B. Built-in Functions</a></li>
+<li class="chapter" data-level="3.4" data-path="homework-1.html"><a href="homework-1.html#part-c.-creating-vectors"><i class="fa fa-check"></i><b>3.4</b> Part C. Creating vectors</a></li>
+<li class="chapter" data-level="3.5" data-path="homework-1.html"><a href="homework-1.html#part-d.-subsetting-vectors"><i class="fa fa-check"></i><b>3.5</b> Part D. Subsetting vectors</a></li>
+<li class="chapter" data-level="3.6" data-path="homework-1.html"><a href="homework-1.html#part-e.-types-of-data"><i class="fa fa-check"></i><b>3.6</b> Part E. Types of data</a></li>
+</ul></li>
+<li class="part"><span><b>Week 02</b></span></li>
+<li class="chapter" data-level="4" data-path="week-02---overview.html"><a href="week-02---overview.html"><i class="fa fa-check"></i><b>4</b> Week 02 - Overview</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="week-02---overview.html"><a href="week-02---overview.html#dependencies-1"><i class="fa fa-check"></i><b>4.1</b> Dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>5</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="functions-in-r.html"><a href="functions-in-r.html#argument-order-and-default-values"><i class="fa fa-check"></i><b>5.1</b> Argument order and default values</a></li>
+<li class="chapter" data-level="5.2" data-path="functions-in-r.html"><a href="functions-in-r.html#writing-your-own-functions"><i class="fa fa-check"></i><b>5.2</b> Writing your own functions</a></li>
+<li class="chapter" data-level="5.3" data-path="functions-in-r.html"><a href="functions-in-r.html#return-values"><i class="fa fa-check"></i><b>5.3</b> Return values</a></li>
+<li class="chapter" data-level="5.4" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>5.4</b> Default argument values</a></li>
+<li class="chapter" data-level="5.5" data-path="functions-in-r.html"><a href="functions-in-r.html#resources-1"><i class="fa fa-check"></i><b>5.5</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html"><i class="fa fa-check"></i><b>6</b> Reading and Writing Data</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html#writing-data"><i class="fa fa-check"></i><b>6.1</b> Writing data</a></li>
+<li class="chapter" data-level="6.2" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html#loading-data"><i class="fa fa-check"></i><b>6.2</b> Loading data</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="tidyverse.html"><a href="tidyverse.html"><i class="fa fa-check"></i><b>7</b> tidyverse</a></li>
+<li class="chapter" data-level="8" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html"><i class="fa fa-check"></i><b>8</b> Using dplyr to manipulate data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#setup-1"><i class="fa fa-check"></i><b>8.1</b> Setup</a></li>
+<li class="chapter" data-level="8.2" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#overview"><i class="fa fa-check"></i><b>8.2</b> Overview</a></li>
+<li class="chapter" data-level="8.3" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#the-pipe-operator"><i class="fa fa-check"></i><b>8.3</b> The pipe operator</a></li>
+<li class="chapter" data-level="8.4" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#data"><i class="fa fa-check"></i><b>8.4</b> Data</a></li>
+<li class="chapter" data-level="8.5" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#filter-rows-with-filter"><i class="fa fa-check"></i><b>8.5</b> Filter rows with <code>filter()</code></a></li>
+<li class="chapter" data-level="8.6" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#arrange-rows-with-arrange"><i class="fa fa-check"></i><b>8.6</b> Arrange rows with <code>arrange()</code></a></li>
+<li class="chapter" data-level="8.7" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#choose-rows-using-their-position-with-slice"><i class="fa fa-check"></i><b>8.7</b> Choose rows using their position with <code>slice()</code></a></li>
+<li class="chapter" data-level="8.8" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#select-columns-with-select"><i class="fa fa-check"></i><b>8.8</b> Select columns with <code>select()</code></a></li>
+<li class="chapter" data-level="8.9" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#rename-columns-with-rename"><i class="fa fa-check"></i><b>8.9</b> Rename columns with <code>rename()</code></a></li>
+<li class="chapter" data-level="8.10" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#add-new-columns-with-mutate"><i class="fa fa-check"></i><b>8.10</b> Add new columns with <code>mutate()</code></a></li>
+<li class="chapter" data-level="8.11" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#change-column-order-with-relocate"><i class="fa fa-check"></i><b>8.11</b> Change column order with <code>relocate()</code></a></li>
+<li class="chapter" data-level="8.12" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#summarize-groups-of-rows-using-summarise"><i class="fa fa-check"></i><b>8.12</b> Summarize groups of rows using <code>summarise()</code></a></li>
+<li class="chapter" data-level="8.13" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#dplyr-cheat-sheet"><i class="fa fa-check"></i><b>8.13</b> dplyr cheat sheet</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html"><i class="fa fa-check"></i><b>9</b> Using tidyr to create tidy data</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#overview-1"><i class="fa fa-check"></i><b>9.2</b> Overview</a></li>
+<li class="chapter" data-level="9.3" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#what-is-tidy-data"><i class="fa fa-check"></i><b>9.3</b> What is tidy data?</a></li>
+<li class="chapter" data-level="9.4" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#making-data-tidy"><i class="fa fa-check"></i><b>9.4</b> Making data tidy</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#column-headers-are-values-not-variables"><i class="fa fa-check"></i><b>9.4.1</b> Column headers are values, not variables</a></li>
+<li class="chapter" data-level="9.4.2" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#multiple-variables-are-stored-in-one-column"><i class="fa fa-check"></i><b>9.4.2</b> Multiple variables are stored in one column</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="creating-graphics-with-ggplot2.html"><a href="creating-graphics-with-ggplot2.html"><i class="fa fa-check"></i><b>10</b> Creating graphics with ggplot2</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="creating-graphics-with-ggplot2.html"><a href="creating-graphics-with-ggplot2.html#resources-for-using-ggplot2"><i class="fa fa-check"></i><b>10.1</b> Resources for using ggplot2</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="homework-2.html"><a href="homework-2.html"><i class="fa fa-check"></i><b>11</b> Homework 2</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="homework-2.html"><a href="homework-2.html#overview-2"><i class="fa fa-check"></i><b>11.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="homework-2.html"><a href="homework-2.html#objectives"><i class="fa fa-check"></i><b>11.1.1</b> Objectives</a></li>
+<li class="chapter" data-level="11.1.2" data-path="homework-2.html"><a href="homework-2.html#grading"><i class="fa fa-check"></i><b>11.1.2</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="homework-2.html"><a href="homework-2.html#setup-3"><i class="fa fa-check"></i><b>11.2</b> Setup</a></li>
+<li class="chapter" data-level="11.3" data-path="homework-2.html"><a href="homework-2.html#part-a.-loading-data-in-r"><i class="fa fa-check"></i><b>11.3</b> Part A. Loading data in R</a></li>
+<li class="chapter" data-level="11.4" data-path="homework-2.html"><a href="homework-2.html#part-b.-visualizing-data-with-ggplot2"><i class="fa fa-check"></i><b>11.4</b> Part B. Visualizing data with ggplot2</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with ❤ and bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="using-tidyr-to-create-tidy-data" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Using tidyr to create tidy data<a href="using-tidyr-to-create-tidy-data.html#using-tidyr-to-create-tidy-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Goals:</p>
+<ul>
+<li>Work through examples of using tidyr (and dplyr) functions to clean up messy (un-tidy) data</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://tidyr.tidyverse.org/articles/tidy-data.html" class="uri">https://tidyr.tidyverse.org/articles/tidy-data.html</a></li>
+<li><a href="https://r4ds.had.co.nz/tidy-data.html">R for Data Science</a></li>
+</ul>
+<div id="setup-2" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Setup<a href="using-tidyr-to-create-tidy-data.html#setup-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You should have already installed the <code>tidyverse</code> collection of packages, which includes the tidyr package.
+But, if you haven’t, go ahead and run:</p>
+<pre><code>install.packages(&quot;tidyverse&quot;)</code></pre>
+<p>In this document, we’ll be using the tidyr and dplyr packages.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="using-tidyr-to-create-tidy-data.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb90-2"><a href="using-tidyr-to-create-tidy-data.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+</div>
+<div id="overview-1" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Overview<a href="using-tidyr-to-create-tidy-data.html#overview-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If you have not already, I suggest that you read the following article for an introduction to tidy data: <a href="https://tidyr.tidyverse.org/articles/tidy-data.html" class="uri">https://tidyr.tidyverse.org/articles/tidy-data.html</a>.
+Additionally, I suggest that you work through the dplyr R Markdown material before working through this document.</p>
+<p>The tidyr package provides functions for making messy data “tidy”.
+For a complete list of the included functions, see <a href="https://tidyr.tidyverse.org/reference/index.html" class="uri">https://tidyr.tidyverse.org/reference/index.html</a>.</p>
+<p>Understanding tidy data and how to reformat your data into a tidy format is very important, as many of the functions/packages that we will use this semester are written to work with tidy-format data.
+For example, ggplot (the R graphics package that we will be using) assumes tidy data.
+Taking the time now to get comfortable with what it means to have tidy data will save you substantial time later on.</p>
+</div>
+<div id="what-is-tidy-data" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> What is tidy data?<a href="using-tidyr-to-create-tidy-data.html#what-is-tidy-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You can represent the same underlying data many ways.
+For example, let’s say we have the following data about students’ grades:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="using-tidyr-to-create-tidy-data.html#cb91-1" aria-hidden="true" tabindex="-1"></a>messy_grade_data1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;lecture-material/week-02/data/messy_grades_1.csv&quot;</span>, <span class="at">na.strings=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb91-2"><a href="using-tidyr-to-create-tidy-data.html#cb91-2" aria-hidden="true" tabindex="-1"></a>messy_grade_data1</span></code></pre></div>
+<pre><code>##     name quiz1 quiz2 test1
+## 1  Billy  &lt;NA&gt;     D     C
+## 2   Suzy     F  &lt;NA&gt;  &lt;NA&gt;
+## 3 Lionel     B     C     B
+## 4  Jenny     A     A     B</code></pre>
+<p>Or, the same exact data could be structured as follows:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="using-tidyr-to-create-tidy-data.html#cb93-1" aria-hidden="true" tabindex="-1"></a>messy_grade_data2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;lecture-material/week-02/data/messy_grades_2.csv&quot;</span>, <span class="at">na.strings=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb93-2"><a href="using-tidyr-to-create-tidy-data.html#cb93-2" aria-hidden="true" tabindex="-1"></a>messy_grade_data2</span></code></pre></div>
+<pre><code>##   assessment Billy  Suzy Lionel Jenny
+## 1      quiz1  &lt;NA&gt; FALSE      B     A
+## 2      quiz2     D    NA      C     A
+## 3      test1     C    NA      B     B</code></pre>
+<p>Neither of these formats are particularly convenient to work with.
+For example, in <code>messy_grade_data2</code> format, it would be difficult to query the full set of student names in the dataset (because each student has their own column).
+Likewise, in <code>messy_grade_data1</code>, it would be diffult to query the set of assessments.</p>
+<p>From <a href="https://tidyr.tidyverse.org/articles/tidy-data.html" class="uri">https://tidyr.tidyverse.org/articles/tidy-data.html</a>,</p>
+<blockquote>
+<p>A dataset is a collection of values, usually either numbers (if quantitative) or strings (if qualitative). Values are organised in two ways. Every value belongs to a variable and an observation. A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units. An observation contains all values measured on the same unit (like a person, or a day, or a race) across attributes.</p>
+</blockquote>
+<p>A tidy version of the grade data would look something like this:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="using-tidyr-to-create-tidy-data.html#cb95-1" aria-hidden="true" tabindex="-1"></a>tidy_grade_data <span class="ot">&lt;-</span> messy_grade_data1 <span class="sc">%&gt;%</span></span>
+<span id="cb95-2"><a href="using-tidyr-to-create-tidy-data.html#cb95-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(quiz1,quiz2,test1), <span class="at">names_to=</span><span class="st">&quot;assessment&quot;</span>, <span class="at">values_to=</span><span class="st">&quot;grade&quot;</span>)</span>
+<span id="cb95-3"><a href="using-tidyr-to-create-tidy-data.html#cb95-3" aria-hidden="true" tabindex="-1"></a>tidy_grade_data</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 3
+##    name   assessment grade
+##    &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;
+##  1 Billy  quiz1      &lt;NA&gt; 
+##  2 Billy  quiz2      D    
+##  3 Billy  test1      C    
+##  4 Suzy   quiz1      F    
+##  5 Suzy   quiz2      &lt;NA&gt; 
+##  6 Suzy   test1      &lt;NA&gt; 
+##  7 Lionel quiz1      B    
+##  8 Lionel quiz2      C    
+##  9 Lionel test1      B    
+## 10 Jenny  quiz1      A    
+## 11 Jenny  quiz2      A    
+## 12 Jenny  test1      B</code></pre>
+<p>This arrangement makes the values, variables, and observations clearer.
+What are the values, variables, and observations in the grade data?
+(the answer is <a href="https://tidyr.tidyverse.org/articles/tidy-data.html#data-semantics">here</a>).</p>
+<p>A dataset is tidy if:</p>
+<ol style="list-style-type: decimal">
+<li>Each variable has its own column</li>
+<li>Each observation has its own row</li>
+<li>Each value has its own cell</li>
+</ol>
+<p>In the grade data, we have the following variables: student name, assessment, and grade.
+Each observation is a particular student’s grade on a particular assessment (e.g., Jenny’s grade on test1).
+Each cell in the dataset specifies a value for a particular variable (e.g., in row 1 of <code>tidy_grade_data</code>, Billy is the value of the name variable).</p>
+</div>
+<div id="making-data-tidy" class="section level2 hasAnchor" number="9.4">
+<h2><span class="header-section-number">9.4</span> Making data tidy<a href="using-tidyr-to-create-tidy-data.html#making-data-tidy" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Two common ways that data is messy:</p>
+<ol style="list-style-type: decimal">
+<li>Column headers are values, not variable names</li>
+<li>Multiple variables are stored in one column</li>
+</ol>
+<p>For more common ways that data are often messy, see: <a href="https://tidyr.tidyverse.org/articles/tidy-data.html#tidying" class="uri">https://tidyr.tidyverse.org/articles/tidy-data.html#tidying</a></p>
+<p>Below, are datasets that exemplify each problem.</p>
+<div id="column-headers-are-values-not-variables" class="section level3 hasAnchor" number="9.4.1">
+<h3><span class="header-section-number">9.4.1</span> Column headers are values, not variables<a href="using-tidyr-to-create-tidy-data.html#column-headers-are-values-not-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Observations over time are often recorded in a “wide” format.
+That is, each timepoint that an observation is made is entered as a column.
+This is convienient for data entry.
+For example, imagine you measure the temperature of a lake at several different depths over a 10 week period (one measurement for each depth every week).
+It’s convenient to enter that data in a “wide” format where each week is a column.
+However, this is not tidy, as each row is no longer a single observation.</p>
+<p>The <code>billboard</code> dataset that is loaded when you load the <code>tidyr</code> package is exemplifies this problem.</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="using-tidyr-to-create-tidy-data.html#cb97-1" aria-hidden="true" tabindex="-1"></a>billboard</span></code></pre></div>
+<pre><code>## # A tibble: 317 × 79
+##    artist track date.ent…¹   wk1   wk2   wk3   wk4   wk5   wk6   wk7   wk8   wk9
+##    &lt;chr&gt;  &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2 Pac  Baby… 2000-02-26    87    82    72    77    87    94    99    NA    NA
+##  2 2Ge+h… The … 2000-09-02    91    87    92    NA    NA    NA    NA    NA    NA
+##  3 3 Doo… Kryp… 2000-04-08    81    70    68    67    66    57    54    53    51
+##  4 3 Doo… Loser 2000-10-21    76    76    72    69    67    65    55    59    62
+##  5 504 B… Wobb… 2000-04-15    57    34    25    17    17    31    36    49    53
+##  6 98^0   Give… 2000-08-19    51    39    34    26    26    19     2     2     3
+##  7 A*Tee… Danc… 2000-07-08    97    97    96    95   100    NA    NA    NA    NA
+##  8 Aaliy… I Do… 2000-01-29    84    62    51    41    38    35    35    38    38
+##  9 Aaliy… Try … 2000-03-18    59    53    38    28    21    18    16    14    12
+## 10 Adams… Open… 2000-08-26    76    76    74    69    68    67    61    58    57
+## # … with 307 more rows, 67 more variables: wk10 &lt;dbl&gt;, wk11 &lt;dbl&gt;, wk12 &lt;dbl&gt;,
+## #   wk13 &lt;dbl&gt;, wk14 &lt;dbl&gt;, wk15 &lt;dbl&gt;, wk16 &lt;dbl&gt;, wk17 &lt;dbl&gt;, wk18 &lt;dbl&gt;,
+## #   wk19 &lt;dbl&gt;, wk20 &lt;dbl&gt;, wk21 &lt;dbl&gt;, wk22 &lt;dbl&gt;, wk23 &lt;dbl&gt;, wk24 &lt;dbl&gt;,
+## #   wk25 &lt;dbl&gt;, wk26 &lt;dbl&gt;, wk27 &lt;dbl&gt;, wk28 &lt;dbl&gt;, wk29 &lt;dbl&gt;, wk30 &lt;dbl&gt;,
+## #   wk31 &lt;dbl&gt;, wk32 &lt;dbl&gt;, wk33 &lt;dbl&gt;, wk34 &lt;dbl&gt;, wk35 &lt;dbl&gt;, wk36 &lt;dbl&gt;,
+## #   wk37 &lt;dbl&gt;, wk38 &lt;dbl&gt;, wk39 &lt;dbl&gt;, wk40 &lt;dbl&gt;, wk41 &lt;dbl&gt;, wk42 &lt;dbl&gt;,
+## #   wk43 &lt;dbl&gt;, wk44 &lt;dbl&gt;, wk45 &lt;dbl&gt;, wk46 &lt;dbl&gt;, wk47 &lt;dbl&gt;, wk48 &lt;dbl&gt;, …</code></pre>
+<p>The <code>billboard</code> dataset records the date a song enters the billboard top 100.
+First on your own, use the <code>pivot_longer</code> function to create a tidy version of the <code>billboard</code> dataset.
+The solution can be found <a href="https://tidyr.tidyverse.org/articles/tidy-data.html#column-headers-are-values-not-variable-names">here</a>.</p>
+</div>
+<div id="multiple-variables-are-stored-in-one-column" class="section level3 hasAnchor" number="9.4.2">
+<h3><span class="header-section-number">9.4.2</span> Multiple variables are stored in one column<a href="using-tidyr-to-create-tidy-data.html#multiple-variables-are-stored-in-one-column" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Sometimes, the values in a column describe multiple variables.
+For example, in the following messy dataset, the month and day of each temperature recording are combined under a single column.</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="using-tidyr-to-create-tidy-data.html#cb99-1" aria-hidden="true" tabindex="-1"></a>messy_temperature <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;lecture-material/week-02/data/multi_variables_single_col.csv&quot;</span>)</span>
+<span id="cb99-2"><a href="using-tidyr-to-create-tidy-data.html#cb99-2" aria-hidden="true" tabindex="-1"></a>messy_temperature</span></code></pre></div>
+<pre><code>##     date year temperature
+## 1   jan1 2022          15
+## 2  jan14 2022         130
+## 3   feb1 2022          19
+## 4  feb14 2022          85
+## 5   mar1 2022          95
+## 6  mar14 2022         130
+## 7   apr1 2022          29
+## 8  apr14 2022          42
+## 9   may1 2022         138
+## 10 may14 2022          14
+## 11  jun1 2022         133
+## 12 jun14 2022          53
+## 13  jul1 2022         120
+## 14 jul14 2022         108
+## 15  aug1 2022          23
+## 16 aug14 2022         148
+## 17  sep1 2022         103
+## 18 sep14 2022         113
+## 19  nov1 2022          67
+## 20 nov14 2022           1
+## 21  oct1 2022         113
+## 22 oct14 2022          56
+## 23  dec1 2022         107
+## 24 dec14 2022          30</code></pre>
+<p>The first three characters of the “date” column give the month, and the following numeric value gives the day of the month of the temperature reading.</p>
+<p>We can use the <code>separate</code> function to properly split the date column into multiple columns.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="using-tidyr-to-create-tidy-data.html#cb101-1" aria-hidden="true" tabindex="-1"></a>tidy_temperature <span class="ot">&lt;-</span> messy_temperature <span class="sc">%&gt;%</span> <span class="fu">separate</span>(<span class="at">col=</span>date, <span class="at">into=</span><span class="fu">c</span>(<span class="st">&quot;month&quot;</span>,<span class="st">&quot;day&quot;</span>), <span class="at">sep=</span><span class="dv">3</span>)</span>
+<span id="cb101-2"><a href="using-tidyr-to-create-tidy-data.html#cb101-2" aria-hidden="true" tabindex="-1"></a>tidy_temperature</span></code></pre></div>
+<pre><code>##    month day year temperature
+## 1    jan   1 2022          15
+## 2    jan  14 2022         130
+## 3    feb   1 2022          19
+## 4    feb  14 2022          85
+## 5    mar   1 2022          95
+## 6    mar  14 2022         130
+## 7    apr   1 2022          29
+## 8    apr  14 2022          42
+## 9    may   1 2022         138
+## 10   may  14 2022          14
+## 11   jun   1 2022         133
+## 12   jun  14 2022          53
+## 13   jul   1 2022         120
+## 14   jul  14 2022         108
+## 15   aug   1 2022          23
+## 16   aug  14 2022         148
+## 17   sep   1 2022         103
+## 18   sep  14 2022         113
+## 19   nov   1 2022          67
+## 20   nov  14 2022           1
+## 21   oct   1 2022         113
+## 22   oct  14 2022          56
+## 23   dec   1 2022         107
+## 24   dec  14 2022          30</code></pre>
+<p>Run <code>?separate</code> to see how the separate function works.</p>
+<p>Adding extra columns doesn’t “untidy” your data.
+Sometimes it is useful to add additional aggregate labels to an observation (especially when working with dates).
+For example, it might be useful to add a proper date column (with the format YEAR-MONTH-DAY) to our tidied temperature data.
+I’ll leave that as an exercise for you to do on your own.
+You’ll need to map each month string to its numeric representation (e.g. jan = 1, feb = 2).
+Then you can use <code>mutate</code> to create a new column from the relevant columns.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="using-dplyr-to-manipulate-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="creating-graphics-with-ggplot2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/lecture-material/week-02/tidyr.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
