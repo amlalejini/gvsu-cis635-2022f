@@ -26,7 +26,8 @@ In your R markdown file, create a section heading for each of the following part
 
 ## Part A. Loading data in R
 
-1. Find a publicly available dataset that is represented as a .csv file. Your chosen dataset should not be trivial (# rows * # columns should at least 250 cells).
+1. Find a publicly available dataset that is represented as a .csv file.
+   Your chosen dataset should not be trivial (# rows * # columns should be at least 250 cells), and you may not choose the same dataset that I demonstrate in this week's lecture material.
    When choosing a dataset, keep in mind that you need to creating at least three different types of plots using your chosen dataset.
    You will upload the chosen data set as a .csv file along with your homework submission.
 
