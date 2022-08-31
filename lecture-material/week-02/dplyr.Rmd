@@ -1,0 +1,267 @@
+# Using dplyr to manipulate data
+
+Goals:
+
+- Learn about solving common data manipulation challenges with dplyr
+- Learn to use the pipe operator (`%>%`)
+
+Sources:
+
+- [Introduction to dplyr](https://dplyr.tidyverse.org/articles/dplyr.html)
+- [R for Data Science](https://r4ds.had.co.nz/transform.html)
+- [dplyr documentation](https://dplyr.tidyverse.org/)
+- [Software carpentry lesson on dplyr](https://swcarpentry.github.io/r-novice-gapminder/13-dplyr/index.html)
+
+## Setup
+
+You should have already installed the `tidyverse` collection of packages, which includes the dplyr package.
+But, if you haven't, go ahead and run:
+
+```
+install.packages("tidyverse")
+```
+
+With the tidyverse packages installed, you'll need to load the dplyr library to use it.
+
+```{r}
+library(dplyr)
+```
+
+## Overview
+
+This document will cover key dplyr functions that solve the most common data manipulation challenges.
+The examples and explanations here non-exhaustive (dplyr has a lot of functionality and each of these functions are very flexible).
+Instead, I'd like you to start building a sense of the broad category of data manipulations that are possible with each of the dplyr functions below.
+As you encounter challenges with manipulating data, you should have a solid idea of which functions you will need to do what you want to do.
+Then, you can use those functions' documentation to work out the specific details.
+
+dplyr's functions for basic data manipulation can be divided into three categories based on the component of the dataset that they work with (descriptions pulled from [dplyr documentation](https://dplyr.tidyverse.org/articles/dplyr.html)):
+
+- Rows
+  - `filter()` - choose rows in your data based on their column values
+  - `slice()` - choose rows in your data based on their location (index) in the dataset
+  - `arrange()` - change the ordering of rows in your data
+- Columns
+  - `select()` - changes whether or not a column is included
+  - `rename()` - changes the names of columns
+  - `mutate()` - changes the values of columns and can create new columns that are functions of existing columns
+  - `relocate()` - changes the order of columns
+- Groups of rows
+  - `summarise()` - collapses a group of rows into a single row
+
+These functions can be used in combination with `group_by()`, which allows you to perform these functions on particular groups of rows, instead of the entire dataset.
+
+Note that the above list of functions is non-exhaustive.
+I refer you to the [dplyr documentation](https://dplyr.tidyverse.org/reference/index.html) for an exhaustive list.
+Additionally, I'd encourage you to look over (and save) the cheat sheet linked at the end of this document.
+
+## The pipe operator
+
+Most dplyr functions take a dataframe (or tibble) as their first argument.
+dplyr provides the pipe operator (`%>%`), which lets you conveniently compose multiple dplyr functions in a single line (instead of needing to save intermediate states of your dataset).
+The pipe operator "pipes" the results of the left side of the pipe into the first argument of the right side of the pipe.
+
+Here's an example:
+
+```{r}
+f <- function(a, b) {
+  return(a + b)
+}
+g <- function(a, b) {
+  return(a * b)
+}
+
+x <- 2
+y <- 100
+
+x %>% f(y) # Is the same as f(x,y)
+x %>% f(y) %>% g(y) # Is the same as g(f(x,y), y)
+```
+
+## Data
+
+We'll use the `starwars` dataset to demonstrate the basic data manipulation functions provided by dplyr.
+You don't need to download anything, the `starwars` dataset is loaded when you load the dplyr package.
+
+```{r}
+dim(starwars)
+```
+
+This dataset has 87 rows and 14 columns where each row represents a character from Star Wars, and each column is a particular attribute.
+
+```{r}
+starwars
+```
+
+If you look closely at the above output, you'll notice that the `starwars` dataset is represented as a tibble.
+A tibble is a more modern version of the dataframe type, and for the most part, anywhere you could use a dataframe, you can use a tibble.
+You can convert a data frame to tibbles with the `as_tible()` function.
+Read more about tibbles here: <https://tibble.tidyverse.org/>.
+
+## Filter rows with `filter()`
+
+`filter()` allows you to choose rows in a data frame based on their column values.
+
+For example, if we wanted to create a new data frame that only contained droids, we could:
+
+```{r}
+starwars %>% filter(species=="Droid")
+```
+
+We can also filter rows based on more complex conditions:
+
+```{r}
+starwars %>% filter(species == "Droid" & height > 100)
+```
+
+What if we wanted all droids, Wookiees, and Hutts?
+
+```{r}
+starwars %>% filter(species == "Droid" | species == "Wookiee" | species == "Hutt")
+```
+
+Even more simply with the `%in%` operator,
+
+```{r}
+starwars %>% filter(species %in% c("Droid", "Wookiee", "Hutt"))
+```
+
+Notice that the original `starwars` dataset is never modified by any of the filter functions.
+None of the dplyr functions modify the dataset passed to them with the `data` argument.
+Instead, they return a new data frame with the appropriate manipulations.
+
+## Arrange rows with `arrange()`
+
+`arrange()` reorders rows in the given data frame.
+It takes a data frame and a set of columns names to reorder by.
+If you give more than one column name, additional column names are used to break ties in the values of proceeding column names.
+
+```{r}
+starwars %>% arrange(mass, height)
+```
+
+You can use `desc()` to order in descending order.
+
+```{r}
+starwars %>% arrange(desc(mass))
+```
+
+## Choose rows using their position with `slice()`
+
+Use slice to choose rows by their position.
+
+For example, to choose the character in the second row of the data frame:
+
+```{r}
+starwars %>% slice(2)
+```
+
+The first, tenth, and twentieth rows of the data frame,
+
+```{r}
+starwars %>% slice(c(1,10,20))
+```
+
+The odd rows of the data frame,
+
+```{r}
+starwars %>% slice(seq(1,nrow(starwars), 2))
+```
+
+Combine with `arrange()` to quickly get the character with the largest height,
+
+```{r}
+starwars %>% arrange(desc(height)) %>% slice(1)
+```
+
+There are a few convenient helper versions of the slice function:
+
+- `slice_head`
+- `slice_tail`
+- `slice_sample`
+- `slice_min`
+- `slice_max`
+
+I'll leave it to you to pull up the help page for those functions.
+
+## Select columns with `select()`
+
+When you're working with large datasets, sometimes you want to drop all of the columns you're not using or interested in.
+
+For example, if you only wanted the species column:
+```{r}
+starwars %>% select(species)
+```
+
+Or, if you wanted name, species, and homeworld:
+
+```{r}
+starwars %>% select(name, species, homeworld)
+```
+
+What if you wanted all columns with the letter m in the column name?
+
+```{r}
+starwars %>% select(contains("m"))
+```
+
+See [the tidyselect documentation](https://tidyselect.r-lib.org/reference/starts_with.html) for more selection helpers (like contains).
+
+## Rename columns with `rename()`
+
+`rename()` lets you rename columns.
+
+For example, if you wanted to rename the column "homeworld" to "home_world":
+
+```{r}
+renamed_starwars <- starwars %>% rename(home_world=homeworld)
+colnames(starwars)
+colnames(renamed_starwars)
+```
+
+## Add new columns with `mutate()`
+
+Often, it is useful to add new columns that are functions of existing columns.
+
+For example, we could add a new column to each row that is the product of that row's height and mass values.
+
+```{r}
+starwars_new_col <- starwars %>% mutate(heightXmass = height * mass)
+colnames(starwars_new_col)
+```
+
+## Change column order with `relocate()`
+
+Relocate let's you move columns around in your data set.
+
+For example, to move the name column after the height column, you can:
+```{r}
+starwars %>% relocate(name, .after=height)
+```
+
+## Summarize groups of rows using `summarise()`
+
+`summarise()` collapses a dataset into a single row.
+
+```{r}
+starwars %>% summarise(mass = mean(mass, na.rm=TRUE))
+```
+
+`summarise()` is particularly useful in combination with the `group_by` function.
+
+For example, to get the average mass of characters in each species,
+```{r}
+starwars %>% group_by(species) %>% summarise(mass=mean(mass, na.rm=TRUE))
+```
+
+Or, if we wanted to count the number of characters of each species,
+
+```{r}
+starwars %>% group_by(species) %>% summarise(count=n())
+```
+
+## dplyr cheat sheet
+
+Download pdf here: <https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf>
+
+

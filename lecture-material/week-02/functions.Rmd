@@ -1,16 +1,23 @@
----
+<!-- ---
 title: "Functions in R"
 author: "Alexander Lalejini"
 output:
   html_document:
     toc: TRUE
     toc_float: true
----
+--- -->
+
+# Functions in R
 
 You can download the R Markdown file used to generate this document (or webpage) [here](https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-02/functions.Rmd).
 I would encourage you to download that Rmd file, open it own your own computer in RStudio, and run the code chunks on your own (and modify things as you wish!).
 
-# Argument order and default values
+In this tutorial,
+
+- We'll go over argument order and default values when calling functions in R
+- We'll go over the basics of writing functions in R
+
+## Argument order and default values
 
 As you encountered last week, R has many built-in functions (e.g., `abs`, `round`, etc), and all of R packages that you install provide even more functions that you can use.
 _Using_ an existing function is simple.
@@ -65,7 +72,7 @@ log(base=3, x=27)
 
 When calling a function with multiple arguments, **I strongly encourage you to specify arguments by name.**
 
-# Writing your own functions
+## Writing your own functions
 
 To write a function in R, the general structure is as follows:
 
@@ -140,7 +147,7 @@ price_with_tax <- function(price, tax_rate=0.06) {
 }
 ```
 
-# Resources
+## Resources
 
 - [Hands-on Programming with R (2.3, 2.4)](https://rstudio-education.github.io/hopr/basics.html#functions)
 - [Software carpentry lesson on writing functions in R](https://swcarpentry.github.io/r-novice-gapminder/10-functions/index.html)

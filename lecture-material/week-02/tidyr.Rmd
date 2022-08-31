@@ -1,0 +1,143 @@
+# Using tidyr to create tidy data
+
+Goals:
+
+- Work through examples of using tidyr (and dplyr) functions to clean up messy (un-tidy) data
+
+Sources:
+
+- <https://tidyr.tidyverse.org/articles/tidy-data.html>
+- [R for Data Science](https://r4ds.had.co.nz/tidy-data.html)
+
+## Setup
+
+You should have already installed the `tidyverse` collection of packages, which includes the tidyr package.
+But, if you haven't, go ahead and run:
+
+```
+install.packages("tidyverse")
+```
+
+In this document, we'll be using the tidyr and dplyr packages.
+
+```{r}
+library(tidyr)
+library(dplyr)
+```
+
+## Overview
+
+If you have not already, I suggest that you read the following article for an introduction to tidy data: <https://tidyr.tidyverse.org/articles/tidy-data.html>.
+Additionally, I suggest that you work through the dplyr R Markdown material before working through this document.
+
+The tidyr package provides functions for making messy data "tidy".
+For a complete list of the included functions, see <https://tidyr.tidyverse.org/reference/index.html>.
+
+Understanding tidy data and how to reformat your data into a tidy format is very important, as many of the functions/packages that we will use this semester are written to work with tidy-format data.
+For example, ggplot (the R graphics package that we will be using) assumes tidy data.
+Taking the time now to get comfortable with what it means to have tidy data will save you substantial time later on.
+
+## What is tidy data?
+
+You can represent the same underlying data many ways.
+For example, let's say we have the following data about students' grades:
+
+```{r}
+messy_grade_data1 <- read.csv("lecture-material/week-02/data/messy_grades_1.csv", na.strings="")
+messy_grade_data1
+```
+
+Or, the same exact data could be structured as follows:
+
+```{r}
+messy_grade_data2 <- read.csv("lecture-material/week-02/data/messy_grades_2.csv", na.strings="")
+messy_grade_data2
+```
+
+Neither of these formats are particularly convenient to work with.
+For example, in `messy_grade_data2` format, it would be difficult to query the full set of student names in the dataset (because each student has their own column).
+Likewise, in `messy_grade_data1`, it would be diffult to query the set of assessments.
+
+From <https://tidyr.tidyverse.org/articles/tidy-data.html>,
+
+> A dataset is a collection of values, usually either numbers (if quantitative) or strings (if qualitative). Values are organised in two ways. Every value belongs to a variable and an observation. A variable contains all values that measure the same underlying attribute (like height, temperature, duration) across units. An observation contains all values measured on the same unit (like a person, or a day, or a race) across attributes.
+
+A tidy version of the grade data would look something like this:
+
+```{r}
+tidy_grade_data <- messy_grade_data1 %>%
+  pivot_longer(c(quiz1,quiz2,test1), names_to="assessment", values_to="grade")
+tidy_grade_data
+```
+
+This arrangement makes the values, variables, and observations clearer.
+What are the values, variables, and observations in the grade data?
+(the answer is [here](https://tidyr.tidyverse.org/articles/tidy-data.html#data-semantics)).
+
+A dataset is tidy if:
+
+1. Each variable has its own column
+2. Each observation has its own row
+3. Each value has its own cell
+
+In the grade data, we have the following variables: student name, assessment, and grade.
+Each observation is a particular student's grade on a particular assessment (e.g., Jenny's grade on test1).
+Each cell in the dataset specifies a value for a particular variable (e.g., in row 1 of `tidy_grade_data`, Billy is the value of the name variable).
+
+## Making data tidy
+
+Two common ways that data is messy:
+
+1. Column headers are values, not variable names
+2. Multiple variables are stored in one column
+
+For more common ways that data are often messy, see: <https://tidyr.tidyverse.org/articles/tidy-data.html#tidying>
+
+Below, are datasets that exemplify each problem.
+
+### Column headers are values, not variables
+
+Observations over time are often recorded in a "wide" format.
+That is, each timepoint that an observation is made is entered as a column.
+This is convienient for data entry.
+For example, imagine you measure the temperature of a lake at several different depths over a 10 week period (one measurement for each depth every week).
+It's convenient to enter that data in a "wide" format where each week is a column.
+However, this is not tidy, as each row is no longer a single observation.
+
+The `billboard` dataset that is loaded when you load the `tidyr` package is exemplifies this problem.
+
+```{r}
+billboard
+```
+
+The `billboard` dataset records the date a song enters the billboard top 100.
+First on your own, use the `pivot_longer` function to create a tidy version of the `billboard` dataset.
+The solution can be found [here](https://tidyr.tidyverse.org/articles/tidy-data.html#column-headers-are-values-not-variable-names).
+
+### Multiple variables are stored in one column
+
+Sometimes, the values in a column describe multiple variables.
+For example, in the following messy dataset, the month and day of each temperature recording are combined under a single column.
+
+```{r}
+messy_temperature <- read.csv("lecture-material/week-02/data/multi_variables_single_col.csv")
+messy_temperature
+```
+
+The first three characters of the "date" column give the month, and the following numeric value gives the day of the month of the temperature reading.
+
+We can use the `separate` function to properly split the date column into multiple columns.
+
+```{r}
+tidy_temperature <- messy_temperature %>% separate(col=date, into=c("month","day"), sep=3)
+tidy_temperature
+```
+
+Run `?separate` to see how the separate function works.
+
+Adding extra columns doesn't "untidy" your data.
+Sometimes it is useful to add additional aggregate labels to an observation (especially when working with dates).
+For example, it might be useful to add a proper date column (with the format YEAR-MONTH-DAY) to our tidied temperature data.
+I'll leave that as an exercise for you to do on your own.
+You'll need to map each month string to its numeric representation (e.g. jan = 1, feb = 2).
+Then you can use `mutate` to create a new column from the relevant columns.

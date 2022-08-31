@@ -1,11 +1,13 @@
----
+<!-- ---
 title: "Reading and Writing Data"
 author: "Alexander Lalejini"
 output:
   html_document:
     toc: TRUE
     toc_float: true
----
+--- -->
+
+# Reading and Writing Data
 
 In this tutorial:
 
@@ -35,12 +37,12 @@ If you run the above R code, where did `orange_trees.csv` get saved? (hint: in y
 If your dataset is large and/or the preprocessing operations you perform are expensive, you don't want do those operations every time you load your dataset.
 Instead, write a script to process the dataset and save the processed dataset.
 
-# Loading data
+## Loading data
 
 Loading data from a csv file is straightfoward. You'll use the `read.csv` function.
 
 ```{r, relative-path}
-pokemon_df <- read.csv(file="data/pokemon.csv")
+pokemon_df <- read.csv(file="lecture-material/week-02/data/pokemon.csv")
 head(pokemon_df)
 ```
 
@@ -58,4 +60,3 @@ In RStudio, when you do not specify a complete path, paths are relative to your 
 Run `getwd()` to see what your current working directory is set to.
 Use `setwd` to change your working directory.
 Read more about project management and R working directories here: <https://r4ds.had.co.nz/workflow-projects.html>
-
