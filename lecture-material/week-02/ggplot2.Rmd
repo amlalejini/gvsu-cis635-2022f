@@ -1,0 +1,17 @@
+# Creating graphics with ggplot2
+
+Read the [Data Visualization chapter of R for Data Science](https://r4ds.had.co.nz/data-visualisation.html).
+
+the `tidyverse` collection of packages, which includes the ggplot2 package.
+But, if you haven't, go ahead and run:
+
+```
+install.packages("tidyverse")
+```
+
+## Resources for using ggplot2
+
+- For a super handy ggplot2 reference: [ggplot2 cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization-2.1.pdf)
+- [Software carpentry lesson on creating publication quality graphics with ggplot2](https://swcarpentry.github.io/r-novice-gapminder/08-plot-ggplot2/index.html)
+- [ggplot2 documentation](https://ggplot2.tidyverse.org/)
+- [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html)

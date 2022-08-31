@@ -14,7 +14,7 @@ In this tutorial:
 - I'll walk you through how to write data stored in a dataframe as a `.csv` file.
 - And, I'll show you how to load data saved in a `.csv` file into a dataframe.
 
-# Writing data
+## Writing data
 
 R comes preloaded with many datasets (for a complete list run `library(help="datasets")`).
 For example, `Orange` is a small data set that gives growth data for 5 orange trees.
