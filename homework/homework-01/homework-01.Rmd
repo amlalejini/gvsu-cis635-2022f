@@ -1,12 +1,14 @@
----
+<!-- ---
 title: "Homework 1"
-output: 
+output:
   html_document:
     toc: TRUE
     toc_float: true
   pdf_document:
     latex_engine: pdflatex
----
+--- -->
+
+# Homework 1
 
 This goal of this homework is as follows:
 
@@ -15,17 +17,17 @@ This goal of this homework is as follows:
 
 Grading
 
-- Each question is weighted evenly 
+- Each question is weighted evenly
 
-# Setup
+## Setup
 
 Make sure you have access to a computer with R and RStudio installed (with the ability to install new packages).
-If you do not, let me know as soon as possible!  
+If you do not, let me know as soon as possible!
 
-If you have not done so already, install R and RStudio (step-by-step guides provided in week 1 course content). 
+If you have not done so already, install R and RStudio (step-by-step guides provided in week 1 course content).
 
-I strongly encourage you to stay organized. 
-I recommend that you directory on your computer where you can save all of your work for this class (e.g., "cis635" would make for a good name). 
+I strongly encourage you to stay organized.
+I recommend that you directory on your computer where you can save all of your work for this class (e.g., "cis635" would make for a good name).
 Within that directory, I recommend keeping each of your homework assignments and projects separated into their own directories.
 For example, I might organize things as follows:
 
@@ -38,17 +40,17 @@ cis635/
   project/
     ...
 ```
- 
-Create a new R Markdown file with the title "Homework 1" and with you as the author (hint: this information will go into your R Markdown frontmatter at the top of the file). 
-In your R markdown file, create a section heading for each of the following parts of your homework: 
+
+Create a new R Markdown file with the title "Homework 1" and with you as the author (hint: this information will go into your R Markdown frontmatter at the top of the file).
+In your R markdown file, create a section heading for each of the following parts of your homework:
 
 - Part A. Use R as a calculator
 - Part B. Built-in Functions
 - Part C. Creating vectors
-- Part D. Subsetting vectors 
-- Part E. Types of data 
+- Part D. Subsetting vectors
+- Part E. Types of data
 
-# Part A. Use R as a calculator
+## Part A. Use R as a calculator
 
 **Under your Part A heading**, write one code chunk for each of the following calculations:
 
@@ -62,17 +64,17 @@ For example, if the calculation is `2 + 2`, your code chunk should look somethin
 2+2
 ```
 
-I want to see each equation _translated directly into code_. 
-Do not simplify any of the calculations (e.g., `2+1` should be `2+1` in your code, not `3`). 
+I want to see each equation _translated directly into code_.
+Do not simplify any of the calculations (e.g., `2+1` should be `2+1` in your code, not `3`).
 
-# Part B. Built-in Functions
+## Part B. Built-in Functions
 
-A built-in function is one that comes pre-loaded in R (you don't need to install and load a package to use). 
-To learn how to use a built-in loaded function that you don't know how to use appropriately, use the `help()` function. 
+A built-in function is one that comes pre-loaded in R (you don't need to install and load a package to use).
+To learn how to use a built-in loaded function that you don't know how to use appropriately, use the `help()` function.
 `help()` takes one parameter, the name of the function that you want information about (e.g., `help(abs)`).
 Instead of the help function, you could also use enter `?` and then the name of the function in your R console (e.g., `?abs`).
 
-Familiarize yourself with the built-in functions `abs()`, `round()`, `sqrt()`, `tolower()`, and `toupper()`. 
+Familiarize yourself with the built-in functions `abs()`, `round()`, `sqrt()`, `tolower()`, and `toupper()`.
 
 **Under your Part B heading**, use these built-in functions to write code that prints the following items (put each of these into a different code chunk in your R Markdown document):
 
@@ -81,7 +83,7 @@ Familiarize yourself with the built-in functions `abs()`, `round()`, `sqrt()`, `
 3. "species" in all capital letters.
 4. "SPECIES" in all lower case letters.
 
-# Part C. Creating vectors
+## Part C. Creating vectors
 
 **Under your Part C heading,** Create the following vectors using just `seq()` and/or `rep()`. (don't use `c()`)
 
@@ -89,7 +91,7 @@ Familiarize yourself with the built-in functions `abs()`, `round()`, `sqrt()`, `
 2. Odd integers between 1 and 99
 3. The numbers `1,1,1,2,2,2,3,3,3` (hint: read the help pages for `seq` and `rep`!)
 
-# Part D. Subsetting vectors 
+## Part D. Subsetting vectors
 
 **Under your Part D heading,** use subsetting syntax (square brackets) to write code that completes the following using the vector `y`.
 
@@ -101,7 +103,7 @@ y <- c(3,2,15,-1,22,1,9,17,5)
 2. Display the last value of `y`, in a way that would work if `y` were any length. (hint: `?length`)
 3. Display only the values in `y` that are greater than the mean of `y`.
 
-# Part E. Types of data 
+## Part E. Types of data
 
 **Under your part E heading,** using the vector `y` write code that completes the following tasks:
 
@@ -115,7 +117,7 @@ y <- c(3,2,15,-1,22,1,9,17,5)
 4. Make a logical vector describing whether any of the values of y are equal to the median of y.
 5. Coerce the vector you just made (in #4 above) into a categorial vector (using `factor()`).
 6. Make a matrix with 4 rows and 3 columns that looks like this:
-    
+
     ```
     ##      [,1] [,2] [,3]
     ## [1,]    1    2    3
