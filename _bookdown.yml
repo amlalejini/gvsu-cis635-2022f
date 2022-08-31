@@ -13,5 +13,8 @@ rmd_files: [
   "lecture-material/week-02/read-write-data.Rmd",
   "lecture-material/week-02/tidyverse.md",
   "lecture-material/week-02/dplyr.Rmd",
+  "lecture-material/week-02/tidyr.Rmd",
+  "lecture-material/week-02/ggplot2.Rmd",
+  "homework/homework-02/homework-02.Rmd",
   "tail.Rmd"
 ]
