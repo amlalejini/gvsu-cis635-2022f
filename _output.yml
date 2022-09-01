@@ -9,7 +9,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with ❤ and bookdown</a></li>
       collapse: section
-    edit: https://github.com/amlalejini/gvsu-cis635-2022f/%s
+    edit: https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/%s
     # download: ["pdf"]
 # bookdown::pdf_book:
 #   latex_engine: pdflatex
