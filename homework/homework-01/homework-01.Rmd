@@ -1,12 +1,8 @@
-<!-- ---
-title: "Homework 1"
+---
 output:
-  html_document:
-    toc: TRUE
-    toc_float: true
-  pdf_document:
-    latex_engine: pdflatex
---- -->
+  pdf_document: default
+  html_document: default
+---
 
 # Homework 1
 
