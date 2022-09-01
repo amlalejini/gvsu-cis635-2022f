@@ -8,6 +8,7 @@ bookdown::gitbook:
         <li><a href="./">CIS 635 (Fall 2022)</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with ❤ and bookdown</a></li>
+      collapse: section
     edit: https://github.com/amlalejini/gvsu-cis635-2022f/%s
     # download: ["pdf"]
 # bookdown::pdf_book:
