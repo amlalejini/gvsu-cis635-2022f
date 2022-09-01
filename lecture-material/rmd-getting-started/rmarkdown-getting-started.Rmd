@@ -1,17 +1,7 @@
-<!-- ---
-title: "Getting Started with R Markdown"
-output:
-    html_document:
-        toc: true
-        toc_float: true
---- -->
-
 # Getting Started with R Markdown
 
 R markdown documents are a way to interweave [markdown](https://www.markdownguide.org/) with R. This enables us to write nicely formatted documents with R code (and output from your R code) embedded directly in the document.
-
 Find examples of compiled R markdown documents here: <https://rmarkdown.rstudio.com/gallery.html>
-
 In fact, this page is generated with R Markdown! Source code for this page [here](https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/rmd-getting-started).
 
 ## Dependencies

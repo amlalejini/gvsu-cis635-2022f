@@ -1,13 +1,7 @@
-<!-- ---
-title: "Reading and Writing Data"
-author: "Alexander Lalejini"
-output:
-  html_document:
-    toc: TRUE
-    toc_float: true
---- -->
-
 # Reading and Writing Data
+
+You can download the R Markdown file used to generate this document (or webpage) [here](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-02/read-write-data.Rmd).
+I would encourage you to download that Rmd file, open it own your own computer in RStudio, and run the code chunks on your own (and modify things as you wish!).
 
 In this tutorial:
 
