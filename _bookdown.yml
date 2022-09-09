@@ -16,5 +16,7 @@ rmd_files: [
   "lecture-material/week-02/tidyr.Rmd",
   "lecture-material/week-02/ggplot2.Rmd",
   "homework/homework-02/homework-02.Rmd",
+  "lecture-material/week-03/week-03.md",
+  "homework/homework-03/homework-03.Rmd",
   "tail.Rmd"
 ]

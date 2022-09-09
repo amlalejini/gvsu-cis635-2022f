@@ -58,3 +58,12 @@ grading
 setup-3
 part-a.-loading-data-in-r
 part-b.-visualizing-data-with-ggplot2
+homework-3
+overview-3
+objectives-1
+grading-1
+deliverables
+setup-4
+part-a.-attribute-descriptions
+part-b.-r-practice
+part-c.-thinking-about-common-data-mining-applications

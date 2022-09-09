@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 tidyverse | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 7 tidyverse | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 tidyverse | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 tidyverse | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="reading-and-writing-data.html"/>
-<link rel="next" href="using-dplyr-to-manipulate-data.html"/>
+<link rel="prev" href="homework-2.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -281,37 +281,102 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="tidyverse" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">Chapter 7</span> tidyverse<a href="tidyverse.html#tidyverse" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>From the <a href="https://www.tidyverse.org">tidyverse website</a>:</p>
-<blockquote>
-<p>The tidyverse is an opinionated collection of R packages designed for data science.
-All packages share an underlying design philosophy, grammar, and data structures.</p>
-</blockquote>
-<p>The tidyverse includes the following packages:</p>
+<div id="homework-3" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Chapter 12</span> Homework 3<a href="homework-3.html#homework-3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="overview-3" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> Overview<a href="homework-3.html#overview-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="objectives-1" class="section level3 hasAnchor" number="12.1.1">
+<h3><span class="header-section-number">12.1.1</span> Objectives<a href="homework-3.html#objectives-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><a href="https://ggplot2.tidyverse.org/">ggplot2</a> - provides a system for creating graphics based on <a href="https://ezproxy.gvsu.edu/login?url=https://search.ebscohost.com/login.aspx?direct=true&amp;AuthType=ip,sso&amp;db=cat08964a&amp;AN=gvsu.ebs286449e&amp;site=eds-live&amp;scope=site">The Grammar of Graphics</a></li>
-<li><a href="https://dplyr.tidyverse.org/">dplyr</a> - provides functions for data manipulation</li>
-<li><a href="https://tidyr.tidyverse.org/">tidyr</a> - provides functions that help you turn your data into <a href="https://tidyr.tidyverse.org/articles/tidy-data.html"><em>tidy</em> data</a></li>
-<li><a href="https://readr.tidyverse.org/">readr</a> - provides fast functions for reading data from files</li>
-<li><a href="https://forcats.tidyverse.org/">forcats</a> - provides functions for working with factors</li>
-<li><a href="https://tibble.tidyverse.org/">tibble</a> - provides an alternative data structure (a tibble) to the data frame</li>
-<li><a href="https://stringr.tidyverse.org/">stringr</a> - provides functions for working with strings</li>
-<li><a href="https://purrr.tidyverse.org/">purrr</a> - provides tools for working with functions and vectors</li>
+<li>Identify nominal versus ordinal attributes</li>
+<li>Practice loading a dataset and using ggplot to graph data</li>
+<li>Consider general data mining tasks</li>
 </ul>
-<p>Install the tidyverse collection of packages using:</p>
-<pre><code>install.packages(&quot;tidyverse&quot;)</code></pre>
-<p>While all of the tidyverse is useful for working with data (and worth spending time to learn),
-we’ll focus on the dplyr, tidyr, and ggplot2 packages.</p>
+</div>
+<div id="grading-1" class="section level3 hasAnchor" number="12.1.2">
+<h3><span class="header-section-number">12.1.2</span> Grading<a href="homework-3.html#grading-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Uploaded <em>all</em> requested files, 5%</li>
+<li>R markdown (and compiled pdf) are properly formatted, 5%</li>
+<li>Part A., 30%</li>
+<li>Part B., 10%</li>
+<li>Part C., 50%</li>
+</ul>
+</div>
+<div id="deliverables" class="section level3 hasAnchor" number="12.1.3">
+<h3><span class="header-section-number">12.1.3</span> Deliverables<a href="homework-3.html#deliverables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>.pdf file</li>
+<li>.rmd file used to generate the pdf file</li>
+</ul>
+</div>
+</div>
+<div id="setup-4" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> Setup<a href="homework-3.html#setup-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Create a new R Markdown file with the title “Homework 3” and with you as the author (hint: this information should be in your frontmatter at the top of the file).
+In your R Markdown file, create a section heading for each of the following parts of your homework (see <a href="https://www.markdownguide.org/basic-syntax/">this documentation</a> for how to make a heading):</p>
+<ul>
+<li>Part A</li>
+<li>Part B</li>
+<li>Part C</li>
+</ul>
+<p>When you knit your markdown document, these headings should be actual headings (like they are in this document).</p>
+</div>
+<div id="part-a.-attribute-descriptions" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Part A. Attribute descriptions<a href="homework-3.html#part-a.-attribute-descriptions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You are given a data file (see assignment attachments on blackboard): <code>hw03data.csv</code>.
+This is a table of ratings for teaching assistants (TA) at some university (this is modified data that originally came from <a href="https://archive.ics.uci.edu/ml/datasets.php" class="uri">https://archive.ics.uci.edu/ml/datasets.php</a>).
+There are 6 attributes:</p>
+<ul>
+<li><code>id</code>: unique number to identify each rating</li>
+<li><code>instructor</code>: id number that identifies the instructor</li>
+<li><code>classNbr</code>: id number that identifies the course</li>
+<li><code>semester</code>: 1=summer, 2=fall, 3=winter</li>
+<li><code>classSize</code>: number of students in the class</li>
+<li><code>rating</code>: 1=low, 2=medium, 3=high</li>
+</ul>
+<p>For each attribute, describe whether it is nominal or ordinal.</p>
+<ol style="list-style-type: decimal">
+<li><code>id</code></li>
+<li><code>instructor</code></li>
+<li><code>classNbr</code></li>
+<li><code>semester</code></li>
+<li><code>classSize</code></li>
+<li><code>rating</code></li>
+</ol>
+</div>
+<div id="part-b.-r-practice" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Part B. R practice<a href="homework-3.html#part-b.-r-practice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Load the tidyverse collection of packages and load <code>hw03data.csv</code> in R (as a dataframe or tibble).</p>
+<p>Using ggplot2, graph the relationship between class size and rating.
+The type of graph is up to you (but must be appropriate).
+Explicitly label your graph axes (e.g., using the <code>labs</code> function).</p>
+</div>
+<div id="part-c.-thinking-about-common-data-mining-applications" class="section level2 hasAnchor" number="12.5">
+<h2><span class="header-section-number">12.5</span> Part C. Thinking about common data mining applications<a href="homework-3.html#part-c.-thinking-about-common-data-mining-applications" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>This question asks you to think about clustering.
+Considering an average kitchen, identify 4 clusters of objects.
+Name them according to their utility.
+For example, if I were asked to identify 4 clusters in a sporting goods store, I might choose
+apparel (e.g., shoes, shirts), containers (e.g., backpacks, coolers), sports equipment (e.g., basketball, tennis racquets), and fishing (e.g., rods, lures).</li>
+<li>Pick one of the following forms of predictive modeling: regression, classification, or ranking.
+<ul>
+<li>Describe an application domain or a dataset where you think it would be useful to apply the chosen predictive modeling approach.</li>
+<li>What attribute(s) would you be predicting?</li>
+<li>What attributes would you use to make the prediction?</li>
+</ul></li>
+</ol>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="reading-and-writing-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="using-dplyr-to-manipulate-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="homework-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -342,7 +407,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-02/tidyverse.md",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/homework/homework-03/homework-03.Rmd",
 "text": "Edit"
 },
 "history": {
