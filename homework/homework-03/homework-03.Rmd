@@ -76,6 +76,6 @@ Explicitly label your graph axes (e.g., using the `labs` function).
    For example, if I were asked to identify 4 clusters in a sporting goods store, I might choose
    apparel (e.g., shoes, shirts), containers (e.g., backpacks, coolers), sports equipment (e.g., basketball, tennis racquets), and fishing (e.g., rods, lures).
 2. Pick one of the following forms of predictive modeling: regression, classification, or ranking.
-   Describe an application domain where you think it would be useful to apply the chosen predictive modeling approach.
-   What attribute(s) would you be predicting?
-   What attributes would you use to make the prediction?
+   - Describe an application domain or a dataset where you think it would be useful to apply the chosen predictive modeling approach.
+   - What attribute(s) would you be predicting?
+   - What attributes would you use to make the prediction?
