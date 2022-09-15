@@ -1,0 +1,187 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Sampling objects in a dataset
+
+In this lab activity, we will demonstrate two methods of sampling objects in a dataset:
+
+- Naive random sampling
+- Stratified random sampling
+
+Sampling is a common method of dealing with a huge number of objects/observations in a dataset.
+
+## Dependencies and setup
+
+In this activity, we'll be using the following R packages:
+
+```{r}
+library(tidyverse)
+```
+
+We'll sample from our handy-dandy Star Wars data set:
+
+```{r}
+head(starwars)
+```
+
+## Random sampling
+
+In naive random sampling, we simply randomly sample rows from our dataset.
+In this example, we'll sample without replacement: we don't want to characters more than once in our down-sampled dataset.
+
+```{r}
+sample_proportion <- 0.2 # Down-sample down to just this % of our full data set
+sample_size <- ceiling(sample_proportion * nrow(starwars)) # Sample size, round up.
+```
+
+We can use `slice_sample` from the `dplyr` package to randomly sample star wars characters.
+
+```{r}
+naive_sampled_data <- starwars %>%
+  slice_sample(
+    n=sample_size,
+    replace=FALSE
+  )
+naive_sampled_data
+```
+
+Take a look at `naive_sampled_data`.
+What are some ways that our random sample might not be representative of our larger data set (`starwars`)?
+
+For example, we can look at the distribution of homeworlds in our original data.
+
+```{r}
+# Get the distribution of homeworlds in full dataset.
+orig_homeworlds <- starwars %>%
+  group_by(
+    homeworld
+  ) %>%
+  summarise(
+    n=n()
+  ) %>%
+  mutate(
+    freq = n / sum(n),
+  ) %>%
+  arrange(
+    desc(freq)
+  )
+
+# Get the distribution of homeworlds in the sampled dataset.
+sampled_homeworlds <- naive_sampled_data %>%
+  group_by(
+    homeworld
+  ) %>%
+  summarise(
+    n=n()
+  ) %>%
+  mutate(
+    freq = n / sum(n),
+  ) %>%
+  arrange(
+    desc(freq)
+  )
+```
+
+Let's take a look at the distribution of homeworlds from the original dataset:
+
+```{r}
+ggplot(
+    orig_homeworlds,
+    aes(
+      x=reorder(homeworld, -freq),
+      y=freq
+    )
+  ) +
+  geom_bar(stat="identity") +
+  labs(
+    x="Homeworld",
+    y="Frequency",
+    title="Distribution of homeworlds for original dataset"
+  ) +
+  theme(
+    axis.text.x=element_text(angle=45, hjust=1)
+  )
+```
+
+And now the sampled dataset:
+
+```{r}
+ggplot(
+    sampled_homeworlds,
+    aes(
+      x=reorder(homeworld, -freq),
+      y=freq
+    )
+  ) +
+  geom_bar(stat="identity") +
+  labs(
+    x="Homeworld",
+    y="Frequency",
+    title="Distribution of homeworlds for sampled dataset"
+  ) +
+  theme(
+    axis.text.x=element_text(angle=45, hjust=1)
+  )
+```
+
+### Exercises
+
+- What differences do you notice between the distribution of homeworlds in the original dataset and the sampled dataset?
+- How could you modify `slice_sample` to randomly sample, but instead of weighting all rows equally, you weight each row's likelihood of being included in the sample according to the height attribute?
+- Adjust the sample proportion parameter and resample. What happens to the distribution of `species` as you increase or decrease the sample size?
+- Read the R code. Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
+
+## Stratified random sampling
+
+Stratified sampling can be used in cases where there are predefined groupings of objects.
+In stratified sampling, you enforce the level of representation for each group.
+
+For example, we might want to ensure that each species among Star Wars characters is represented in our sample.
+There are many ways to implement this, and the particular approach you take will depend on your objective.
+In this example, I'll randomly sample each species independently, guaranteeing that at least one character of each species is represented in our sample.
+
+```{r}
+# Grab the set of species represented in our original dataset
+species <- levels(as.factor(starwars$species))
+# Create an empty data frame that we will store our sample
+stratified_sampled_data <- data.frame(
+  matrix(
+    ncol=ncol(starwars),
+    nrow=0,
+    dimnames=list(NULL,colnames(starwars))
+  )
+)
+for (s in species) {
+  # First, filter down to the species
+  species_sample <- starwars %>%
+    filter(
+      species==s
+    )
+  # Calculate sample size, guarantee >= 1
+  sample_size = max(
+    ceiling(nrow(species_sample)*sample_proportion),
+    1
+  )
+  # Sample from characters of the current species
+  species_sample <- species_sample %>%
+    slice_sample(
+      n=sample_size,
+      replace=FALSE
+    )
+  # Add sample of this species to larger sample
+  stratified_sampled_data <- rbind(
+    stratified_sampled_data,
+    species_sample
+  )
+}
+stratified_sampled_data
+```
+
+### Exercises
+
+- Graph the distribution of species in the original `starwars` dataset and in the stratified sample (just like we did for homeworlds in the naive random sample). What differences do you notice? What might be causing those differences?
+- We specified a sample proportion of `r sample_proportion`. Why might the size of our stratified sample differ from the size of our random sample?
+- Read the R code. Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
