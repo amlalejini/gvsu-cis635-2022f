@@ -1,0 +1,101 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Curse of dimensionality demo
+
+As the dimensionality of your data increases, your data become increasingly sparse in the space that they occupy.
+As a result, the distances between objects in your dataset become less meaningful as dimensionality increases.
+This dynamic can make some data mining techniques less effective (e.g., clustering or outlier detection).
+
+In this activity, we will demonstrate the effect of dimensionality on distances in data.
+
+## Dependencies
+
+We'll use the `rdist` package to calculate distances between points.
+Look over the documentation for `rdist` here: <https://github.com/blasern/rdist>.
+
+The code chunk below will check if you have the rdist package. If not, it will install it.
+
+```{r}
+rdist_available <- require(rdist)
+if (!rdist_available) {
+  install.packages("rdist")
+}
+library(rdist)
+```
+
+We'll also use the following libraries (if you don't have these, you'll need to install them):
+
+```{r}
+library(tidyverse)
+```
+
+## Generate example data
+
+```{r}
+num_points <- 500
+min_range <- 0
+max_range <- 1
+dimension_sizes <- 2:50
+dist_metrics <- c("euclidean", "angular")
+```
+
+Generate `r num_points` points in an N-dimensional box (where each dimension of the box ranges from `r min_range` and `r max_range`).
+
+```{r}
+data <- data.frame(num_dimensions=c())
+# For each dimensionality, randomly generate "num_points" points in our rectangle.
+for (num_dimensions in dimension_sizes) {
+  # Generate random points in our N-dimensional box.
+  points_matrix <- matrix(
+    data = runif(num_points * num_dimensions),
+    nrow = num_points,
+    ncol = num_dimensions
+  )
+  # Calculate the pairwise distances between points in our dataset.
+  # Run ?pdist to see how the pdist function works
+  for (cur_metric in dist_metrics) {
+    distances <- c(rdist(points_matrix, metric=cur_metric))
+    dim_data <- data.frame(
+      max_dist = c(max(distances)),
+      min_dist = c(min(distances)),
+      metric = c(cur_metric),
+      num_dimensions = num_dimensions
+    )
+    data <- rbind(data, dim_data)
+  }
+}
+```
+
+We can get a rough idea of how meaningful the distances in our space are by calculating
+$$\frac{(MAX_DIST-MIN_DIST)}{MIN_DIST}$$.
+
+```{r}
+ggplot(
+    data,
+    aes(
+      x=num_dimensions,
+      y=((max_dist-min_dist)/min_dist),
+      color=metric,
+      fill=metric
+      )
+    ) +
+  geom_point() +
+  scale_y_continuous(
+    name="log10((max_dist-min_dist)/min_dist)",
+    trans="log10"
+  ) +
+  labs(
+    x="Number of dimensions",
+    color="Metric",
+    fill="Metric"
+  )
+```
+
+## Exercises
+
+- Think about the meaning of $$\frac{(MAX_DIST-MIN_DIST)}{MIN_DIST}$$. What's going on as we increase dimensionality?
+- Read the R code in this document. Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
