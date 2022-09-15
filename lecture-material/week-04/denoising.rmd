@@ -11,10 +11,11 @@ library(tidyverse)
 ```
 
 In this exercise:
+
 1. First, we'll generate a time series of "measurements" where the process we are measuring behaves exactly like a sine wave.
    This will be our "ground truth" signal.
 2. Next, we'll simulate different types of noise that could result from imperfect measurements.
-3. Finally, we'll apply [TODO] common denoising techniques to each of our noisy signals.
+3. Finally, we'll apply 2 basic denoising techniques to each of our noisy signals.
 
 ## Generating the ground truth
 
@@ -168,8 +169,11 @@ ggplot(data, aes(x=x, y=y_noise_faulty_denoised)) +
 - Generate a small sequence of random values. On paper, apply a rolling average filter to your sequence. You decide the window size.
 - Is the rolling average a good denoising approach for `y_noise`? What about `y_noise_faulty`?
 - Did the rolling average improve how representative `y_noise_faulty` is of the ground truth signal?
+  - Try calculating the [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) for each of `y_noise` and `y_noise_denoised`. Does error go down?
+  - What about for `y_noise_faulty` and `y_noise_faulty_denoised`?
 - What happens when you make the rolling average window smaller? Bigger?
 - What happens when you add _more_ noise to the signal?
+- Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
 
 ## Denoising using a median filter
 
@@ -233,9 +237,12 @@ ggplot(data, aes(x=x, y=y_noise_faulty_denoised)) +
 - Do you notice any differences in the results of applying a median filter versus applying a rolling average?
 - Generate a small sequence of random values. On paper, apply a median filter to your sequence. You decide the window size.
 - Is the median filter a good denoising approach for `y_noise`? What about `y_noise_faulty`?
+  - Try calculating the [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) for each of `y_noise` and `y_noise_denoised`. Does error go down?
+  - What about for `y_noise_faulty` and `y_noise_faulty_denoised`?
 - Did the median filter improve how representative `y_noise_faulty` is of the ground truth signal?
 - What happens when you make the median filter window smaller? Bigger?
 - What happens when you add _more_ noise to the signal?
+- Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
 
 ## Further exploration
 
