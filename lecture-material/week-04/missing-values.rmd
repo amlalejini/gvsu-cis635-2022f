@@ -1,0 +1,137 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Dealing with missing values
+
+In this lab activity, we will use R to deal with missing values in a dataset.
+There are many methods of dealing with missing values in a dataset.
+Here, we'll cover how to apply a few simple/basic approaches in R:
+
+- Feature elimination (remove columns with missing values)
+- Object elimination (remove rows with missing values)
+- Mean imputation
+- Median imputation
+
+This activity is meant to server as a "how to" guide and does not discuss _when_ different methods of handling missing values should be applied. l
+Whether or not a particular approach is appropriate will depend on your particular dataset and domain.
+
+## Dependencies and setup
+
+```{r}
+library(tidyverse)
+```
+
+## Testing for missing values
+
+In R, missing values are often represented by `NA` (or some other value particular to your data; e.g., -1, none, etc).
+You can identify missing values using `is.na()` (run `?is.na` to see documentation).
+
+In this demo, we'll play with the `airquality` dataset, which comes loaded automatically in R.
+
+```{r}
+airquality
+```
+
+There are `NA` values in the `airquality` dataset.
+To get a binary dataframe that indicates which positions have `NA` values, you can:
+
+```{r}
+airquality_na <- is.na(airquality)
+airquality_na
+```
+
+## Dropping columns with missing values (feature elimination)
+
+First, let's get a list of columns that contain missing values.
+
+```{r}
+columns_with_na <- c()
+for (col in colnames(airquality)) {
+  if (NA %in% airquality[,col]) {
+    columns_with_na <- c(columns_with_na, col)
+  }
+}
+print(columns_with_na)
+```
+
+You can verify that against the `airquality_na` matrix we created earlier.
+
+To drop columns, we can use the `select` function in dplyr.
+
+```{r}
+airquality %>%
+  select(
+    !all_of(columns_with_na)
+  )
+```
+
+## Dropping rows with missing values (object elimination)
+
+If you know exactly what columns have missing values in them, you can use `filter` to filter out rows where those columns have NA.
+
+```{r}
+airquality %>%
+  filter(
+    !(is.na(Ozone) | is.na(Solar.R))
+  )
+```
+
+A little bit more generic, we can use the matrix we generated earlier, `airquality_na`.
+
+```{r}
+# First, let's figure out all of the row ids that we want to drop
+drop_rows <- c()
+for (ri in 1:nrow(airquality_na)) {
+  if (TRUE %in% as.vector(airquality_na[ri,])) {
+    drop_rows <- c(drop_rows, ri)
+  }
+}
+
+# We can use filter to drop all of the row ids in drop_rows
+airquality %>%
+  filter(
+    !(row_number() %in% drop_rows)
+  )
+```
+
+## Mean imputation
+
+A mean imputation replaces missing values for a particular feature with the mean of other values for that feature.
+We can use `dplyr` functions to pretty easily perform a mean imputation on a particular column:
+
+```{r}
+airquality %>%
+  mutate(
+    Ozone=ifelse(is.na(Ozone), mean(Ozone, na.rm=TRUE), Ozone)
+  )
+```
+
+In the code above, we mutate the Ozone column. If the value is na, we replace it with the mean of the Ozone column, and otherwise, we leave it as is.
+
+## Median imputation
+
+A median imputation replaces missing values for a particular feature with the median of other (non-missing) values for that feature.
+We can do the exact same thing we did for a mean imputation, but swap mean out for median:
+
+```{r}
+airquality %>%
+  mutate(
+    Ozone=ifelse(is.na(Ozone), median(Ozone, na.rm=TRUE), Ozone)
+  )
+```
+
+## Exercises
+
+- Describe a procedure for replacing an object's missing value for a particular feature with the value from its nearest neighbor object?
+  - What does it mean for one object to be "near" another object? How could you quantify how close two objects are to one another?
+  - How would you implement this approach in R? (either from scratch or using an existing function in a library you install/load)
+- Assume that you have a dataset where each object has two features: a continuous feature (where some of the values are missing) and a categorical feature.
+  In this dataset, objects of the same category are more similar to each other than to objects in different categories.
+  You want to apply a mean imputation to this dataset to replace the missing values in the continuous feature.
+  How could you use each object's category to improve your mean imputation?
+
+
+
