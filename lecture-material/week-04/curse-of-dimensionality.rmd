@@ -97,5 +97,5 @@ ggplot(
 
 ## Exercises
 
-- Think about the meaning of $$\frac{(MAX_DIST-MIN_DIST)}{MIN_DIST}$$. What's going on as we increase dimensionality?
+- Think about the meaning of `(max_dist-min_dist)/min_dist`. What's going on as we increase dimensionality?
 - Read the R code in this document. Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.

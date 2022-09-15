@@ -132,6 +132,3 @@ airquality %>%
   In this dataset, objects of the same category are more similar to each other than to objects in different categories.
   You want to apply a mean imputation to this dataset to replace the missing values in the continuous feature.
   How could you use each object's category to improve your mean imputation?
-
-
-
