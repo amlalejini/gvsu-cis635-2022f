@@ -1,0 +1,90 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Aggregation
+
+Sometimes we want to combine multiple objects in a dataset into a single object.
+For example, we often want to combine objects according to some categorical variable.
+We are often interested in the number of objects that go into each aggregate as well as various summary statistics; e.g.,
+
+- mean
+- median
+- mode
+- standard deviation
+- variance
+- minimum value
+- maximum value
+- range
+
+If you are not familiar any of those summary statistics, look them up!
+
+## Dependencies and setup
+
+We'll be using the `dplyr` package, which comes loaded in the `tidyverse` collection of packages.
+
+```{r}
+library(tidyverse)
+```
+
+## Exercise
+
+Given the following vector, `y`
+
+```{r}
+y <- runif(100, min=-1000, max=1000)
+```
+
+Write R code to calculate each of the following:
+
+- mean
+- median
+- mode
+- standard deviation
+- variance
+- minimum value
+- maximum value
+- range
+
+## Using dplyr to aggregate objects in a dataset according to a category
+
+In many cases, you will be able to use a combination of the `group_by` and `summarise` functions (from `dplyr`) to aggregate categories of data.
+
+```{r}
+data <- starwars
+data
+```
+
+Let's aggregate characters in the Star Wars dataset according to their species.
+In this particular example, we'll focus on summarize the mass values within each species.
+
+```{r}
+# First let's filter out all characters with NA for mass or species.
+data$species <- as.factor(data$species)
+data <- data %>%
+  filter(
+    !(is.na(species) | is.na(mass))
+  )
+
+agg_data <- data %>%
+  group_by(
+    species
+  ) %>%
+  summarise(
+    mass_median=median(mass),
+    mass_mean=mean(mass),
+    mass_sd=sd(mass),
+    mass_min=min(mass),
+    mass_max=max(mass),
+    mass_total=sum(mass),
+    num_characters=n()
+  )
+print(agg_data)
+```
+
+## Exercises
+
+- Try loading in some data that you have used in a previous homework assignment (or any dataset of your choice), and combine objects in your dataset using a combination of `group_by` and `summarize`.
+- Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
