@@ -152,7 +152,9 @@ ggplot(data, aes(x=x, y=y_noise_denoised)) +
   geom_point()
 ```
 
-Apply our rolling average function to `y_noise_faulty`
+Much smoother! The rolling average works well when you want to smooth out a small magnitude of random noise.
+
+Apply our rolling average function to `y_noise_faulty`:
 
 ```{r}
 window_w <- 10
@@ -164,9 +166,15 @@ ggplot(data, aes(x=x, y=y_noise_faulty_denoised)) +
   geom_point()
 ```
 
+Yikes! Our signal looks _worse_ than it did before we applied the rolling average denoising.
+
 ### Exercises
 
-- Generate a small sequence of random values. On paper, apply a rolling average filter to your sequence. You decide the window size.
+- Generate a small sequence of 10 random values.
+  On paper, apply a rolling average filter to your sequence.
+  You decide the window size.
+  - What would happen if you increased your window size?
+  - What about if you decreased your window size?
 - Is the rolling average a good denoising approach for `y_noise`? What about `y_noise_faulty`?
 - Did the rolling average improve how representative `y_noise_faulty` is of the ground truth signal?
   - Try calculating the [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) for each of `y_noise` and `y_noise_denoised`. Does error go down?
@@ -208,7 +216,7 @@ median_filter <- function(sequence, window_width=1) {
 }
 ```
 
-Apply our rolling average function to `y_noise`
+Apply our rolling average function to `y_noise`:
 
 ```{r}
 window_w <- 10
@@ -220,7 +228,7 @@ ggplot(data, aes(x=x, y=y_noise_denoised)) +
   geom_point()
 ```
 
-Apply our rolling average function to `y_noise_faulty`
+Apply our rolling average function to `y_noise_faulty`:
 
 ```{r}
 window_w <- 10
@@ -235,7 +243,10 @@ ggplot(data, aes(x=x, y=y_noise_faulty_denoised)) +
 ### Exercises
 
 - Do you notice any differences in the results of applying a median filter versus applying a rolling average?
-- Generate a small sequence of random values. On paper, apply a median filter to your sequence. You decide the window size.
+- Generate a small sequence of 10 random values.
+  On paper, apply a median filter to your sequence. You decide the window size.
+  - What happens if you increase your window size?
+  - What about if you decrease your window size?
 - Is the median filter a good denoising approach for `y_noise`? What about `y_noise_faulty`?
   - Try calculating the [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) for each of `y_noise` and `y_noise_denoised`. Does error go down?
   - What about for `y_noise_faulty` and `y_noise_faulty_denoised`?
