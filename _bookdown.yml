@@ -21,8 +21,8 @@ rmd_files: [
   "lecture-material/week-04/week-04.md",
   "lecture-material/week-04/denoising.rmd",
   "lecture-material/week-04/missing-values.rmd",
-  "lecture-material/week-04/aggregation.rmd",
-  "lecture-material/week-04/curse-of-dimensionality.rmd",
   "lecture-material/week-04/sampling.rmd",
+  "lecture-material/week-04/curse-of-dimensionality.rmd",
+  "lecture-material/week-04/aggregation.rmd",
   "tail.Rmd"
 ]
