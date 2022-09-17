@@ -15,10 +15,12 @@ Here, we'll cover how to apply a few simple/basic approaches in R:
 - Mean imputation
 - Median imputation
 
-This activity is meant to server as a "how to" guide and does not discuss _when_ different methods of handling missing values should be applied. l
+This activity is meant to server as a "how to" guide and does not discuss _when_ different methods of handling missing values should be applied.
 Whether or not a particular approach is appropriate will depend on your particular dataset and domain.
 
 ## Dependencies and setup
+
+We'll need to load the tidyverse packages for this lab activity:
 
 ```{r}
 library(tidyverse)
@@ -32,7 +34,7 @@ You can identify missing values using `is.na()` (run `?is.na` to see documentati
 In this demo, we'll play with the `airquality` dataset, which comes loaded automatically in R.
 
 ```{r}
-airquality
+head(airquality)
 ```
 
 There are `NA` values in the `airquality` dataset.
@@ -40,7 +42,7 @@ To get a binary dataframe that indicates which positions have `NA` values, you c
 
 ```{r}
 airquality_na <- is.na(airquality)
-airquality_na
+head(airquality_na)
 ```
 
 ## Dropping columns with missing values (feature elimination)
@@ -62,10 +64,11 @@ You can verify that against the `airquality_na` matrix we created earlier.
 To drop columns, we can use the `select` function in dplyr.
 
 ```{r}
-airquality %>%
+dropped_cols_data <- airquality %>%
   select(
     !all_of(columns_with_na)
   )
+head(dropped_cols_data)
 ```
 
 ## Dropping rows with missing values (object elimination)
@@ -73,16 +76,18 @@ airquality %>%
 If you know exactly what columns have missing values in them, you can use `filter` to filter out rows where those columns have NA.
 
 ```{r}
-airquality %>%
+dropped_rows_data <- airquality %>%
   filter(
     !(is.na(Ozone) | is.na(Solar.R))
   )
+head(dropped_rows_data)
 ```
 
 A little bit more generic, we can use the matrix we generated earlier, `airquality_na`.
 
 ```{r}
 # First, let's figure out all of the row ids that we want to drop
+
 drop_rows <- c()
 for (ri in 1:nrow(airquality_na)) {
   if (TRUE %in% as.vector(airquality_na[ri,])) {
@@ -91,10 +96,11 @@ for (ri in 1:nrow(airquality_na)) {
 }
 
 # We can use filter to drop all of the row ids in drop_rows
-airquality %>%
+dropped_rows_data2 <- airquality %>%
   filter(
     !(row_number() %in% drop_rows)
   )
+head(dropped_rows_data2)
 ```
 
 ## Mean imputation
@@ -125,8 +131,8 @@ airquality %>%
 
 ## Exercises
 
-- Describe a procedure for replacing an object's missing value for a particular feature with the value from its nearest neighbor object?
-  - What does it mean for one object to be "near" another object? How could you quantify how close two objects are to one another?
+- Describe a procedure for replacing an object's missing value for a particular feature with the value from its "nearest neighbor"?
+  - What does it mean for one object (i.e., row) to be "near" another object? How could you quantify how close two objects are to one another?
   - How would you implement this approach in R? (either from scratch or using an existing function in a library you install/load)
 - Assume that you have a dataset where each object has two features: a continuous feature (where some of the values are missing) and a categorical feature.
   In this dataset, objects of the same category are more similar to each other than to objects in different categories.

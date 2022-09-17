@@ -56,7 +56,7 @@ for (num_dimensions in dimension_sizes) {
     ncol = num_dimensions
   )
   # Calculate the pairwise distances between points in our dataset.
-  # Run ?pdist to see how the pdist function works
+  # Run ?rdist to see how the rdist function works
   for (cur_metric in dist_metrics) {
     distances <- c(rdist(points_matrix, metric=cur_metric))
     dim_data <- data.frame(
@@ -71,7 +71,7 @@ for (num_dimensions in dimension_sizes) {
 ```
 
 We can get a rough idea of how meaningful the distances in our space are by calculating
-$$\frac{(MAX_DIST-MIN_DIST)}{MIN_DIST}$$.
+`(max_dist-min_dist)/min_dist`.
 
 ```{r}
 ggplot(

@@ -131,6 +131,7 @@ ggplot(
 
 - What differences do you notice between the distribution of homeworlds in the original dataset and the sampled dataset?
 - How could you modify `slice_sample` to randomly sample, but instead of weighting all rows equally, you weight each row's likelihood of being included in the sample according to the height attribute?
+  Hint: `?slice_sample`
 - Adjust the sample proportion parameter and resample. What happens to the distribution of `species` as you increase or decrease the sample size?
 - Read the R code. Identify any lines of code that you don't understand. Use the documentation to figure out what those lines of code are doing.
 
