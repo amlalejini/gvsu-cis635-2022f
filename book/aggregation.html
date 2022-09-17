@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="homework-2.html"/>
-<link rel="next" href="simple-denoising-examples.html"/>
+<link rel="prev" href="curse-of-dimensionality-demo.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -331,111 +331,118 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="homework-3" class="section level1 hasAnchor" number="12">
-<h1><span class="header-section-number">Chapter 12</span> Homework 3<a href="homework-3.html#homework-3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="overview-3" class="section level2 hasAnchor" number="12.1">
-<h2><span class="header-section-number">12.1</span> Overview<a href="homework-3.html#overview-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="objectives-1" class="section level3 hasAnchor" number="12.1.1">
-<h3><span class="header-section-number">12.1.1</span> Objectives<a href="homework-3.html#objectives-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="aggregation" class="section level1 hasAnchor" number="17">
+<h1><span class="header-section-number">Chapter 17</span> Aggregation<a href="aggregation.html#aggregation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Sometimes we want to combine multiple objects in a dataset into a single object.
+For example, we often want to combine objects according to some categorical variable.
+We are often interested in the number of objects that go into each aggregate as well as various summary statistics; e.g.,</p>
 <ul>
-<li>Identify nominal versus ordinal attributes</li>
-<li>Practice loading a dataset and using ggplot to graph data</li>
-<li>Consider general data mining tasks</li>
+<li>mean</li>
+<li>median</li>
+<li>mode</li>
+<li>standard deviation</li>
+<li>variance</li>
+<li>minimum value</li>
+<li>maximum value</li>
+<li>range</li>
+</ul>
+<p>If you are not familiar any of those summary statistics, look them up!</p>
+<div id="dependencies-and-setup-2" class="section level2 hasAnchor" number="17.1">
+<h2><span class="header-section-number">17.1</span> Dependencies and setup<a href="aggregation.html#dependencies-and-setup-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll be using the <code>dplyr</code> package, which comes loaded in the <code>tidyverse</code> collection of packages.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="aggregation.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+</div>
+<div id="exercise" class="section level2 hasAnchor" number="17.2">
+<h2><span class="header-section-number">17.2</span> Exercise<a href="aggregation.html#exercise" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Given the following vector, <code>y</code></p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="aggregation.html#cb154-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="at">min=</span><span class="sc">-</span><span class="dv">1000</span>, <span class="at">max=</span><span class="dv">1000</span>)</span></code></pre></div>
+<p>Write R code to calculate each of the following:</p>
+<ul>
+<li>mean</li>
+<li>median</li>
+<li>mode</li>
+<li>standard deviation</li>
+<li>variance</li>
+<li>minimum value</li>
+<li>maximum value</li>
+<li>range</li>
 </ul>
 </div>
-<div id="grading-1" class="section level3 hasAnchor" number="12.1.2">
-<h3><span class="header-section-number">12.1.2</span> Grading<a href="homework-3.html#grading-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="using-dplyr-to-aggregate-objects-in-a-dataset-according-to-a-category" class="section level2 hasAnchor" number="17.3">
+<h2><span class="header-section-number">17.3</span> Using dplyr to aggregate objects in a dataset according to a category<a href="aggregation.html#using-dplyr-to-aggregate-objects-in-a-dataset-according-to-a-category" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In many cases, you will be able to use a combination of the <code>group_by</code> and <code>summarise</code> functions (from <code>dplyr</code>) to aggregate categories of data.</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="aggregation.html#cb155-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> starwars</span>
+<span id="cb155-2"><a href="aggregation.html#cb155-2" aria-hidden="true" tabindex="-1"></a>data</span></code></pre></div>
+<pre><code>## # A tibble: 87 × 14
+##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
+##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
+##  1 Luke Skywa…    172    77 blond   fair    blue       19   male  mascu… Tatooi…
+##  2 C-3PO          167    75 &lt;NA&gt;    gold    yellow    112   none  mascu… Tatooi…
+##  3 R2-D2           96    32 &lt;NA&gt;    white,… red        33   none  mascu… Naboo  
+##  4 Darth Vader    202   136 none    white   yellow     41.9 male  mascu… Tatooi…
+##  5 Leia Organa    150    49 brown   light   brown      19   fema… femin… Aldera…
+##  6 Owen Lars      178   120 brown,… light   blue       52   male  mascu… Tatooi…
+##  7 Beru White…    165    75 brown   light   blue       47   fema… femin… Tatooi…
+##  8 R5-D4           97    32 &lt;NA&gt;    white,… red        NA   none  mascu… Tatooi…
+##  9 Biggs Dark…    183    84 black   light   brown      24   male  mascu… Tatooi…
+## 10 Obi-Wan Ke…    182    77 auburn… fair    blue-g…    57   male  mascu… Stewjon
+## # … with 77 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<p>Let’s aggregate characters in the Star Wars dataset according to their species.
+In this particular example, we’ll focus on summarize the mass values within each species.</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="aggregation.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First let&#39;s filter out all characters with NA for mass or species.</span></span>
+<span id="cb157-2"><a href="aggregation.html#cb157-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>species <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>species)</span>
+<span id="cb157-3"><a href="aggregation.html#cb157-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb157-4"><a href="aggregation.html#cb157-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb157-5"><a href="aggregation.html#cb157-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>(<span class="fu">is.na</span>(species) <span class="sc">|</span> <span class="fu">is.na</span>(mass))</span>
+<span id="cb157-6"><a href="aggregation.html#cb157-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb157-7"><a href="aggregation.html#cb157-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-8"><a href="aggregation.html#cb157-8" aria-hidden="true" tabindex="-1"></a>agg_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb157-9"><a href="aggregation.html#cb157-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
+<span id="cb157-10"><a href="aggregation.html#cb157-10" aria-hidden="true" tabindex="-1"></a>    species</span>
+<span id="cb157-11"><a href="aggregation.html#cb157-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb157-12"><a href="aggregation.html#cb157-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb157-13"><a href="aggregation.html#cb157-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_median=</span><span class="fu">median</span>(mass),</span>
+<span id="cb157-14"><a href="aggregation.html#cb157-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_mean=</span><span class="fu">mean</span>(mass),</span>
+<span id="cb157-15"><a href="aggregation.html#cb157-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_sd=</span><span class="fu">sd</span>(mass),</span>
+<span id="cb157-16"><a href="aggregation.html#cb157-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_min=</span><span class="fu">min</span>(mass),</span>
+<span id="cb157-17"><a href="aggregation.html#cb157-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_max=</span><span class="fu">max</span>(mass),</span>
+<span id="cb157-18"><a href="aggregation.html#cb157-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_total=</span><span class="fu">sum</span>(mass),</span>
+<span id="cb157-19"><a href="aggregation.html#cb157-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_characters=</span><span class="fu">n</span>()</span>
+<span id="cb157-20"><a href="aggregation.html#cb157-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb157-21"><a href="aggregation.html#cb157-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(agg_data)</span></code></pre></div>
+<pre><code>## # A tibble: 31 × 8
+##    species   mass_median mass_mean mass_sd mass_min mass_max mass_total num_ch…¹
+##    &lt;fct&gt;           &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;int&gt;
+##  1 Aleena           15        15      NA         15       15        15         1
+##  2 Besalisk        102       102      NA        102      102       102         1
+##  3 Cerean           82        82      NA         82       82        82         1
+##  4 Clawdite         55        55      NA         55       55        55         1
+##  5 Droid            53.5      69.8    51.0       32      140       279         4
+##  6 Dug              40        40      NA         40       40        40         1
+##  7 Ewok             20        20      NA         20       20        20         1
+##  8 Geonosian        80        80      NA         80       80        80         1
+##  9 Gungan           74        74      11.3       66       82       148         2
+## 10 Human            79        82.8    19.4       45      136      1821.       22
+## # … with 21 more rows, and abbreviated variable name ¹​num_characters</code></pre>
+</div>
+<div id="exercises-6" class="section level2 hasAnchor" number="17.4">
+<h2><span class="header-section-number">17.4</span> Exercises<a href="aggregation.html#exercises-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Uploaded <em>all</em> requested files, 5%</li>
-<li>R markdown (and compiled pdf) are properly formatted, 5%
-<ul>
-<li>Proper section headers for each part of your homework.</li>
-<li>You clearly indicate which question each of your responses are associated with.</li>
-</ul></li>
-<li>Part A., 30%</li>
-<li>Part B., 10%</li>
-<li>Part C., 50%</li>
+<li>Try loading in some data that you have used in a previous homework assignment (or any dataset of your choice), and combine objects in your dataset using a combination of <code>group_by</code> and <code>summarize</code>.</li>
+<li>Identify any lines of code that you don’t understand. Use the documentation to figure out what those lines of code are doing.</li>
 </ul>
-</div>
-<div id="deliverables" class="section level3 hasAnchor" number="12.1.3">
-<h3><span class="header-section-number">12.1.3</span> Deliverables<a href="homework-3.html#deliverables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>.pdf file (generated by knitting your .rmd file)</li>
-<li>.rmd file (used to generate the pdf file)</li>
-</ul>
-</div>
-</div>
-<div id="setup-4" class="section level2 hasAnchor" number="12.2">
-<h2><span class="header-section-number">12.2</span> Setup<a href="homework-3.html#setup-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Create a new R Markdown file with the title “Homework 3” and with you as the author (hint: this information should be in your frontmatter at the top of the file).
-In your R Markdown file, create a section heading for each of the following parts of your homework (see <a href="https://www.markdownguide.org/basic-syntax/">this documentation</a> for how to make a heading):</p>
-<ul>
-<li>Part A</li>
-<li>Part B</li>
-<li>Part C</li>
-</ul>
-<p><strong>When you knit your markdown document, these headings should be actual headings (like they are in this document)</strong>.
-For each of your responses, clearly indicate which question the responses belongs to.</p>
-</div>
-<div id="part-a.-attribute-descriptions" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Part A. Attribute descriptions<a href="homework-3.html#part-a.-attribute-descriptions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>You are given a data file (see assignment attachments on blackboard): <code>hw03data.csv</code>.
-This is a table of ratings for teaching assistants (TA) at some university (this is modified data that originally came from <a href="https://archive.ics.uci.edu/ml/datasets.php" class="uri">https://archive.ics.uci.edu/ml/datasets.php</a>).
-There are 6 attributes:</p>
-<ul>
-<li><code>id</code>: unique number to identify each rating</li>
-<li><code>instructor</code>: id number that identifies the instructor</li>
-<li><code>classNbr</code>: id number that identifies the course</li>
-<li><code>semester</code>: 1=summer, 2=fall, 3=winter</li>
-<li><code>classSize</code>: number of students in the class</li>
-<li><code>rating</code>: 1=low, 2=medium, 3=high</li>
-</ul>
-<p>For each attribute, describe whether it is nominal or ordinal.</p>
-<ol style="list-style-type: decimal">
-<li><code>id</code></li>
-<li><code>instructor</code></li>
-<li><code>classNbr</code></li>
-<li><code>semester</code></li>
-<li><code>classSize</code></li>
-<li><code>rating</code></li>
-</ol>
-</div>
-<div id="part-b.-r-practice" class="section level2 hasAnchor" number="12.4">
-<h2><span class="header-section-number">12.4</span> Part B. R practice<a href="homework-3.html#part-b.-r-practice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Load the tidyverse collection of packages and load <code>hw03data.csv</code> in R (as a dataframe or tibble).</p>
-<p>Using ggplot2, graph the relationship between class size and rating.
-The type of graph is up to you (but must be appropriate).
-Explicitly label your graph axes (e.g., using the <code>labs</code> function).</p>
-</div>
-<div id="part-c.-thinking-about-common-data-mining-applications" class="section level2 hasAnchor" number="12.5">
-<h2><span class="header-section-number">12.5</span> Part C. Thinking about common data mining applications<a href="homework-3.html#part-c.-thinking-about-common-data-mining-applications" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ol style="list-style-type: decimal">
-<li>This question asks you to think about clustering.
-Considering an average kitchen, identify 4 clusters of objects.
-Name them according to their utility.
-For example, if I were asked to identify 4 clusters in a sporting goods store, I might choose
-apparel (e.g., shoes, shirts), containers (e.g., backpacks, coolers), sports equipment (e.g., basketball, tennis racquets), and fishing (e.g., rods, lures).</li>
-<li>Pick one of the following forms of predictive modeling: regression, classification, or ranking.
-<ul>
-<li>Describe an application domain or a dataset where you think it would be useful to apply the chosen predictive modeling approach.</li>
-<li>What attribute(s) would you be predicting?</li>
-<li>What attributes would you use to make the prediction?</li>
-</ul></li>
-</ol>
 
 </div>
-</div>
-
-
-
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="homework-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="simple-denoising-examples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="curse-of-dimensionality-demo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -466,7 +473,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/homework/homework-03/homework-03.Rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-04/aggregation.rmd",
 "text": "Edit"
 },
 "history": {
