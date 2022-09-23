@@ -8,7 +8,13 @@ In this data mining project, you will choose a data mining application domain an
 
 One of the goals for this course is for you to be able to design, implement, and evaluate a data mining / knowledge discovery pipeline from start to finish.
 You will propose and implement a data mining project in an application domain of your choice.
-You will be guided on your project through a series of check-in assignments, culminating in a written final report.
+You will be guided on your project through a series of check-in assignments (listed below), culminating in a written final report.
+
+- Project survey (see blackboard, under Assignments)
+- [Project proposal](https://lalejini.com/gvsu-cis635-2022f/book/final-project---proposal.html)
+- [Project progress report](https://lalejini.com/gvsu-cis635-2022f/book/final-project---mid-project-update.html)
+- [Project report draft](https://lalejini.com/gvsu-cis635-2022f/book/final-project---report-draft.html)
+- [Project final report](https://lalejini.com/gvsu-cis635-2022f/book/final-project---final-report.html)
 
 ## Learning objectives
 
@@ -29,10 +35,10 @@ I will assist in forming groups by sending out a survey asking about which topic
 | Item | Contribution to grade |
 | --- | --- |
 | Survey response | 5% |
-| Project proposal | 10% |
-| Project update | 5% |
-| Draft | 5% |
-| Final report | 25% |
+| [Project proposal](https://lalejini.com/gvsu-cis635-2022f/book/final-project---proposal.html) | 10% |
+| [Project update](https://lalejini.com/gvsu-cis635-2022f/book/final-project---mid-project-update.html) | 5% |
+| [Draft](https://lalejini.com/gvsu-cis635-2022f/book/final-project---report-draft.html) | 5% |
+| [Final report](https://lalejini.com/gvsu-cis635-2022f/book/final-project---final-report.html) | 25% |
 
 Note that you cannot use your homework extensions on project components.
 
