@@ -19,8 +19,7 @@ You will be guided on your project through a series of check-in assignments, cul
 
 ## Groups
 
-You will be allowed to work in groups of two or work by yourself.
-Keep in mind that my expections for groups will be higher than for individuals.
+You will be allowed to work in groups of three or work by yourself.
 I will assist in forming groups by sending out a survey asking about which topics interest you, who you would/would not like to work with (if anyone), and your expectations for your final project.
 
 ## Grading
@@ -62,13 +61,13 @@ My advice is to start by choosing a domain that is interesting to you and a type
 
 Some example types of projects (your project does not need to fall under any of these categories)
 
-- Solve a problem.
+- Solve a problem
   - E.g., Design and apply a data mining pipeline to a particular problem you are interested in, and then evaluate your approach by comparing to another method.
-- Replicate (and/or extend) a published study.
+- Replicate (and/or extend) a published study
   - E.g., identify a published study that you are interested in and independently replicate some portion of it (you must create your own pipeline to do so, not just reuse the original authors').
-- Answer a research question.
+- Answer a research question
   - E.g., formulate a hypothesis and design (and apply) a data mining approach to test your hypothesis.
-- Analysis.
+- Analysis
   - E.g., design a data mining pipeline for some task (or use an existing pipeline) and analyze how/why it works (or doesn't work). You might try swapping out individual components of the pipeline for alternative techniques, add noise to the dataset, etc, etc.
   - E.g., design an experiment to analyze the properties of different similarity metrics and their effect on a data mining algorithm
 

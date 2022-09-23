@@ -13,8 +13,9 @@ If your project is not complete by the time you turn in your draft, you should n
 
 Your draft will be graded primarily on
 
-1. Effort: turned it in on time, draft contains meaningful content relevant to your final report
+1. Effort: turned it in on time, draft contains meaningful content relevant to your final report, and it is clear that you have completed a meaningful amount of your project
   - I can't give meaningful feedback if you don't submit a meaningful draft.
+  - I cannot give full credit for effort if you do not demonstrate that you have at least completed some meaningful portion of your project.
 2. Organization: clearly organized with proper section headings, text is readable
   - I can't give you useful feedback if your draft is not organized in a reasonable way.
 

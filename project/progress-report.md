@@ -8,7 +8,7 @@ You should not wait for my feedback on your progress update before resuming work
 
 ## Requirements
 
-Your progress update should be approximately a page of text and address the following:
+Your progress update should be approximately one to two pages of text and address the following:
 
 - **Progress so far**
   - What have you completed so far?

@@ -11,10 +11,11 @@ In your project, you will choose a data mining application domain and develop a 
 The particular application area, techniques you choose to use, and the outputs of your project are open-ended and up to you to propose.
 Be creative!
 
-However, I have the following expectations for all projects:
+However, I do have the following expectations for all projects:
 
 - I expect you to design and implement a complete data mining pipeline from start to finish.
 - I expect your project to be well-researched, appropriate, and achievable in the given time frame.
+  - If you're unsure, come chat with me during office hours!
 - You may use existing software/libraries to implement your pipeline. However, you must implement at least one component (i.e., data collection, data mining algorithm) of your project yourself.
   - For example, if your project involves extensive data preprocessing and then the use of symbolic regression to build a model that you plan to compare to an alternative approach, you may choose to implement your symbolic regression algorithm and use existing libraries for your data preprocessing and for the alternative model.
 - I expect you to either collect your own dataset or use a publicly available dataset.
@@ -28,7 +29,7 @@ For example, if your are collecting your own data, your pipeline will need to be
 
 ## Proposal guidelines
 
-Your project proposal should address the following:
+Your project proposal should be under 3 pages, be formatted under the following headings, and address each of the following points:
 
 1. **Project overview**
   - Provide an overview of your project.
@@ -87,3 +88,5 @@ The proposal will be graded as follows (out of 100):
 | Writing is appropriately formal | 5 |
 | Writing is clear | 5 |
 | Proposal is well-formatted | 5 |
+
+I reserve the right to award flex points for exemplary work in any areas of this project.
