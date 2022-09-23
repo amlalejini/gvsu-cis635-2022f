@@ -24,5 +24,11 @@ rmd_files: [
   "lecture-material/week-04/sampling.rmd",
   "lecture-material/week-04/curse-of-dimensionality.rmd",
   "lecture-material/week-04/aggregation.rmd",
+  "project/project.md",
+  # "project/survey.md",
+  "project/proposal.md",
+  "project/progress-report.md",
+  "project/draft.md",
+  "project/final-report.md",
   "tail.Rmd"
 ]
