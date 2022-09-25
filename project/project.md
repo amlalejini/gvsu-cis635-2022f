@@ -30,15 +30,15 @@ I will assist in forming groups by sending out a survey asking about which topic
 
 ## Grading
 
-50% of your grade in this course relates to your final project:
+40% of your grade in this course relates to your final project:
 
 | Item | Contribution to grade |
 | --- | --- |
-| Survey response | 5% |
+| Survey response | 2.5% |
 | [Project proposal](https://lalejini.com/gvsu-cis635-2022f/book/final-project---proposal.html) | 10% |
-| [Project update](https://lalejini.com/gvsu-cis635-2022f/book/final-project---mid-project-update.html) | 5% |
+| [Project update](https://lalejini.com/gvsu-cis635-2022f/book/final-project---mid-project-update.html) | 2.5% |
 | [Draft](https://lalejini.com/gvsu-cis635-2022f/book/final-project---report-draft.html) | 5% |
-| [Final report](https://lalejini.com/gvsu-cis635-2022f/book/final-project---final-report.html) | 25% |
+| [Final report](https://lalejini.com/gvsu-cis635-2022f/book/final-project---final-report.html) | 20% |
 
 Note that you cannot use your homework extensions on project components.
 
