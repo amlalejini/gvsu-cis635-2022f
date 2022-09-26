@@ -1,0 +1,41 @@
+# Time spent by students
+
+Time spent by students each week on weekly material (as approximated by students in their weekly reflections).
+
+```{r}
+library(tidyverse)
+library(RColorBrewer)
+library(cowplot)
+
+data <- read_csv("scripts/time_spent_long.csv")
+# data$time_spent <- as.numeric(data$time_spent)
+```
+
+```{r}
+ggplot(
+    data,
+    aes(x=time_spent)
+  ) +
+  geom_histogram(
+    binwidth=1,
+    stat="bin",
+    fill="#1F78B4",
+    color="white"
+  ) +
+  scale_y_continuous(
+    name="Students (count)",
+    limits=c(0, 10),
+    breaks=0:10
+  ) +
+  scale_x_continuous(
+    name="Time spent (hours)"
+    # breaks=0:max(data$time_spent)
+  ) +
+  facet_wrap(
+    ~week,
+    ncol=1,
+    labeller=label_both
+  ) +
+  theme_cowplot()
+```
+
