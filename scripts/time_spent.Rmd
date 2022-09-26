@@ -36,6 +36,10 @@ ggplot(
     ncol=1,
     labeller=label_both
   ) +
+  labs(
+    title="Time spent on course content",
+    subtitle="(as approximated by students in weekly reflections)"
+  ) +
   theme_cowplot()
 ```
 
