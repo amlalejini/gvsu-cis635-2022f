@@ -1,0 +1,190 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Building a decision tree in R
+
+In this lab activity, we will use the `rpart` R package to build a decision tree classifier.
+
+## Dependencies and setup
+
+We'll use the `rpart`, `rpart.plot`, and `caret` packages in this activity.
+If you do not have these packages installed, you will need to do so (use the `install.packages` command).
+
+```{r, warning=FALSE}
+library(rpart) # Used to build decision tree model
+library(rpart.plot) # Used to visualize trees
+library(caret) # Used to build a fancy confusion matrix
+```
+
+I encourage you to look up the documentation for these packages.
+
+We'll also use the following packages:
+```{r}
+library(tidyverse)
+```
+
+Next, we'll load the dataset that contains data for the 100 US senators as of summer 2020.
+**Depending on your working directory, you may need to adjust the path to the data file.**
+
+```{r}
+senator_data <- read_csv("lecture-material/week-06/senate-data.csv")
+senator_data$pol <- as.factor(senator_data$pol)
+senator_data$law <- as.factor(senator_data$law)
+senator_data$mil <- as.factor(senator_data$mil)
+senator_data$soc <- as.factor(senator_data$soc)
+senator_data$edu <- as.factor(senator_data$edu)
+senator_data$med <- as.factor(senator_data$med)
+senator_data$bus <- as.factor(senator_data$bus)
+senator_data$agr <- as.factor(senator_data$agr)
+senator_data$fin <- as.factor(senator_data$fin)
+senator_data$approval <- as.factor(senator_data$approval)
+head(senator_data)
+```
+
+These data were taken from a website of senator rankings.
+Each row in these data describes a senator with the following attributes:
+
+- `first` - First name
+- `last` - Last name
+- `pol` - Political party (democrat, republican, or independent)
+- `age` - Age of the senator
+- `law` - Binary attribute describing whether senator had a previous career in law enforcement
+- `mil` - Binary attribute describing whether senator had a previous career in the military
+- `soc` - Binary attribute describing whether senator had a previous career in social services
+- `edu` - Binary attribute describing whether senator had a previous career in education
+- `med` - Binary attribute describing whether senator had a previous career in medicine
+- `bus` - Binary attribute describing whether senator had a previous career in business
+- `agr` - Binary attribute describing whether senator had a previous career in aggriculture
+- `fin` - Binary attribute describing whether senator had a previous career in finance
+- `years` - Number of years in office
+- `approval` - Approval class. class=0 means voters don't approve of them, and class=1 means that voters do approve of them.
+
+## Building a decision tree
+
+We can use the `rpart` function to build a decison tree:
+
+```{r}
+model <- rpart(
+  formula = approval ~ pol + age + law + mil + soc + edu + med + bus + agr + fin + years,
+  data = senator_data,
+  parms = list(split="information")
+)
+model
+```
+
+If you've never seen the formula syntax before, I recommend reading up on it a bit: <https://r4ds.had.co.nz/model-basics.html?q=formula#formulas-and-model-families>
+In the formula used to build our decision tree model, `approval` is our dependent variable and all of the predictor attributes to the right of the `~` are our independent variables.
+
+We can use the `summary` function for a little bit more information about our model:
+
+```{r}
+summary(model)
+```
+
+## Visualizing our decision tree
+
+We'll use functionality from the `rpart.plot` package to visualize the decision tree we built:
+
+```{r}
+# If you want to save the visualization, uncomment the next few lines
+pdf("decision_tree.pdf")
+rpart.plot(model)
+dev.off()
+# (this isn't using ggplot, so we can't use ggsave)
+
+# Redraw plot to make it show up in our Rmd doc
+rpart.plot(model)
+```
+
+## Evaluating the accuracy of our decision tree
+
+Our goal with this model was primarily descriptive.
+That is, we wanted to learn more about the properties of our senators dataset instead of building a model to predict the approval rating of unknown senators.
+
+As such, we did not create an explicit training and testing set.
+In essence, the entire senator dataset is our "training set".
+So, while we don't have a testing set to evaluate our model, we can evaluate our model's accuracy on the training set.
+
+```{r}
+ground_truth <- senator_data$approval
+training_predictions <- predict(
+  model,
+  data=senator_data,
+  type="class"
+)
+confusion_matrix <- table(ground_truth, training_predictions)
+confusion_matrix
+```
+
+We can also use the `confusionMatrix` function from the `caret` package to build a fancier confusion matrix for us.
+
+```{r}
+confusionMatrix(confusion_matrix)
+```
+
+## Using our decision tree to make a prediction
+
+Let's pretend that a mysterious new senator shows up to join the US senate one day (ignoring any and all laws that would prevent this from happening in reality).
+```{r}
+# Make an empty dataframe w/correct attributes to hold new senator.
+new_senator <- senator_data[0,0:13]
+# Bind new mystery senator to empty dataframe
+new_senator <- rbind(
+  new_senator,
+  list(
+    fist="Mystery",
+    last="Senator",
+    pol="I",
+    age=42,
+    law=0,
+    mil=0,
+    soc=0,
+    edu=0,
+    med=0,
+    bus=0,
+    agr=0,
+    fin=0,
+    years=0
+  )
+)
+# Turn new senator columsn into factors where appropriate
+new_senator$pol <- as.factor(new_senator$pol)
+new_senator$law <- as.factor(new_senator$law)
+new_senator$mil <- as.factor(new_senator$mil)
+new_senator$soc <- as.factor(new_senator$soc)
+new_senator$edu <- as.factor(new_senator$edu)
+new_senator$med <- as.factor(new_senator$med)
+new_senator$bus <- as.factor(new_senator$bus)
+new_senator$agr <- as.factor(new_senator$agr)
+new_senator$fin <- as.factor(new_senator$fin)
+# I know that was all a little annoying just to predict a hand-crafted example.
+# Usually the things you want to predict are in a file, so it's less annoying to
+# load them in from file...
+```
+
+```{r}
+result <- predict(
+  model,
+  newdata=new_senator,
+  type="class"
+)
+result[[1]]
+```
+
+It looks like we would predict that Mystery Senator would not have voter approval (according to our model).
+
+## Exercises
+
+- Identify any lines of code that you do not understand. Use the documentation to figure out what is going on.
+- Describe the decision tree. What is the most informative attribute for determining whether or not a senator has voter approval?
+- How would you describe the performance of our model? What is its training error?
+- Try adjusting the attributes for the Mystery Senator we created. What attributes can you change to change our model's prediction?
+- Identify a dataset that might be interesting to build a decision tree model for.
+  - Load that dataset into R
+  - Partition the data into a training and testing set (i.e., split the rows)
+  - Use rpart to build a decision tree using the training set.
+  - What is the accuracy of your model on the training set?
+  - What is the accuracy of your model on the testing set?
