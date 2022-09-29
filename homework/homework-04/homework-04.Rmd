@@ -1,0 +1,73 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Homework 4
+
+## Overview
+
+Being able to search for and read academic publications is useful for learning about data mining techniques (and for doing your final projects).
+In this assignment, you will find and describe academic publications related to classification.
+
+### Objectives
+
+- Practice using academic search engines
+- Gain experience reading academic papers
+- Describe, at a high level, the findings presented in an academic paper
+
+### Grading
+
+- Uploaded requested files, 5%
+- File is properly formatted, 5%
+- Writing is clear, 5%
+- Part A, 45%
+  - For each of the three papers:
+    - 1: 5%
+    - 2: 5%
+    - 3: 5%
+- Part B, 40%
+  - 1: 10%
+  - 2: 20%
+  - 3: 10%
+
+### Deliverables
+
+- A .pdf file with your responses, formatted as in my example.
+
+### Formatting
+
+Include headings for each part (Part A and Part B).
+Clearly indicate which question each of your responses belong to, and for Part A, clearly indicate each paper (paper 1, paper 2, and paper 3).
+See the example formatting that is posted on blackboard as an attachment to this assignment.
+
+You do not need to use R markdown to generate your pdf for this assignment.
+However, your formatting should mirror the format of my example file.
+
+## Part A. Identify relevant publications
+
+For Part A, use an academic search engine (e.g., google scholar) to find three publications related to classification that you think might be interesting.
+Each of the chosen papers should be a scholarly publication; they should not be, for example, news articles, promotional materials, or blog posts.
+
+For each of the three papers you find, provide the following:
+
+1. Citation information (at minimum include authors, year published, title, and journal/conference/book published in)
+    - Note that I must be able to find your paper using your citation information
+2. Abstract
+3. How did you find the paper?
+
+## Part B.
+
+For Part B, choose one of the three papers you found for Part A.
+Read the paper to the best of your ability.
+It's okay if you don't fully understand everything in the paper.
+
+Answer the following questions.
+Your responses should be in complete sentences.
+None of your responses need to be more than a paragraph, but it should be clear that you have read and made an effort to understand the chosen paper.
+
+1. Why did you choose to read this paper?
+2. In your own words (1 - 2 paragraphs), what is the paper about?
+    - E.g., what are the major results, the problem being solved, techniques used, etc.
+3. To the best of your understanding, what classification algorithms are discussed and/or used in the paper?
