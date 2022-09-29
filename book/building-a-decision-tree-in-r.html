@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 18 Building a decision tree in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 18 Building a decision tree in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 18 Building a decision tree in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 12 Homework 3 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 18 Building a decision tree in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="homework-2.html"/>
-<link rel="next" href="simple-denoising-examples.html"/>
+<link rel="prev" href="aggregation.html"/>
+<link rel="next" href="homework-4.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -394,111 +394,339 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="homework-3" class="section level1 hasAnchor" number="12">
-<h1><span class="header-section-number">Chapter 12</span> Homework 3<a href="homework-3.html#homework-3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="overview-3" class="section level2 hasAnchor" number="12.1">
-<h2><span class="header-section-number">12.1</span> Overview<a href="homework-3.html#overview-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="objectives-1" class="section level3 hasAnchor" number="12.1.1">
-<h3><span class="header-section-number">12.1.1</span> Objectives<a href="homework-3.html#objectives-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="building-a-decision-tree-in-r" class="section level1 hasAnchor" number="18">
+<h1><span class="header-section-number">Chapter 18</span> Building a decision tree in R<a href="building-a-decision-tree-in-r.html#building-a-decision-tree-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this lab activity, we will use the <code>rpart</code> R package to build a decision tree classifier.</p>
+<div id="dependencies-and-setup-3" class="section level2 hasAnchor" number="18.1">
+<h2><span class="header-section-number">18.1</span> Dependencies and setup<a href="building-a-decision-tree-in-r.html#dependencies-and-setup-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll use the <code>rpart</code>, <code>rpart.plot</code>, and <code>caret</code> packages in this activity.
+If you do not have these packages installed, you will need to do so (use the <code>install.packages</code> command).</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="building-a-decision-tree-in-r.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart) <span class="co"># Used to build decision tree model</span></span>
+<span id="cb159-2"><a href="building-a-decision-tree-in-r.html#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot) <span class="co"># Used to visualize trees</span></span>
+<span id="cb159-3"><a href="building-a-decision-tree-in-r.html#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret) <span class="co"># Used to build a fancy confusion matrix</span></span></code></pre></div>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## 
+## Attaching package: &#39;caret&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     lift</code></pre>
+<p>I encourage you to look up the documentation for these packages.</p>
+<p>We’ll also use the following packages:</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="building-a-decision-tree-in-r.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<p>Next, we’ll load the dataset that contains data for the 100 US senators as of summer 2020.
+<strong>Depending on your working directory, you may need to adjust the path to the data file.</strong></p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="building-a-decision-tree-in-r.html#cb164-1" aria-hidden="true" tabindex="-1"></a>senator_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;lecture-material/week-06/senate-data.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 100 Columns: 14
+## ── Column specification ─────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (3): first, last, pol
+## dbl (11): age, law, mil, soc, edu, med, bus, agr, fin, years, approval
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="building-a-decision-tree-in-r.html#cb166-1" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>pol <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>pol)</span>
+<span id="cb166-2"><a href="building-a-decision-tree-in-r.html#cb166-2" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>law <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>law)</span>
+<span id="cb166-3"><a href="building-a-decision-tree-in-r.html#cb166-3" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>mil <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>mil)</span>
+<span id="cb166-4"><a href="building-a-decision-tree-in-r.html#cb166-4" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>soc <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>soc)</span>
+<span id="cb166-5"><a href="building-a-decision-tree-in-r.html#cb166-5" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>edu <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>edu)</span>
+<span id="cb166-6"><a href="building-a-decision-tree-in-r.html#cb166-6" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>med <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>med)</span>
+<span id="cb166-7"><a href="building-a-decision-tree-in-r.html#cb166-7" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>bus <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>bus)</span>
+<span id="cb166-8"><a href="building-a-decision-tree-in-r.html#cb166-8" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>agr <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>agr)</span>
+<span id="cb166-9"><a href="building-a-decision-tree-in-r.html#cb166-9" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>fin <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>fin)</span>
+<span id="cb166-10"><a href="building-a-decision-tree-in-r.html#cb166-10" aria-hidden="true" tabindex="-1"></a>senator_data<span class="sc">$</span>approval <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(senator_data<span class="sc">$</span>approval)</span>
+<span id="cb166-11"><a href="building-a-decision-tree-in-r.html#cb166-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(senator_data)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 14
+##   first  last  pol     age law   mil   soc   edu   med   bus   agr   fin   years
+##   &lt;chr&gt;  &lt;chr&gt; &lt;fct&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;
+## 1 Richa… Shel… R        86 1     0     0     0     0     0     0     0        33
+## 2 Doug   Jones D        66 1     0     0     0     0     0     0     0         2
+## 3 Lisa   Murk… R        63 1     0     0     0     0     0     0     0        17
+## 4 Dan    Sull… R        55 1     1     0     0     0     0     0     0         5
+## 5 Kyrst… Sine… D        43 1     0     1     0     1     0     0     0         1
+## 6 Martha McSa… R        54 0     1     0     0     0     0     0     0         1
+## # … with 1 more variable: approval &lt;fct&gt;</code></pre>
+<p>These data were taken from a website of senator rankings.
+Each row in these data describes a senator with the following attributes:</p>
 <ul>
-<li>Identify nominal versus ordinal attributes</li>
-<li>Practice loading a dataset and using ggplot to graph data</li>
-<li>Consider general data mining tasks</li>
+<li><code>first</code> - First name</li>
+<li><code>last</code> - Last name</li>
+<li><code>pol</code> - Political party (democrat, republican, or independent)</li>
+<li><code>age</code> - Age of the senator</li>
+<li><code>law</code> - Binary attribute describing whether senator had a previous career in law enforcement</li>
+<li><code>mil</code> - Binary attribute describing whether senator had a previous career in the military</li>
+<li><code>soc</code> - Binary attribute describing whether senator had a previous career in social services</li>
+<li><code>edu</code> - Binary attribute describing whether senator had a previous career in education</li>
+<li><code>med</code> - Binary attribute describing whether senator had a previous career in medicine</li>
+<li><code>bus</code> - Binary attribute describing whether senator had a previous career in business</li>
+<li><code>agr</code> - Binary attribute describing whether senator had a previous career in aggriculture</li>
+<li><code>fin</code> - Binary attribute describing whether senator had a previous career in finance</li>
+<li><code>years</code> - Number of years in office</li>
+<li><code>approval</code> - Approval class. class=0 means voters don’t approve of them, and class=1 means that voters do approve of them.</li>
 </ul>
 </div>
-<div id="grading-1" class="section level3 hasAnchor" number="12.1.2">
-<h3><span class="header-section-number">12.1.2</span> Grading<a href="homework-3.html#grading-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="building-a-decision-tree" class="section level2 hasAnchor" number="18.2">
+<h2><span class="header-section-number">18.2</span> Building a decision tree<a href="building-a-decision-tree-in-r.html#building-a-decision-tree" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We can use the <code>rpart</code> function to build a decison tree:</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="building-a-decision-tree-in-r.html#cb168-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">rpart</span>(</span>
+<span id="cb168-2"><a href="building-a-decision-tree-in-r.html#cb168-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> approval <span class="sc">~</span> pol <span class="sc">+</span> age <span class="sc">+</span> law <span class="sc">+</span> mil <span class="sc">+</span> soc <span class="sc">+</span> edu <span class="sc">+</span> med <span class="sc">+</span> bus <span class="sc">+</span> agr <span class="sc">+</span> fin <span class="sc">+</span> years,</span>
+<span id="cb168-3"><a href="building-a-decision-tree-in-r.html#cb168-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> senator_data,</span>
+<span id="cb168-4"><a href="building-a-decision-tree-in-r.html#cb168-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">parms =</span> <span class="fu">list</span>(<span class="at">split=</span><span class="st">&quot;information&quot;</span>)</span>
+<span id="cb168-5"><a href="building-a-decision-tree-in-r.html#cb168-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb168-6"><a href="building-a-decision-tree-in-r.html#cb168-6" aria-hidden="true" tabindex="-1"></a>model</span></code></pre></div>
+<pre><code>## n= 100 
+## 
+## node), split, n, loss, yval, (yprob)
+##       * denotes terminal node
+## 
+##  1) root 100 41 1 (0.4100000 0.5900000)  
+##    2) age&lt; 66.5 59 29 1 (0.4915254 0.5084746)  
+##      4) years&lt; 2.5 10  2 0 (0.8000000 0.2000000) *
+##      5) years&gt;=2.5 49 21 1 (0.4285714 0.5714286)  
+##       10) pol=R 26 13 0 (0.5000000 0.5000000)  
+##         20) age&gt;=50.5 18  8 0 (0.5555556 0.4444444) *
+##         21) age&lt; 50.5 8  3 1 (0.3750000 0.6250000) *
+##       11) pol=D 23  8 1 (0.3478261 0.6521739) *
+##    3) age&gt;=66.5 41 12 1 (0.2926829 0.7073171) *</code></pre>
+<p>If you’ve never seen the formula syntax before, I recommend reading up on it a bit: <a href="https://r4ds.had.co.nz/model-basics.html?q=formula#formulas-and-model-families" class="uri">https://r4ds.had.co.nz/model-basics.html?q=formula#formulas-and-model-families</a>
+In the formula used to build our decision tree model, <code>approval</code> is our dependent variable and all of the predictor attributes to the right of the <code>~</code> are our independent variables.</p>
+<p>We can use the <code>summary</code> function for a little bit more information about our model:</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="building-a-decision-tree-in-r.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<pre><code>## Call:
+## rpart(formula = approval ~ pol + age + law + mil + soc + edu + 
+##     med + bus + agr + fin + years, data = senator_data, parms = list(split = &quot;information&quot;))
+##   n= 100 
+## 
+##           CP nsplit rel error   xerror      xstd
+## 1 0.07317073      0 1.0000000 1.000000 0.1199593
+## 2 0.02439024      2 0.8536585 1.292683 0.1217315
+## 3 0.01000000      4 0.8048780 1.463415 0.1194873
+## 
+## Variable importance
+## years   age   pol   agr   law   edu   mil 
+##    46    36     9     5     2     1     1 
+## 
+## Node number 1: 100 observations,    complexity param=0.07317073
+##   predicted class=1  expected loss=0.41  P(node) =1
+##     class counts:    41    59
+##    probabilities: 0.410 0.590 
+##   left son=2 (59 obs) right son=3 (41 obs)
+##   Primary splits:
+##       age   &lt; 66.5 to the left,  improve=2.0126500, (0 missing)
+##       years &lt; 2.5  to the left,  improve=1.2801170, (0 missing)
+##       pol   splits as  RRL,      improve=0.8920908, (0 missing)
+##       fin   splits as  RL,       improve=0.3974025, (0 missing)
+##       soc   splits as  RL,       improve=0.1539107, (0 missing)
+##   Surrogate splits:
+##       years &lt; 16   to the left,  agree=0.75, adj=0.390, (0 split)
+##       pol   splits as  LRL,      agree=0.61, adj=0.049, (0 split)
+##       agr   splits as  LR,       agree=0.61, adj=0.049, (0 split)
+##       mil   splits as  LR,       agree=0.60, adj=0.024, (0 split)
+##       edu   splits as  LR,       agree=0.60, adj=0.024, (0 split)
+## 
+## Node number 2: 59 observations,    complexity param=0.07317073
+##   predicted class=1  expected loss=0.4915254  P(node) =0.59
+##     class counts:    29    30
+##    probabilities: 0.492 0.508 
+##   left son=4 (10 obs) right son=5 (49 obs)
+##   Primary splits:
+##       years &lt; 2.5  to the left,  improve=2.4206870, (0 missing)
+##       bus   splits as  RL,       improve=0.7882244, (0 missing)
+##       age   &lt; 58.5 to the left,  improve=0.4144379, (0 missing)
+##       pol   splits as  R-L,      improve=0.2210771, (0 missing)
+##       law   splits as  RL,       improve=0.2084032, (0 missing)
+##   Surrogate splits:
+##       age &lt; 44   to the left,  agree=0.847, adj=0.1, (0 split)
+##       agr splits as  RL,       agree=0.847, adj=0.1, (0 split)
+## 
+## Node number 3: 41 observations
+##   predicted class=1  expected loss=0.2926829  P(node) =0.41
+##     class counts:    12    29
+##    probabilities: 0.293 0.707 
+## 
+## Node number 4: 10 observations
+##   predicted class=0  expected loss=0.2  P(node) =0.1
+##     class counts:     8     2
+##    probabilities: 0.800 0.200 
+## 
+## Node number 5: 49 observations,    complexity param=0.02439024
+##   predicted class=1  expected loss=0.4285714  P(node) =0.49
+##     class counts:    21    28
+##    probabilities: 0.429 0.571 
+##   left son=10 (26 obs) right son=11 (23 obs)
+##   Primary splits:
+##       pol   splits as  R-L,      improve=0.5805888, (0 missing)
+##       age   &lt; 60.5 to the left,  improve=0.4295409, (0 missing)
+##       law   splits as  RL,       improve=0.2763052, (0 missing)
+##       years &lt; 8    to the right, improve=0.2186185, (0 missing)
+##       bus   splits as  RL,       improve=0.1644552, (0 missing)
+##   Surrogate splits:
+##       years &lt; 10   to the left,  agree=0.653, adj=0.261, (0 split)
+##       law   splits as  LR,       agree=0.633, adj=0.217, (0 split)
+##       age   &lt; 50   to the left,  agree=0.571, adj=0.087, (0 split)
+##       soc   splits as  LR,       agree=0.551, adj=0.043, (0 split)
+##       bus   splits as  RL,       agree=0.551, adj=0.043, (0 split)
+## 
+## Node number 10: 26 observations,    complexity param=0.02439024
+##   predicted class=0  expected loss=0.5  P(node) =0.26
+##     class counts:    13    13
+##    probabilities: 0.500 0.500 
+##   left son=20 (18 obs) right son=21 (8 obs)
+##   Primary splits:
+##       age   &lt; 50.5 to the right, improve=0.3640124, (0 missing)
+##       years &lt; 8    to the right, improve=0.3107940, (0 missing)
+## 
+## Node number 11: 23 observations
+##   predicted class=1  expected loss=0.3478261  P(node) =0.23
+##     class counts:     8    15
+##    probabilities: 0.348 0.652 
+## 
+## Node number 20: 18 observations
+##   predicted class=0  expected loss=0.4444444  P(node) =0.18
+##     class counts:    10     8
+##    probabilities: 0.556 0.444 
+## 
+## Node number 21: 8 observations
+##   predicted class=1  expected loss=0.375  P(node) =0.08
+##     class counts:     3     5
+##    probabilities: 0.375 0.625</code></pre>
+</div>
+<div id="visualizing-our-decision-tree" class="section level2 hasAnchor" number="18.3">
+<h2><span class="header-section-number">18.3</span> Visualizing our decision tree<a href="building-a-decision-tree-in-r.html#visualizing-our-decision-tree" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll use functionality from the <code>rpart.plot</code> package to visualize the decision tree we built:</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="building-a-decision-tree-in-r.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If you want to save the visualization, uncomment the next few lines</span></span>
+<span id="cb172-2"><a href="building-a-decision-tree-in-r.html#cb172-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">&quot;decision_tree.pdf&quot;</span>)</span>
+<span id="cb172-3"><a href="building-a-decision-tree-in-r.html#cb172-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model)</span>
+<span id="cb172-4"><a href="building-a-decision-tree-in-r.html#cb172-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<pre><code>## quartz_off_screen 
+##                 2</code></pre>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="building-a-decision-tree-in-r.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (this isn&#39;t using ggplot, so we can&#39;t use ggsave)</span></span>
+<span id="cb174-2"><a href="building-a-decision-tree-in-r.html#cb174-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb174-3"><a href="building-a-decision-tree-in-r.html#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Redraw plot to make it show up in our Rmd doc</span></span>
+<span id="cb174-4"><a href="building-a-decision-tree-in-r.html#cb174-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model)</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-90-1.png" width="672" /></p>
+</div>
+<div id="evaluating-the-accuracy-of-our-decision-tree" class="section level2 hasAnchor" number="18.4">
+<h2><span class="header-section-number">18.4</span> Evaluating the accuracy of our decision tree<a href="building-a-decision-tree-in-r.html#evaluating-the-accuracy-of-our-decision-tree" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Our goal with this model was primarily descriptive.
+That is, we wanted to learn more about the properties of our senators dataset instead of building a model to predict the approval rating of unknown senators.</p>
+<p>As such, we did not create an explicit training and testing set.
+In essence, the entire senator dataset is our “training set”.
+So, while we don’t have a testing set to evaluate our model, we can evaluate our model’s accuracy on the training set.</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="building-a-decision-tree-in-r.html#cb175-1" aria-hidden="true" tabindex="-1"></a>ground_truth <span class="ot">&lt;-</span> senator_data<span class="sc">$</span>approval</span>
+<span id="cb175-2"><a href="building-a-decision-tree-in-r.html#cb175-2" aria-hidden="true" tabindex="-1"></a>training_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb175-3"><a href="building-a-decision-tree-in-r.html#cb175-3" aria-hidden="true" tabindex="-1"></a>  model,</span>
+<span id="cb175-4"><a href="building-a-decision-tree-in-r.html#cb175-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>senator_data,</span>
+<span id="cb175-5"><a href="building-a-decision-tree-in-r.html#cb175-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type=</span><span class="st">&quot;class&quot;</span></span>
+<span id="cb175-6"><a href="building-a-decision-tree-in-r.html#cb175-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb175-7"><a href="building-a-decision-tree-in-r.html#cb175-7" aria-hidden="true" tabindex="-1"></a>confusion_matrix <span class="ot">&lt;-</span> <span class="fu">table</span>(ground_truth, training_predictions)</span>
+<span id="cb175-8"><a href="building-a-decision-tree-in-r.html#cb175-8" aria-hidden="true" tabindex="-1"></a>confusion_matrix</span></code></pre></div>
+<pre><code>##             training_predictions
+## ground_truth  0  1
+##            0 18 23
+##            1 10 49</code></pre>
+<p>We can also use the <code>confusionMatrix</code> function from the <code>caret</code> package to build a fancier confusion matrix for us.</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="building-a-decision-tree-in-r.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(confusion_matrix)</span></code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##             training_predictions
+## ground_truth  0  1
+##            0 18 23
+##            1 10 49
+##                                           
+##                Accuracy : 0.67            
+##                  95% CI : (0.5688, 0.7608)
+##     No Information Rate : 0.72            
+##     P-Value [Acc &gt; NIR] : 0.88840         
+##                                           
+##                   Kappa : 0.2832          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.03671         
+##                                           
+##             Sensitivity : 0.6429          
+##             Specificity : 0.6806          
+##          Pos Pred Value : 0.4390          
+##          Neg Pred Value : 0.8305          
+##              Prevalence : 0.2800          
+##          Detection Rate : 0.1800          
+##    Detection Prevalence : 0.4100          
+##       Balanced Accuracy : 0.6617          
+##                                           
+##        &#39;Positive&#39; Class : 0               
+## </code></pre>
+</div>
+<div id="using-our-decision-tree-to-make-a-prediction" class="section level2 hasAnchor" number="18.5">
+<h2><span class="header-section-number">18.5</span> Using our decision tree to make a prediction<a href="building-a-decision-tree-in-r.html#using-our-decision-tree-to-make-a-prediction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s pretend that a mysterious new senator shows up to join the US senate one day (ignoring any and all laws that would prevent this from happening in reality).</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="building-a-decision-tree-in-r.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make an empty dataframe w/correct attributes to hold new senator.</span></span>
+<span id="cb179-2"><a href="building-a-decision-tree-in-r.html#cb179-2" aria-hidden="true" tabindex="-1"></a>new_senator <span class="ot">&lt;-</span> senator_data[<span class="dv">0</span>,<span class="dv">0</span><span class="sc">:</span><span class="dv">13</span>]</span>
+<span id="cb179-3"><a href="building-a-decision-tree-in-r.html#cb179-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bind new mystery senator to empty dataframe</span></span>
+<span id="cb179-4"><a href="building-a-decision-tree-in-r.html#cb179-4" aria-hidden="true" tabindex="-1"></a>new_senator <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb179-5"><a href="building-a-decision-tree-in-r.html#cb179-5" aria-hidden="true" tabindex="-1"></a>  new_senator,</span>
+<span id="cb179-6"><a href="building-a-decision-tree-in-r.html#cb179-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb179-7"><a href="building-a-decision-tree-in-r.html#cb179-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fist=</span><span class="st">&quot;Mystery&quot;</span>,</span>
+<span id="cb179-8"><a href="building-a-decision-tree-in-r.html#cb179-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">last=</span><span class="st">&quot;Senator&quot;</span>,</span>
+<span id="cb179-9"><a href="building-a-decision-tree-in-r.html#cb179-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">pol=</span><span class="st">&quot;I&quot;</span>,</span>
+<span id="cb179-10"><a href="building-a-decision-tree-in-r.html#cb179-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">age=</span><span class="dv">42</span>,</span>
+<span id="cb179-11"><a href="building-a-decision-tree-in-r.html#cb179-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">law=</span><span class="dv">0</span>,</span>
+<span id="cb179-12"><a href="building-a-decision-tree-in-r.html#cb179-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">mil=</span><span class="dv">0</span>,</span>
+<span id="cb179-13"><a href="building-a-decision-tree-in-r.html#cb179-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc=</span><span class="dv">0</span>,</span>
+<span id="cb179-14"><a href="building-a-decision-tree-in-r.html#cb179-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">edu=</span><span class="dv">0</span>,</span>
+<span id="cb179-15"><a href="building-a-decision-tree-in-r.html#cb179-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">med=</span><span class="dv">0</span>,</span>
+<span id="cb179-16"><a href="building-a-decision-tree-in-r.html#cb179-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">bus=</span><span class="dv">0</span>,</span>
+<span id="cb179-17"><a href="building-a-decision-tree-in-r.html#cb179-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">agr=</span><span class="dv">0</span>,</span>
+<span id="cb179-18"><a href="building-a-decision-tree-in-r.html#cb179-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fin=</span><span class="dv">0</span>,</span>
+<span id="cb179-19"><a href="building-a-decision-tree-in-r.html#cb179-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">years=</span><span class="dv">0</span></span>
+<span id="cb179-20"><a href="building-a-decision-tree-in-r.html#cb179-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb179-21"><a href="building-a-decision-tree-in-r.html#cb179-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb179-22"><a href="building-a-decision-tree-in-r.html#cb179-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn new senator columsn into factors where appropriate</span></span>
+<span id="cb179-23"><a href="building-a-decision-tree-in-r.html#cb179-23" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>pol <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>pol)</span>
+<span id="cb179-24"><a href="building-a-decision-tree-in-r.html#cb179-24" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>law <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>law)</span>
+<span id="cb179-25"><a href="building-a-decision-tree-in-r.html#cb179-25" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>mil <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>mil)</span>
+<span id="cb179-26"><a href="building-a-decision-tree-in-r.html#cb179-26" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>soc <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>soc)</span>
+<span id="cb179-27"><a href="building-a-decision-tree-in-r.html#cb179-27" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>edu <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>edu)</span>
+<span id="cb179-28"><a href="building-a-decision-tree-in-r.html#cb179-28" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>med <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>med)</span>
+<span id="cb179-29"><a href="building-a-decision-tree-in-r.html#cb179-29" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>bus <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>bus)</span>
+<span id="cb179-30"><a href="building-a-decision-tree-in-r.html#cb179-30" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>agr <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>agr)</span>
+<span id="cb179-31"><a href="building-a-decision-tree-in-r.html#cb179-31" aria-hidden="true" tabindex="-1"></a>new_senator<span class="sc">$</span>fin <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(new_senator<span class="sc">$</span>fin)</span>
+<span id="cb179-32"><a href="building-a-decision-tree-in-r.html#cb179-32" aria-hidden="true" tabindex="-1"></a><span class="co"># I know that was all a little annoying just to predict a hand-crafted example.</span></span>
+<span id="cb179-33"><a href="building-a-decision-tree-in-r.html#cb179-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Usually the things you want to predict are in a file, so it&#39;s less annoying to</span></span>
+<span id="cb179-34"><a href="building-a-decision-tree-in-r.html#cb179-34" aria-hidden="true" tabindex="-1"></a><span class="co"># load them in from file...</span></span></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="building-a-decision-tree-in-r.html#cb180-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb180-2"><a href="building-a-decision-tree-in-r.html#cb180-2" aria-hidden="true" tabindex="-1"></a>  model,</span>
+<span id="cb180-3"><a href="building-a-decision-tree-in-r.html#cb180-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata=</span>new_senator,</span>
+<span id="cb180-4"><a href="building-a-decision-tree-in-r.html#cb180-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type=</span><span class="st">&quot;class&quot;</span></span>
+<span id="cb180-5"><a href="building-a-decision-tree-in-r.html#cb180-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb180-6"><a href="building-a-decision-tree-in-r.html#cb180-6" aria-hidden="true" tabindex="-1"></a>result[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>## [1] 0
+## Levels: 0 1</code></pre>
+<p>It looks like we would predict that Mystery Senator would not have voter approval (according to our model).</p>
+</div>
+<div id="exercises-7" class="section level2 hasAnchor" number="18.6">
+<h2><span class="header-section-number">18.6</span> Exercises<a href="building-a-decision-tree-in-r.html#exercises-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Uploaded <em>all</em> requested files, 5%</li>
-<li>R markdown (and compiled pdf) are properly formatted, 5%
+<li>Identify any lines of code that you do not understand. Use the documentation to figure out what is going on.</li>
+<li>Describe the decision tree. What is the most informative attribute for determining whether or not a senator has voter approval?</li>
+<li>How would you describe the performance of our model? What is its training error?</li>
+<li>Try adjusting the attributes for the Mystery Senator we created. What attributes can you change to change our model’s prediction?</li>
+<li>Identify a dataset that might be interesting to build a decision tree model for.
 <ul>
-<li>Proper section headers for each part of your homework.</li>
-<li>You clearly indicate which question each of your responses are associated with.</li>
+<li>Load that dataset into R</li>
+<li>Partition the data into a training and testing set (i.e., split the rows)</li>
+<li>Use rpart to build a decision tree using the training set.</li>
+<li>What is the accuracy of your model on the training set?</li>
+<li>What is the accuracy of your model on the testing set?</li>
 </ul></li>
-<li>Part A., 30%</li>
-<li>Part B., 10%</li>
-<li>Part C., 50%</li>
 </ul>
-</div>
-<div id="deliverables" class="section level3 hasAnchor" number="12.1.3">
-<h3><span class="header-section-number">12.1.3</span> Deliverables<a href="homework-3.html#deliverables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>.pdf file (generated by knitting your .rmd file)</li>
-<li>.rmd file (used to generate the pdf file)</li>
-</ul>
-</div>
-</div>
-<div id="setup-4" class="section level2 hasAnchor" number="12.2">
-<h2><span class="header-section-number">12.2</span> Setup<a href="homework-3.html#setup-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Create a new R Markdown file with the title “Homework 3” and with you as the author (hint: this information should be in your frontmatter at the top of the file).
-In your R Markdown file, create a section heading for each of the following parts of your homework (see <a href="https://www.markdownguide.org/basic-syntax/">this documentation</a> for how to make a heading):</p>
-<ul>
-<li>Part A</li>
-<li>Part B</li>
-<li>Part C</li>
-</ul>
-<p><strong>When you knit your markdown document, these headings should be actual headings (like they are in this document)</strong>.
-For each of your responses, clearly indicate which question the responses belongs to.</p>
-</div>
-<div id="part-a.-attribute-descriptions" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Part A. Attribute descriptions<a href="homework-3.html#part-a.-attribute-descriptions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>You are given a data file (see assignment attachments on blackboard): <code>hw03data.csv</code>.
-This is a table of ratings for teaching assistants (TA) at some university (this is modified data that originally came from <a href="https://archive.ics.uci.edu/ml/datasets.php" class="uri">https://archive.ics.uci.edu/ml/datasets.php</a>).
-There are 6 attributes:</p>
-<ul>
-<li><code>id</code>: unique number to identify each rating</li>
-<li><code>instructor</code>: id number that identifies the instructor</li>
-<li><code>classNbr</code>: id number that identifies the course</li>
-<li><code>semester</code>: 1=summer, 2=fall, 3=winter</li>
-<li><code>classSize</code>: number of students in the class</li>
-<li><code>rating</code>: 1=low, 2=medium, 3=high</li>
-</ul>
-<p>For each attribute, describe whether it is nominal or ordinal.</p>
-<ol style="list-style-type: decimal">
-<li><code>id</code></li>
-<li><code>instructor</code></li>
-<li><code>classNbr</code></li>
-<li><code>semester</code></li>
-<li><code>classSize</code></li>
-<li><code>rating</code></li>
-</ol>
-</div>
-<div id="part-b.-r-practice" class="section level2 hasAnchor" number="12.4">
-<h2><span class="header-section-number">12.4</span> Part B. R practice<a href="homework-3.html#part-b.-r-practice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Load the tidyverse collection of packages and load <code>hw03data.csv</code> in R (as a dataframe or tibble).</p>
-<p>Using ggplot2, graph the relationship between class size and rating.
-The type of graph is up to you (but must be appropriate).
-Explicitly label your graph axes (e.g., using the <code>labs</code> function).</p>
-</div>
-<div id="part-c.-thinking-about-common-data-mining-applications" class="section level2 hasAnchor" number="12.5">
-<h2><span class="header-section-number">12.5</span> Part C. Thinking about common data mining applications<a href="homework-3.html#part-c.-thinking-about-common-data-mining-applications" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ol style="list-style-type: decimal">
-<li>This question asks you to think about clustering.
-Considering an average kitchen, identify 4 clusters of objects.
-Name them according to their utility.
-For example, if I were asked to identify 4 clusters in a sporting goods store, I might choose
-apparel (e.g., shoes, shirts), containers (e.g., backpacks, coolers), sports equipment (e.g., basketball, tennis racquets), and fishing (e.g., rods, lures).</li>
-<li>Pick one of the following forms of predictive modeling: regression, classification, or ranking.
-<ul>
-<li>Describe an application domain or a dataset where you think it would be useful to apply the chosen predictive modeling approach.</li>
-<li>What attribute(s) would you be predicting?</li>
-<li>What attributes would you use to make the prediction?</li>
-</ul></li>
-</ol>
 
 </div>
-</div>
-
-
-
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="homework-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="simple-denoising-examples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="aggregation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="homework-4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -529,7 +757,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/homework/homework-03/homework-03.Rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-06/decision-tree.Rmd",
 "text": "Edit"
 },
 "history": {
