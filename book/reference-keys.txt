@@ -113,6 +113,14 @@ deliverables-1
 formatting
 part-a.-identify-relevant-publications
 part-b.
+linear-regression-in-r
+dependencies-and-setup-4
+fitting-a-linear-model-to-data
+random-regression-models
+model-space
+more-systematically-searching-model-space-for-good-models
+using-lm-for-linear-regression-in-r
+exercises-8
 final-project-overview
 problem-statement
 learning-objectives

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 20 Linear regression in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 20 Linear regression in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 20 Linear regression in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 20 Linear regression in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  
+  
+  
+
+<meta name="author" content="Instructor: Dr. Alexander Lalejini" />
+
+
+<meta name="date" content="2022-10-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="homework-4.html"/>
+<link rel="next" href="final-project-overview.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">CIS 635 (Fall 2022)</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="part"><span><b>Week 01</b></span></li>
+<li class="chapter" data-level="2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html"><i class="fa fa-check"></i><b>2</b> Getting Started with R Markdown</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#dependencies"><i class="fa fa-check"></i><b>2.1</b> Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#installing-r-packages"><i class="fa fa-check"></i><b>2.1.1</b> Installing R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#create-a-new-r-markdown-document-in-rstudio"><i class="fa fa-check"></i><b>2.2</b> Create a new R Markdown document in RStudio</a></li>
+<li class="chapter" data-level="2.3" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#anatomy-of-an-r-markdown-document"><i class="fa fa-check"></i><b>2.3</b> Anatomy of an R Markdown document</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#frontmatter-metadata"><i class="fa fa-check"></i><b>2.3.1</b> Frontmatter (metadata)</a></li>
+<li class="chapter" data-level="2.3.2" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#text"><i class="fa fa-check"></i><b>2.3.2</b> Text</a></li>
+<li class="chapter" data-level="2.3.3" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#code"><i class="fa fa-check"></i><b>2.3.3</b> Code</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#knitting"><i class="fa fa-check"></i><b>2.4</b> “Knitting”</a></li>
+<li class="chapter" data-level="2.5" data-path="getting-started-with-r-markdown.html"><a href="getting-started-with-r-markdown.html#resources"><i class="fa fa-check"></i><b>2.5</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="homework-1.html"><a href="homework-1.html"><i class="fa fa-check"></i><b>3</b> Homework 1</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="homework-1.html"><a href="homework-1.html#setup"><i class="fa fa-check"></i><b>3.1</b> Setup</a></li>
+<li class="chapter" data-level="3.2" data-path="homework-1.html"><a href="homework-1.html#part-a.-use-r-as-a-calculator"><i class="fa fa-check"></i><b>3.2</b> Part A. Use R as a calculator</a></li>
+<li class="chapter" data-level="3.3" data-path="homework-1.html"><a href="homework-1.html#part-b.-built-in-functions"><i class="fa fa-check"></i><b>3.3</b> Part B. Built-in Functions</a></li>
+<li class="chapter" data-level="3.4" data-path="homework-1.html"><a href="homework-1.html#part-c.-creating-vectors"><i class="fa fa-check"></i><b>3.4</b> Part C. Creating vectors</a></li>
+<li class="chapter" data-level="3.5" data-path="homework-1.html"><a href="homework-1.html#part-d.-subsetting-vectors"><i class="fa fa-check"></i><b>3.5</b> Part D. Subsetting vectors</a></li>
+<li class="chapter" data-level="3.6" data-path="homework-1.html"><a href="homework-1.html#part-e.-types-of-data"><i class="fa fa-check"></i><b>3.6</b> Part E. Types of data</a></li>
+</ul></li>
+<li class="part"><span><b>Week 02</b></span></li>
+<li class="chapter" data-level="4" data-path="week-02---overview.html"><a href="week-02---overview.html"><i class="fa fa-check"></i><b>4</b> Week 02 - Overview</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="week-02---overview.html"><a href="week-02---overview.html#dependencies-1"><i class="fa fa-check"></i><b>4.1</b> Dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>5</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="functions-in-r.html"><a href="functions-in-r.html#argument-order-and-default-values"><i class="fa fa-check"></i><b>5.1</b> Argument order and default values</a></li>
+<li class="chapter" data-level="5.2" data-path="functions-in-r.html"><a href="functions-in-r.html#writing-your-own-functions"><i class="fa fa-check"></i><b>5.2</b> Writing your own functions</a></li>
+<li class="chapter" data-level="5.3" data-path="functions-in-r.html"><a href="functions-in-r.html#return-values"><i class="fa fa-check"></i><b>5.3</b> Return values</a></li>
+<li class="chapter" data-level="5.4" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>5.4</b> Default argument values</a></li>
+<li class="chapter" data-level="5.5" data-path="functions-in-r.html"><a href="functions-in-r.html#resources-1"><i class="fa fa-check"></i><b>5.5</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html"><i class="fa fa-check"></i><b>6</b> Reading and Writing Data</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html#writing-data"><i class="fa fa-check"></i><b>6.1</b> Writing data</a></li>
+<li class="chapter" data-level="6.2" data-path="reading-and-writing-data.html"><a href="reading-and-writing-data.html#loading-data"><i class="fa fa-check"></i><b>6.2</b> Loading data</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="tidyverse.html"><a href="tidyverse.html"><i class="fa fa-check"></i><b>7</b> tidyverse</a></li>
+<li class="chapter" data-level="8" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html"><i class="fa fa-check"></i><b>8</b> Using dplyr to manipulate data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#setup-1"><i class="fa fa-check"></i><b>8.1</b> Setup</a></li>
+<li class="chapter" data-level="8.2" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#overview"><i class="fa fa-check"></i><b>8.2</b> Overview</a></li>
+<li class="chapter" data-level="8.3" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#the-pipe-operator"><i class="fa fa-check"></i><b>8.3</b> The pipe operator</a></li>
+<li class="chapter" data-level="8.4" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#data"><i class="fa fa-check"></i><b>8.4</b> Data</a></li>
+<li class="chapter" data-level="8.5" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#filter-rows-with-filter"><i class="fa fa-check"></i><b>8.5</b> Filter rows with <code>filter()</code></a></li>
+<li class="chapter" data-level="8.6" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#arrange-rows-with-arrange"><i class="fa fa-check"></i><b>8.6</b> Arrange rows with <code>arrange()</code></a></li>
+<li class="chapter" data-level="8.7" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#choose-rows-using-their-position-with-slice"><i class="fa fa-check"></i><b>8.7</b> Choose rows using their position with <code>slice()</code></a></li>
+<li class="chapter" data-level="8.8" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#select-columns-with-select"><i class="fa fa-check"></i><b>8.8</b> Select columns with <code>select()</code></a></li>
+<li class="chapter" data-level="8.9" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#rename-columns-with-rename"><i class="fa fa-check"></i><b>8.9</b> Rename columns with <code>rename()</code></a></li>
+<li class="chapter" data-level="8.10" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#add-new-columns-with-mutate"><i class="fa fa-check"></i><b>8.10</b> Add new columns with <code>mutate()</code></a></li>
+<li class="chapter" data-level="8.11" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#change-column-order-with-relocate"><i class="fa fa-check"></i><b>8.11</b> Change column order with <code>relocate()</code></a></li>
+<li class="chapter" data-level="8.12" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#summarize-groups-of-rows-using-summarise"><i class="fa fa-check"></i><b>8.12</b> Summarize groups of rows using <code>summarise()</code></a></li>
+<li class="chapter" data-level="8.13" data-path="using-dplyr-to-manipulate-data.html"><a href="using-dplyr-to-manipulate-data.html#dplyr-cheat-sheet"><i class="fa fa-check"></i><b>8.13</b> dplyr cheat sheet</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html"><i class="fa fa-check"></i><b>9</b> Using tidyr to create tidy data</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#overview-1"><i class="fa fa-check"></i><b>9.2</b> Overview</a></li>
+<li class="chapter" data-level="9.3" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#what-is-tidy-data"><i class="fa fa-check"></i><b>9.3</b> What is tidy data?</a></li>
+<li class="chapter" data-level="9.4" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#making-data-tidy"><i class="fa fa-check"></i><b>9.4</b> Making data tidy</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#column-headers-are-values-not-variables"><i class="fa fa-check"></i><b>9.4.1</b> Column headers are values, not variables</a></li>
+<li class="chapter" data-level="9.4.2" data-path="using-tidyr-to-create-tidy-data.html"><a href="using-tidyr-to-create-tidy-data.html#multiple-variables-are-stored-in-one-column"><i class="fa fa-check"></i><b>9.4.2</b> Multiple variables are stored in one column</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="creating-graphics-with-ggplot2.html"><a href="creating-graphics-with-ggplot2.html"><i class="fa fa-check"></i><b>10</b> Creating graphics with ggplot2</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="creating-graphics-with-ggplot2.html"><a href="creating-graphics-with-ggplot2.html#resources-for-using-ggplot2"><i class="fa fa-check"></i><b>10.1</b> Resources for using ggplot2</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="homework-2.html"><a href="homework-2.html"><i class="fa fa-check"></i><b>11</b> Homework 2</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="homework-2.html"><a href="homework-2.html#overview-2"><i class="fa fa-check"></i><b>11.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="homework-2.html"><a href="homework-2.html#objectives"><i class="fa fa-check"></i><b>11.1.1</b> Objectives</a></li>
+<li class="chapter" data-level="11.1.2" data-path="homework-2.html"><a href="homework-2.html#grading"><i class="fa fa-check"></i><b>11.1.2</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="homework-2.html"><a href="homework-2.html#setup-3"><i class="fa fa-check"></i><b>11.2</b> Setup</a></li>
+<li class="chapter" data-level="11.3" data-path="homework-2.html"><a href="homework-2.html#part-a.-loading-data-in-r"><i class="fa fa-check"></i><b>11.3</b> Part A. Loading data in R</a></li>
+<li class="chapter" data-level="11.4" data-path="homework-2.html"><a href="homework-2.html#part-b.-visualizing-data-with-ggplot2"><i class="fa fa-check"></i><b>11.4</b> Part B. Visualizing data with ggplot2</a></li>
+</ul></li>
+<li class="part"><span><b>Week 03</b></span></li>
+<li class="chapter" data-level="12" data-path="homework-3.html"><a href="homework-3.html"><i class="fa fa-check"></i><b>12</b> Homework 3</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="homework-3.html"><a href="homework-3.html#overview-3"><i class="fa fa-check"></i><b>12.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="12.1.1" data-path="homework-3.html"><a href="homework-3.html#objectives-1"><i class="fa fa-check"></i><b>12.1.1</b> Objectives</a></li>
+<li class="chapter" data-level="12.1.2" data-path="homework-3.html"><a href="homework-3.html#grading-1"><i class="fa fa-check"></i><b>12.1.2</b> Grading</a></li>
+<li class="chapter" data-level="12.1.3" data-path="homework-3.html"><a href="homework-3.html#deliverables"><i class="fa fa-check"></i><b>12.1.3</b> Deliverables</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="homework-3.html"><a href="homework-3.html#setup-4"><i class="fa fa-check"></i><b>12.2</b> Setup</a></li>
+<li class="chapter" data-level="12.3" data-path="homework-3.html"><a href="homework-3.html#part-a.-attribute-descriptions"><i class="fa fa-check"></i><b>12.3</b> Part A. Attribute descriptions</a></li>
+<li class="chapter" data-level="12.4" data-path="homework-3.html"><a href="homework-3.html#part-b.-r-practice"><i class="fa fa-check"></i><b>12.4</b> Part B. R practice</a></li>
+<li class="chapter" data-level="12.5" data-path="homework-3.html"><a href="homework-3.html#part-c.-thinking-about-common-data-mining-applications"><i class="fa fa-check"></i><b>12.5</b> Part C. Thinking about common data mining applications</a></li>
+</ul></li>
+<li class="part"><span><b>Week 04</b></span></li>
+<li class="chapter" data-level="13" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html"><i class="fa fa-check"></i><b>13</b> Simple denoising examples</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#generating-the-ground-truth"><i class="fa fa-check"></i><b>13.1</b> Generating the ground truth</a></li>
+<li class="chapter" data-level="13.2" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#adding-some-noise"><i class="fa fa-check"></i><b>13.2</b> Adding some noise</a></li>
+<li class="chapter" data-level="13.3" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#denoising-using-a-rolling-average"><i class="fa fa-check"></i><b>13.3</b> Denoising using a rolling average</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#exercises"><i class="fa fa-check"></i><b>13.3.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#denoising-using-a-median-filter"><i class="fa fa-check"></i><b>13.4</b> Denoising using a median filter</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#exercises-1"><i class="fa fa-check"></i><b>13.4.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="simple-denoising-examples.html"><a href="simple-denoising-examples.html#further-exploration"><i class="fa fa-check"></i><b>13.5</b> Further exploration</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html"><i class="fa fa-check"></i><b>14</b> Dealing with missing values</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#dependencies-and-setup"><i class="fa fa-check"></i><b>14.1</b> Dependencies and setup</a></li>
+<li class="chapter" data-level="14.2" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#testing-for-missing-values"><i class="fa fa-check"></i><b>14.2</b> Testing for missing values</a></li>
+<li class="chapter" data-level="14.3" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#dropping-columns-with-missing-values-feature-elimination"><i class="fa fa-check"></i><b>14.3</b> Dropping columns with missing values (feature elimination)</a></li>
+<li class="chapter" data-level="14.4" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#dropping-rows-with-missing-values-object-elimination"><i class="fa fa-check"></i><b>14.4</b> Dropping rows with missing values (object elimination)</a></li>
+<li class="chapter" data-level="14.5" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#mean-imputation"><i class="fa fa-check"></i><b>14.5</b> Mean imputation</a></li>
+<li class="chapter" data-level="14.6" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#median-imputation"><i class="fa fa-check"></i><b>14.6</b> Median imputation</a></li>
+<li class="chapter" data-level="14.7" data-path="dealing-with-missing-values.html"><a href="dealing-with-missing-values.html#exercises-2"><i class="fa fa-check"></i><b>14.7</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="sampling-objects-in-a-dataset.html"><a href="sampling-objects-in-a-dataset.html"><i class="fa fa-check"></i><b>15</b> Sampling objects in a dataset</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="sampling-objects-in-a-dataset.html"><a href="sampling-objects-in-a-dataset.html#dependencies-and-setup-1"><i class="fa fa-check"></i><b>15.1</b> Dependencies and setup</a></li>
+<li class="chapter" data-level="15.2" data-path="sampling-objects-in-a-dataset.html"><a href="sampling-objects-in-a-dataset.html#random-sampling"><i class="fa fa-check"></i><b>15.2</b> Random sampling</a>
+<ul>
+<li class="chapter" data-level="15.2.1" data-path="sampling-objects-in-a-dataset.html"><a href="sampling-objects-in-a-dataset.html#exercises-3"><i class="fa fa-check"></i><b>15.2.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="sampling-objects-in-a-dataset.html"><a href="sampling-objects-in-a-dataset.html#stratified-random-sampling"><i class="fa fa-check"></i><b>15.3</b> Stratified random sampling</a>
+<ul>
+<li class="chapter" data-level="15.3.1" data-path="sampling-objects-in-a-dataset.html"><a href="sampling-objects-in-a-dataset.html#exercises-4"><i class="fa fa-check"></i><b>15.3.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="curse-of-dimensionality-demo.html"><a href="curse-of-dimensionality-demo.html"><i class="fa fa-check"></i><b>16</b> Curse of dimensionality demo</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="curse-of-dimensionality-demo.html"><a href="curse-of-dimensionality-demo.html#dependencies-2"><i class="fa fa-check"></i><b>16.1</b> Dependencies</a></li>
+<li class="chapter" data-level="16.2" data-path="curse-of-dimensionality-demo.html"><a href="curse-of-dimensionality-demo.html#generate-example-data"><i class="fa fa-check"></i><b>16.2</b> Generate example data</a></li>
+<li class="chapter" data-level="16.3" data-path="curse-of-dimensionality-demo.html"><a href="curse-of-dimensionality-demo.html#exercises-5"><i class="fa fa-check"></i><b>16.3</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="aggregation.html"><a href="aggregation.html"><i class="fa fa-check"></i><b>17</b> Aggregation</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="aggregation.html"><a href="aggregation.html#dependencies-and-setup-2"><i class="fa fa-check"></i><b>17.1</b> Dependencies and setup</a></li>
+<li class="chapter" data-level="17.2" data-path="aggregation.html"><a href="aggregation.html#exercise"><i class="fa fa-check"></i><b>17.2</b> Exercise</a></li>
+<li class="chapter" data-level="17.3" data-path="aggregation.html"><a href="aggregation.html#using-dplyr-to-aggregate-objects-in-a-dataset-according-to-a-category"><i class="fa fa-check"></i><b>17.3</b> Using dplyr to aggregate objects in a dataset according to a category</a></li>
+<li class="chapter" data-level="17.4" data-path="aggregation.html"><a href="aggregation.html#exercises-6"><i class="fa fa-check"></i><b>17.4</b> Exercises</a></li>
+</ul></li>
+<li class="part"><span><b>Week 06</b></span></li>
+<li class="chapter" data-level="18" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html"><i class="fa fa-check"></i><b>18</b> Building a decision tree in R</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html#dependencies-and-setup-3"><i class="fa fa-check"></i><b>18.1</b> Dependencies and setup</a></li>
+<li class="chapter" data-level="18.2" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html#building-a-decision-tree"><i class="fa fa-check"></i><b>18.2</b> Building a decision tree</a></li>
+<li class="chapter" data-level="18.3" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html#visualizing-our-decision-tree"><i class="fa fa-check"></i><b>18.3</b> Visualizing our decision tree</a></li>
+<li class="chapter" data-level="18.4" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html#evaluating-the-accuracy-of-our-decision-tree"><i class="fa fa-check"></i><b>18.4</b> Evaluating the accuracy of our decision tree</a></li>
+<li class="chapter" data-level="18.5" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html#using-our-decision-tree-to-make-a-prediction"><i class="fa fa-check"></i><b>18.5</b> Using our decision tree to make a prediction</a></li>
+<li class="chapter" data-level="18.6" data-path="building-a-decision-tree-in-r.html"><a href="building-a-decision-tree-in-r.html#exercises-7"><i class="fa fa-check"></i><b>18.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="homework-4.html"><a href="homework-4.html"><i class="fa fa-check"></i><b>19</b> Homework 4</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="homework-4.html"><a href="homework-4.html#overview-4"><i class="fa fa-check"></i><b>19.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="homework-4.html"><a href="homework-4.html#objectives-2"><i class="fa fa-check"></i><b>19.1.1</b> Objectives</a></li>
+<li class="chapter" data-level="19.1.2" data-path="homework-4.html"><a href="homework-4.html#grading-2"><i class="fa fa-check"></i><b>19.1.2</b> Grading</a></li>
+<li class="chapter" data-level="19.1.3" data-path="homework-4.html"><a href="homework-4.html#deliverables-1"><i class="fa fa-check"></i><b>19.1.3</b> Deliverables</a></li>
+<li class="chapter" data-level="19.1.4" data-path="homework-4.html"><a href="homework-4.html#formatting"><i class="fa fa-check"></i><b>19.1.4</b> Formatting</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="homework-4.html"><a href="homework-4.html#part-a.-identify-relevant-publications"><i class="fa fa-check"></i><b>19.2</b> Part A. Identify relevant publications</a></li>
+<li class="chapter" data-level="19.3" data-path="homework-4.html"><a href="homework-4.html#part-b."><i class="fa fa-check"></i><b>19.3</b> Part B.</a></li>
+</ul></li>
+<li class="part"><span><b>Week 07</b></span></li>
+<li class="chapter" data-level="20" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html"><i class="fa fa-check"></i><b>20</b> Linear regression in R</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html#dependencies-and-setup-4"><i class="fa fa-check"></i><b>20.1</b> Dependencies and setup</a></li>
+<li class="chapter" data-level="20.2" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html#fitting-a-linear-model-to-data"><i class="fa fa-check"></i><b>20.2</b> Fitting a linear model to data</a>
+<ul>
+<li class="chapter" data-level="20.2.1" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html#random-regression-models"><i class="fa fa-check"></i><b>20.2.1</b> Random regression models</a></li>
+<li class="chapter" data-level="20.2.2" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html#more-systematically-searching-model-space-for-good-models"><i class="fa fa-check"></i><b>20.2.2</b> More systematically searching model space for good models</a></li>
+<li class="chapter" data-level="20.2.3" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html#using-lm-for-linear-regression-in-r"><i class="fa fa-check"></i><b>20.2.3</b> Using <code>lm</code> for linear regression in R</a></li>
+</ul></li>
+<li class="chapter" data-level="20.3" data-path="linear-regression-in-r.html"><a href="linear-regression-in-r.html#exercises-8"><i class="fa fa-check"></i><b>20.3</b> Exercises</a></li>
+</ul></li>
+<li class="part"><span><b>Final Project</b></span></li>
+<li class="chapter" data-level="21" data-path="final-project-overview.html"><a href="final-project-overview.html"><i class="fa fa-check"></i><b>21</b> Final project overview</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="final-project-overview.html"><a href="final-project-overview.html#problem-statement"><i class="fa fa-check"></i><b>21.1</b> Problem statement</a></li>
+<li class="chapter" data-level="21.2" data-path="final-project-overview.html"><a href="final-project-overview.html#learning-objectives"><i class="fa fa-check"></i><b>21.2</b> Learning objectives</a></li>
+<li class="chapter" data-level="21.3" data-path="final-project-overview.html"><a href="final-project-overview.html#groups"><i class="fa fa-check"></i><b>21.3</b> Groups</a></li>
+<li class="chapter" data-level="21.4" data-path="final-project-overview.html"><a href="final-project-overview.html#grading-3"><i class="fa fa-check"></i><b>21.4</b> Grading</a></li>
+<li class="chapter" data-level="21.5" data-path="final-project-overview.html"><a href="final-project-overview.html#timeline"><i class="fa fa-check"></i><b>21.5</b> Timeline</a></li>
+<li class="chapter" data-level="21.6" data-path="final-project-overview.html"><a href="final-project-overview.html#possible-project-ideas"><i class="fa fa-check"></i><b>21.6</b> Possible project ideas</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="final-project---proposal.html"><a href="final-project---proposal.html"><i class="fa fa-check"></i><b>22</b> Final project - Proposal</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="final-project---proposal.html"><a href="final-project---proposal.html#project-expectations"><i class="fa fa-check"></i><b>22.1</b> Project expectations</a></li>
+<li class="chapter" data-level="22.2" data-path="final-project---proposal.html"><a href="final-project---proposal.html#proposal-guidelines"><i class="fa fa-check"></i><b>22.2</b> Proposal guidelines</a></li>
+<li class="chapter" data-level="22.3" data-path="final-project---proposal.html"><a href="final-project---proposal.html#grading-4"><i class="fa fa-check"></i><b>22.3</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="final-project---mid-project-update.html"><a href="final-project---mid-project-update.html"><i class="fa fa-check"></i><b>23</b> Final project - Mid-project update</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="final-project---mid-project-update.html"><a href="final-project---mid-project-update.html#requirements"><i class="fa fa-check"></i><b>23.1</b> Requirements</a></li>
+<li class="chapter" data-level="23.2" data-path="final-project---mid-project-update.html"><a href="final-project---mid-project-update.html#grading-5"><i class="fa fa-check"></i><b>23.2</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="final-project---report-draft.html"><a href="final-project---report-draft.html"><i class="fa fa-check"></i><b>24</b> Final project - Report draft</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="final-project---report-draft.html"><a href="final-project---report-draft.html#grading-6"><i class="fa fa-check"></i><b>24.1</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="final-project---final-report.html"><a href="final-project---final-report.html"><i class="fa fa-check"></i><b>25</b> Final project - Final report</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="final-project---final-report.html"><a href="final-project---final-report.html#format"><i class="fa fa-check"></i><b>25.1</b> Format</a></li>
+<li class="chapter" data-level="25.2" data-path="final-project---final-report.html"><a href="final-project---final-report.html#contents"><i class="fa fa-check"></i><b>25.2</b> Contents</a>
+<ul>
+<li class="chapter" data-level="25.2.1" data-path="final-project---final-report.html"><a href="final-project---final-report.html#introduction-1"><i class="fa fa-check"></i><b>25.2.1</b> Introduction</a></li>
+<li class="chapter" data-level="25.2.2" data-path="final-project---final-report.html"><a href="final-project---final-report.html#related-work"><i class="fa fa-check"></i><b>25.2.2</b> Related work</a></li>
+<li class="chapter" data-level="25.2.3" data-path="final-project---final-report.html"><a href="final-project---final-report.html#methods"><i class="fa fa-check"></i><b>25.2.3</b> Methods</a></li>
+<li class="chapter" data-level="25.2.4" data-path="final-project---final-report.html"><a href="final-project---final-report.html#results-and-discussion"><i class="fa fa-check"></i><b>25.2.4</b> Results and discussion</a></li>
+<li class="chapter" data-level="25.2.5" data-path="final-project---final-report.html"><a href="final-project---final-report.html#conclusion"><i class="fa fa-check"></i><b>25.2.5</b> Conclusion</a></li>
+<li class="chapter" data-level="25.2.6" data-path="final-project---final-report.html"><a href="final-project---final-report.html#data-and-software-availability"><i class="fa fa-check"></i><b>25.2.6</b> Data and software availability</a></li>
+<li class="chapter" data-level="25.2.7" data-path="final-project---final-report.html"><a href="final-project---final-report.html#references"><i class="fa fa-check"></i><b>25.2.7</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="25.3" data-path="final-project---final-report.html"><a href="final-project---final-report.html#deliverables-2"><i class="fa fa-check"></i><b>25.3</b> Deliverables</a></li>
+<li class="chapter" data-level="25.4" data-path="final-project---final-report.html"><a href="final-project---final-report.html#grading-7"><i class="fa fa-check"></i><b>25.4</b> Grading</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with ❤ and bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-regression-in-r" class="section level1 hasAnchor" number="20">
+<h1><span class="header-section-number">Chapter 20</span> Linear regression in R<a href="linear-regression-in-r.html#linear-regression-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This lab activity is adapted from the <a href="https://r4ds.had.co.nz/model-basics.html">R for Data Science book</a>.</p>
+<p>In this lab activity, we step through the rationale for linear regression.</p>
+<div id="dependencies-and-setup-4" class="section level2 hasAnchor" number="20.1">
+<h2><span class="header-section-number">20.1</span> Dependencies and setup<a href="linear-regression-in-r.html#dependencies-and-setup-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This lab using the following packages:
+- <code>tidyverse</code>
+- <code>modelr</code>
+- <code>cowplot</code></p>
+<p>You will need to install any that you do not have.</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="linear-regression-in-r.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb182-2"><a href="linear-regression-in-r.html#cb182-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelr)</span>
+<span id="cb182-3"><a href="linear-regression-in-r.html#cb182-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The cowplot package has a nice theme for ggplot *and* all sorts of useful</span></span>
+<span id="cb182-4"><a href="linear-regression-in-r.html#cb182-4" aria-hidden="true" tabindex="-1"></a><span class="co"># other features.</span></span>
+<span id="cb182-5"><a href="linear-regression-in-r.html#cb182-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb182-6"><a href="linear-regression-in-r.html#cb182-6" aria-hidden="true" tabindex="-1"></a><span class="co"># With theme_set, we can set the default ggplot theme to be the cowplot theme.</span></span>
+<span id="cb182-7"><a href="linear-regression-in-r.html#cb182-7" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_cowplot</span>())</span></code></pre></div>
+</div>
+<div id="fitting-a-linear-model-to-data" class="section level2 hasAnchor" number="20.2">
+<h2><span class="header-section-number">20.2</span> Fitting a linear model to data<a href="linear-regression-in-r.html#fitting-a-linear-model-to-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>sim1</code> is a simple dataset included in the <code>modelr</code> package.
+<code>sim1</code> has two attributes: y and x.
+In this lab activity, <code>sim1</code> is our training data wherein y is our response variable and x is a predictor variable.
+That is, we want to use linear regression to build a model that describes the relationship between our response variable, y, and our predictor variable, x.
+We could then use our model to make predictions about values of y for unseen values of x.</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="linear-regression-in-r.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim1)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 2
+##       x     y
+##   &lt;int&gt; &lt;dbl&gt;
+## 1     1  4.20
+## 2     1  7.51
+## 3     1  2.13
+## 4     2  8.99
+## 5     2 10.2 
+## 6     2 11.3</code></pre>
+<p>Let’s plot our training data:</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="linear-regression-in-r.html#cb185-1" aria-hidden="true" tabindex="-1"></a>s1_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(sim1, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb185-2"><a href="linear-regression-in-r.html#cb185-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb185-3"><a href="linear-regression-in-r.html#cb185-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb185-4"><a href="linear-regression-in-r.html#cb185-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb185-5"><a href="linear-regression-in-r.html#cb185-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb185-6"><a href="linear-regression-in-r.html#cb185-6" aria-hidden="true" tabindex="-1"></a>s1_plot</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-97-1.png" width="672" /></p>
+<div id="random-regression-models" class="section level3 hasAnchor" number="20.2.1">
+<h3><span class="header-section-number">20.2.1</span> Random regression models<a href="linear-regression-in-r.html#random-regression-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In a simple linear regression, we assume a linear relationship between our response variable y and our predictor variable x.
+We can describe this relationship mathematically as follows: <span class="math display">\[y=a_2*x + a_1\]</span></p>
+<p>Notice how we set up that function such that y depends on three things: the value of our predictor variable x, <span class="math inline">\(a_2\)</span>, and <span class="math inline">\(a_1\)</span>.
+<span class="math inline">\(a_2\)</span> and $a_1 <em>parameterize</em> our linear model.
+That is, the values of <span class="math inline">\(a_2\)</span> and <span class="math inline">\(a_1\)</span> specify the particular linear relationship between x and y.
+<span class="math inline">\(a_2\)</span> gives the slope of the line and <span class="math inline">\(a_1\)</span> gives the y-intercept for the line.</p>
+<p>Every combination of values for <span class="math inline">\(a_2\)</span> and <span class="math inline">\(a_1\)</span> is a different model.
+For example, we could generate 500 different models for our <code>sim1</code> data by generating 500 random pairs of values for <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>:</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="linear-regression-in-r.html#cb186-1" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb186-2"><a href="linear-regression-in-r.html#cb186-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">a1 =</span> <span class="fu">runif</span>(<span class="dv">500</span>, <span class="sc">-</span><span class="dv">20</span>, <span class="dv">40</span>),</span>
+<span id="cb186-3"><a href="linear-regression-in-r.html#cb186-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">a2 =</span> <span class="fu">runif</span>(<span class="dv">500</span>, <span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb186-4"><a href="linear-regression-in-r.html#cb186-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb186-5"><a href="linear-regression-in-r.html#cb186-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(models)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 2
+##      a1     a2
+##   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 -11.2  4.84 
+## 2  10.9 -3.30 
+## 3  22.0 -3.39 
+## 4  23.6  0.110
+## 5  20.8 -2.07 
+## 6 -11.3  2.22</code></pre>
+<p>Let’s plot all 500 of those random models on top of our <code>sim1</code> data:</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="linear-regression-in-r.html#cb188-1" aria-hidden="true" tabindex="-1"></a>rand_search_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(sim1, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb188-2"><a href="linear-regression-in-r.html#cb188-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
+<span id="cb188-3"><a href="linear-regression-in-r.html#cb188-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> models,</span>
+<span id="cb188-4"><a href="linear-regression-in-r.html#cb188-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">intercept =</span> a1, <span class="at">slope =</span> a2),</span>
+<span id="cb188-5"><a href="linear-regression-in-r.html#cb188-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
+<span id="cb188-6"><a href="linear-regression-in-r.html#cb188-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb188-7"><a href="linear-regression-in-r.html#cb188-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb188-8"><a href="linear-regression-in-r.html#cb188-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">3</span></span>
+<span id="cb188-9"><a href="linear-regression-in-r.html#cb188-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb188-10"><a href="linear-regression-in-r.html#cb188-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb188-11"><a href="linear-regression-in-r.html#cb188-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb188-12"><a href="linear-regression-in-r.html#cb188-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb188-13"><a href="linear-regression-in-r.html#cb188-13" aria-hidden="true" tabindex="-1"></a>rand_search_plot</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-99-1.png" width="672" /></p>
+<p>Each light gray line in the plot above is a different possible model for our <code>sim1</code> data.
+However, not all models are an equally good fit for our data – we generated them all randomly, so we shouldn’t have any expectation for many of them to be good!
+So, we need a way to assess the quality of each model.</p>
+<p>The function below will run our linear model with a given parameterization for <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>.</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="linear-regression-in-r.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run_model &lt;- function(a, data) {</span></span>
+<span id="cb189-2"><a href="linear-regression-in-r.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   a[1] + data$x * a[2]</span></span>
+<span id="cb189-3"><a href="linear-regression-in-r.html#cb189-3" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb189-4"><a href="linear-regression-in-r.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model1(c(7, 1.5), sim1)</span></span>
+<span id="cb189-5"><a href="linear-regression-in-r.html#cb189-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-6"><a href="linear-regression-in-r.html#cb189-6" aria-hidden="true" tabindex="-1"></a>run_model <span class="ot">&lt;-</span> <span class="cf">function</span>(a1, a2, data) {</span>
+<span id="cb189-7"><a href="linear-regression-in-r.html#cb189-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a1 <span class="sc">+</span> (data<span class="sc">$</span>x <span class="sc">*</span> a2) )</span>
+<span id="cb189-8"><a href="linear-regression-in-r.html#cb189-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>For example, if we wanted to run our linear model using the x values from our training data (<code>sim1</code>) with <span class="math inline">\(a_1=7\)</span> and <span class="math inline">\(a_2=1.5\)</span>:</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="linear-regression-in-r.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_model</span>(<span class="dv">7</span>, <span class="fl">1.5</span>, sim1)</span></code></pre></div>
+<pre><code>##  [1]  8.5  8.5  8.5 10.0 10.0 10.0 11.5 11.5 11.5 13.0 13.0 13.0 14.5 14.5 14.5
+## [16] 16.0 16.0 16.0 17.5 17.5 17.5 19.0 19.0 19.0 20.5 20.5 20.5 22.0 22.0 22.0</code></pre>
+<p>That output gives the predicted y value for each x value in our training set if we were to parameterize our model with <span class="math inline">\(a_1=7\)</span> and <span class="math inline">\(a_2=1.5\)</span></p>
+<p>Next, we need a way to measure the error between the value of our response variable in our training data and the prediction made by our model.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="linear-regression-in-r.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="co"># measure_error returns the sum of squared error between the model output</span></span>
+<span id="cb192-2"><a href="linear-regression-in-r.html#cb192-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and the true value of the response variable in our training data.</span></span>
+<span id="cb192-3"><a href="linear-regression-in-r.html#cb192-3" aria-hidden="true" tabindex="-1"></a>measure_error <span class="ot">&lt;-</span> <span class="cf">function</span>(model_params, data) {</span>
+<span id="cb192-4"><a href="linear-regression-in-r.html#cb192-4" aria-hidden="true" tabindex="-1"></a>  diff <span class="ot">&lt;-</span> data<span class="sc">$</span>y <span class="sc">-</span> <span class="fu">run_model</span>(model_params[<span class="dv">1</span>], model_params[<span class="dv">2</span>], data)</span>
+<span id="cb192-5"><a href="linear-regression-in-r.html#cb192-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">sum</span>(diff <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb192-6"><a href="linear-regression-in-r.html#cb192-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>For example, we can use the above <code>measure_error</code> function to calculate the sum of squared error for the linear model defined by <span class="math inline">\(a_1=7\)</span> and <span class="math inline">\(a_2=1.5\)</span></p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="linear-regression-in-r.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">measure_error</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="fl">1.5</span>), sim1)</span></code></pre></div>
+<pre><code>## [1] 213.1007</code></pre>
+<p>We can now measure the error for all 500 of our randomly generated models:</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="linear-regression-in-r.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I define this sim1_err function to make it easy to use mapply to compute</span></span>
+<span id="cb195-2"><a href="linear-regression-in-r.html#cb195-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the error for *all* models at once.</span></span>
+<span id="cb195-3"><a href="linear-regression-in-r.html#cb195-3" aria-hidden="true" tabindex="-1"></a>sim1_err <span class="ot">&lt;-</span> <span class="cf">function</span>(a1, a2) {</span>
+<span id="cb195-4"><a href="linear-regression-in-r.html#cb195-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">measure_error</span>(<span class="fu">c</span>(a1, a2), sim1)</span>
+<span id="cb195-5"><a href="linear-regression-in-r.html#cb195-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb195-6"><a href="linear-regression-in-r.html#cb195-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb195-7"><a href="linear-regression-in-r.html#cb195-7" aria-hidden="true" tabindex="-1"></a>models<span class="sc">$</span>error <span class="ot">&lt;-</span> <span class="fu">mapply</span>(</span>
+<span id="cb195-8"><a href="linear-regression-in-r.html#cb195-8" aria-hidden="true" tabindex="-1"></a>  sim1_err,</span>
+<span id="cb195-9"><a href="linear-regression-in-r.html#cb195-9" aria-hidden="true" tabindex="-1"></a>  models<span class="sc">$</span>a1,</span>
+<span id="cb195-10"><a href="linear-regression-in-r.html#cb195-10" aria-hidden="true" tabindex="-1"></a>  models<span class="sc">$</span>a2</span>
+<span id="cb195-11"><a href="linear-regression-in-r.html#cb195-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb195-12"><a href="linear-regression-in-r.html#cb195-12" aria-hidden="true" tabindex="-1"></a>models</span></code></pre></div>
+<pre><code>## # A tibble: 500 × 3
+##        a1     a2  error
+##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 -11.2   4.84   2059.
+##  2  10.9  -3.30  22679.
+##  3  22.0  -3.39  11886.
+##  4  23.6   0.110  3347.
+##  5  20.8  -2.07   5467.
+##  6 -11.3   2.22   6475.
+##  7  27.8  -1.95   4173.
+##  8  35.1   0.257 14215.
+##  9  -5.08 -0.150 15083.
+## 10  29.7  -2.10   4618.
+## # … with 490 more rows</code></pre>
+<p>Notice that <code>models</code> describes 500 models (i.e., defines 500 pairs of values for a1 and a2), <em>and</em> now gives the error for each model.
+With those error values, we can start to look at the best of our 500 models.</p>
+<p>Let’s look at the best 3 models out of the 500 random models we generated:</p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="linear-regression-in-r.html#cb197-1" aria-hidden="true" tabindex="-1"></a>top_models_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb197-2"><a href="linear-regression-in-r.html#cb197-2" aria-hidden="true" tabindex="-1"></a>    sim1,</span>
+<span id="cb197-3"><a href="linear-regression-in-r.html#cb197-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(x, y)</span>
+<span id="cb197-4"><a href="linear-regression-in-r.html#cb197-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb197-5"><a href="linear-regression-in-r.html#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb197-6"><a href="linear-regression-in-r.html#cb197-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">2</span>,</span>
+<span id="cb197-7"><a href="linear-regression-in-r.html#cb197-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">&quot;grey30&quot;</span></span>
+<span id="cb197-8"><a href="linear-regression-in-r.html#cb197-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb197-9"><a href="linear-regression-in-r.html#cb197-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
+<span id="cb197-10"><a href="linear-regression-in-r.html#cb197-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">intercept =</span> a1, <span class="at">slope =</span> a2, <span class="at">colour =</span> <span class="sc">-</span>error),</span>
+<span id="cb197-11"><a href="linear-regression-in-r.html#cb197-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">filter</span>(models, <span class="fu">rank</span>(error) <span class="sc">&lt;=</span> <span class="dv">3</span>)</span>
+<span id="cb197-12"><a href="linear-regression-in-r.html#cb197-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb197-13"><a href="linear-regression-in-r.html#cb197-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(</span>
+<span id="cb197-14"><a href="linear-regression-in-r.html#cb197-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Error&quot;</span></span>
+<span id="cb197-15"><a href="linear-regression-in-r.html#cb197-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb197-16"><a href="linear-regression-in-r.html#cb197-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb197-17"><a href="linear-regression-in-r.html#cb197-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>)</span>
+<span id="cb197-18"><a href="linear-regression-in-r.html#cb197-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb197-19"><a href="linear-regression-in-r.html#cb197-19" aria-hidden="true" tabindex="-1"></a>top_models_plot</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-105-1.png" width="672" /></p>
+<div id="model-space" class="section level4 hasAnchor" number="20.2.1.1">
+<h4><span class="header-section-number">20.2.1.1</span> Model space<a href="linear-regression-in-r.html#model-space" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We could think of each model (defined by a1 and a2) as a point in “model space” (i.e., the space of all possible model parameterizations).
+That is, we could plot all 500 models we randomly generated according to their value for a1 and a2.</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="linear-regression-in-r.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(models, <span class="fu">aes</span>(a1, a2)) <span class="sc">+</span></span>
+<span id="cb198-2"><a href="linear-regression-in-r.html#cb198-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb198-3"><a href="linear-regression-in-r.html#cb198-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">colour =</span> <span class="sc">-</span>error)</span>
+<span id="cb198-4"><a href="linear-regression-in-r.html#cb198-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb198-5"><a href="linear-regression-in-r.html#cb198-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(</span>
+<span id="cb198-6"><a href="linear-regression-in-r.html#cb198-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Error&quot;</span></span>
+<span id="cb198-7"><a href="linear-regression-in-r.html#cb198-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb198-8"><a href="linear-regression-in-r.html#cb198-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb198-9"><a href="linear-regression-in-r.html#cb198-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb198-10"><a href="linear-regression-in-r.html#cb198-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-106-1.png" width="672" /></p>
+<p>Now, let’s highlight (in red) the three best models we found in model space:</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="linear-regression-in-r.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(models, <span class="fu">aes</span>(a1, a2)) <span class="sc">+</span></span>
+<span id="cb199-2"><a href="linear-regression-in-r.html#cb199-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb199-3"><a href="linear-regression-in-r.html#cb199-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">filter</span>(models, <span class="fu">rank</span>(error) <span class="sc">&lt;=</span> <span class="dv">3</span>),</span>
+<span id="cb199-4"><a href="linear-regression-in-r.html#cb199-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb199-5"><a href="linear-regression-in-r.html#cb199-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">&quot;red&quot;</span></span>
+<span id="cb199-6"><a href="linear-regression-in-r.html#cb199-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb199-7"><a href="linear-regression-in-r.html#cb199-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb199-8"><a href="linear-regression-in-r.html#cb199-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">colour =</span> <span class="sc">-</span>error)</span>
+<span id="cb199-9"><a href="linear-regression-in-r.html#cb199-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb199-10"><a href="linear-regression-in-r.html#cb199-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(</span>
+<span id="cb199-11"><a href="linear-regression-in-r.html#cb199-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Error&quot;</span></span>
+<span id="cb199-12"><a href="linear-regression-in-r.html#cb199-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb199-13"><a href="linear-regression-in-r.html#cb199-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb199-14"><a href="linear-regression-in-r.html#cb199-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb199-15"><a href="linear-regression-in-r.html#cb199-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-107-1.png" width="672" /></p>
+</div>
+</div>
+<div id="more-systematically-searching-model-space-for-good-models" class="section level3 hasAnchor" number="20.2.2">
+<h3><span class="header-section-number">20.2.2</span> More systematically searching model space for good models<a href="linear-regression-in-r.html#more-systematically-searching-model-space-for-good-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Instead of generating 500 <em>random</em> models, we could generate 500 models that are evenly spaced within some portion of “model space”.</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="linear-regression-in-r.html#cb200-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb200-2"><a href="linear-regression-in-r.html#cb200-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">a1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">20</span>, <span class="at">length =</span> <span class="dv">50</span>),</span>
+<span id="cb200-3"><a href="linear-regression-in-r.html#cb200-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">a2 =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="at">length =</span> <span class="dv">50</span>)</span>
+<span id="cb200-4"><a href="linear-regression-in-r.html#cb200-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb200-5"><a href="linear-regression-in-r.html#cb200-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(grid)</span></code></pre></div>
+<pre><code>##          a1 a2
+## 1 -5.000000  1
+## 2 -4.489796  1
+## 3 -3.979592  1
+## 4 -3.469388  1
+## 5 -2.959184  1
+## 6 -2.448980  1</code></pre>
+<p><code>grid</code> has 500 evenly spaced models:</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="linear-regression-in-r.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb202-2"><a href="linear-regression-in-r.html#cb202-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>grid,</span>
+<span id="cb202-3"><a href="linear-regression-in-r.html#cb202-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(a1, a2)</span>
+<span id="cb202-4"><a href="linear-regression-in-r.html#cb202-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb202-5"><a href="linear-regression-in-r.html#cb202-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb202-6"><a href="linear-regression-in-r.html#cb202-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb202-7"><a href="linear-regression-in-r.html#cb202-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb202-8"><a href="linear-regression-in-r.html#cb202-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-109-1.png" width="672" /></p>
+<p>We can calculate the error for each model:</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="linear-regression-in-r.html#cb203-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> grid <span class="sc">%&gt;%</span></span>
+<span id="cb203-2"><a href="linear-regression-in-r.html#cb203-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">error =</span> purrr<span class="sc">::</span><span class="fu">map2_dbl</span>(a1, a2, sim1_err))</span>
+<span id="cb203-3"><a href="linear-regression-in-r.html#cb203-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(grid)</span></code></pre></div>
+<pre><code>##          a1 a2    error
+## 1 -5.000000  1 7163.370
+## 2 -4.489796  1 6711.865
+## 3 -3.979592  1 6275.979
+## 4 -3.469388  1 5855.711
+## 5 -2.959184  1 5451.062
+## 6 -2.448980  1 5062.031</code></pre>
+<p>And then plot it, highlighting the top 3 models:</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="linear-regression-in-r.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb205-2"><a href="linear-regression-in-r.html#cb205-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>grid,</span>
+<span id="cb205-3"><a href="linear-regression-in-r.html#cb205-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(a1, a2)</span>
+<span id="cb205-4"><a href="linear-regression-in-r.html#cb205-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb205-5"><a href="linear-regression-in-r.html#cb205-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb205-6"><a href="linear-regression-in-r.html#cb205-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">filter</span>(grid, <span class="fu">rank</span>(error) <span class="sc">&lt;=</span> <span class="dv">3</span>),</span>
+<span id="cb205-7"><a href="linear-regression-in-r.html#cb205-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb205-8"><a href="linear-regression-in-r.html#cb205-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">&quot;red&quot;</span></span>
+<span id="cb205-9"><a href="linear-regression-in-r.html#cb205-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb205-10"><a href="linear-regression-in-r.html#cb205-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb205-11"><a href="linear-regression-in-r.html#cb205-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">colour =</span> <span class="sc">-</span>error)</span>
+<span id="cb205-12"><a href="linear-regression-in-r.html#cb205-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb205-13"><a href="linear-regression-in-r.html#cb205-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(</span>
+<span id="cb205-14"><a href="linear-regression-in-r.html#cb205-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Error&quot;</span></span>
+<span id="cb205-15"><a href="linear-regression-in-r.html#cb205-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb205-16"><a href="linear-regression-in-r.html#cb205-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb205-17"><a href="linear-regression-in-r.html#cb205-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb205-18"><a href="linear-regression-in-r.html#cb205-18" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-111-1.png" width="672" /></p>
+<p>What do those top 3 models look like in terms of our predictor and response variable?</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="linear-regression-in-r.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb206-2"><a href="linear-regression-in-r.html#cb206-2" aria-hidden="true" tabindex="-1"></a>    sim1,</span>
+<span id="cb206-3"><a href="linear-regression-in-r.html#cb206-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(x, y)</span>
+<span id="cb206-4"><a href="linear-regression-in-r.html#cb206-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb206-5"><a href="linear-regression-in-r.html#cb206-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb206-6"><a href="linear-regression-in-r.html#cb206-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">2</span>,</span>
+<span id="cb206-7"><a href="linear-regression-in-r.html#cb206-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">&quot;grey30&quot;</span></span>
+<span id="cb206-8"><a href="linear-regression-in-r.html#cb206-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb206-9"><a href="linear-regression-in-r.html#cb206-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
+<span id="cb206-10"><a href="linear-regression-in-r.html#cb206-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">intercept =</span> a1, <span class="at">slope =</span> a2, <span class="at">colour =</span> <span class="sc">-</span>error),</span>
+<span id="cb206-11"><a href="linear-regression-in-r.html#cb206-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">filter</span>(grid, <span class="fu">rank</span>(error) <span class="sc">&lt;=</span> <span class="dv">3</span>)</span>
+<span id="cb206-12"><a href="linear-regression-in-r.html#cb206-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb206-13"><a href="linear-regression-in-r.html#cb206-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(</span>
+<span id="cb206-14"><a href="linear-regression-in-r.html#cb206-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Error&quot;</span></span>
+<span id="cb206-15"><a href="linear-regression-in-r.html#cb206-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb206-16"><a href="linear-regression-in-r.html#cb206-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb206-17"><a href="linear-regression-in-r.html#cb206-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)</span>
+<span id="cb206-18"><a href="linear-regression-in-r.html#cb206-18" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-112-1.png" width="672" /></p>
+</div>
+<div id="using-lm-for-linear-regression-in-r" class="section level3 hasAnchor" number="20.2.3">
+<h3><span class="header-section-number">20.2.3</span> Using <code>lm</code> for linear regression in R<a href="linear-regression-in-r.html#using-lm-for-linear-regression-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Fortunately for us, we don’t need to generate random models or do a grid search in order to find good parameterizations for a linear regression model.
+There are optimization techniques/algorithms that will quickly find good values for a1 and a2.
+In R, you can use the <code>lm</code> function to fit linear models.</p>
+<p>The <code>lm</code> function using R’s formula syntax, which you will want to familiarize yourself with: <a href="https://r4ds.had.co.nz/model-basics.html#model-basics" class="uri">https://r4ds.had.co.nz/model-basics.html#model-basics</a> and <a href="https://r4ds.had.co.nz/model-basics.html#formulas-and-model-families" class="uri">https://r4ds.had.co.nz/model-basics.html#formulas-and-model-families</a> give good introductions to the formula syntax in R.</p>
+<p>For example, to fit the linear model we were using to model the <code>sim1</code> training data, we could:</p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="linear-regression-in-r.html#cb207-1" aria-hidden="true" tabindex="-1"></a>lm_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim1)</span>
+<span id="cb207-2"><a href="linear-regression-in-r.html#cb207-2" aria-hidden="true" tabindex="-1"></a>lm_mod</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x, data = sim1)
+## 
+## Coefficients:
+## (Intercept)            x  
+##       4.221        2.052</code></pre>
+</div>
+</div>
+<div id="exercises-8" class="section level2 hasAnchor" number="20.3">
+<h2><span class="header-section-number">20.3</span> Exercises<a href="linear-regression-in-r.html#exercises-8" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Read through the R code. Identify any lines you don’t understand and figure out how they work using the R documentation.</li>
+<li>In the example above, we generated 500 random models. How would it have affected our results if we had generated just 10 random models? What about 10,000 random models?</li>
+<li>Look back to where we visualized our 500 random models in model space. What would it mean for the top 10 models to be in very different parts of model space (e.g., some in the top right and some in the bottom left)? What kind of data might that happen for?</li>
+<li>Look up multivariate linear regression. Then, look up how you could do multivariate linear regression using the <code>lm</code> function in R?</li>
+<li>Pick another regression approach that I listed in the overview of regression lecture. Look up what situations that regression approach is useful for, and then look up how you could do it in R (e.g., using base R functionality or with a third-party package).</li>
+</ol>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="homework-4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-project-overview.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-07/linear-regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
