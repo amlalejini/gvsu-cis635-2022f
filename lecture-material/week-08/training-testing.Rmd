@@ -1,0 +1,240 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Using a testing set to evaluate the quality of a model
+
+In this lab activity, we will do the following:
+- load a dataset
+- randomly divide the dataset into training and testing data
+- train a linear model and a regression tree using the training set
+- compute training error
+- compute testing error
+
+## Dependencies and setup
+
+We'll use the following packages in this lab activity:
+
+```{r}
+library(tidyverse)
+library(modelr)
+library(rpart)      # Used to build a regression tree
+library(rpart.plot) # Used to visualize trees
+```
+
+You'll need to install any packages that you don't already have installed.
+
+## Loading and preprocessing the data
+
+In this lab activity, we'll be using the Seoul bike dataset from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/datasets/Seoul+Bike+Sharing+Demand).
+This dataset contains the number of public bikes rented at each hour in a Seoul bike sharing system.
+In addition to the number of bikes, the data contains other variables, including weather and holiday information.
+Our goal will be to build some simple models that predict the number of bikes rented as a function of other attributes available in the dataset.
+
+```{r}
+# Load data from file (you will need to adjust the file path to run locally)
+data <- read_csv("lecture-material/week-08/data/SeoulBikeData.csv")
+```
+
+We can look at the attributes of our data:
+
+```{r}
+colnames(data)
+```
+
+Next, we want to convert categorical attributes into proper factors.
+
+```{r}
+# Convert categorical variables into factors:
+data$holiday <- as.factor(data$holiday)
+data$functioning_day <- as.factor(data$functioning_day)
+data$seasons <- as.factor(data$seasons)
+```
+
+## Creating training and testing sets
+
+Next, we want to split our full data set into a training set and a testing set.
+We'll use the training set to train/build our models, and then we can use the testing set to evaluate the performance of our model on data unseen during training.
+
+```{r}
+# First assign ID to each row to help us make the split.
+data <- data %>%
+  mutate(id = row_number())
+
+# Size (as a proportion) of our training set.
+training_set_size <- 0.5
+
+# Use slice sample create a training set comprising a sample of the rows from
+# the full dataset.
+training_data <- data %>%
+  slice_sample(prop = training_set_size)
+
+# The testing set should be all of the rows in data not in the training set
+# For this, we can use the 'anti_join' dplyr function
+testing_data <- data %>%
+  anti_join(training_data, by = "id")
+
+# Alternatively, we could have used the filter function to do the same thing
+# testing_data <- data %>%
+#   filter(!(id %in% training_data$id))
+```
+
+## Training a simple linear model
+
+Next, we'll use linear regression to estimate a simple model of `rented_bike_count` as a function of the `temperature`, `rainfall`, and `hour` attributes.
+That is, `rented_bike_count` will be our response variable, and `temperature`, `rainfall`, and `hour` are our predictor attributes.
+Note that I picked these variables somewhat arbitrarily, so I do not necessarily have a strong intuition for whether these are good predictor attributes for this particular problem.
+
+Recall from previous lab activities that we can use the `lm` function to train a linear model in R.
+
+```{r}
+# Train a linear model of rented_bike_count as a function of the temperature,
+# rainfall, and hour attributes.
+model_a <- lm(
+  formula = rented_bike_count ~ temperature + rainfall + hour,
+  data = training_data
+)
+summary(model_a)
+```
+
+### Computing training and testing error
+
+The summary output for our model already gives a lot of useful information about model's training error (see the `Residual standard error`).
+We can also calculate the training error manually:
+
+```{r}
+# Use the predict function to get the model's output for each row of the
+# training data
+mA_training_predictions <- predict(
+  model_a,
+  data = training_data
+)
+# Using the training prediction values, we can compute the mean squared error
+# for the model on the training data.
+mA_training_MSE <- mean(
+  (training_data$rented_bike_count - mA_training_predictions)^2
+)
+mA_training_MSE
+```
+
+On it's own, the mean squared error (MSE) for a model is a bit hard to interpret.
+We can also compute the root mean squared error (RMSE):
+
+```{r}
+sqrt(mA_training_MSE)
+```
+
+which gives us a better idea of the average error in the same units as the response variable (i.e., `rented_bike_count`).
+
+Next, let's compute the testing error of our model.
+```{r}
+# Use the predict function to get the model's output for each testing example
+mA_testing_predictions <- predict(
+  model_a,
+  data = testing_data
+)
+# Compute the mean squared error
+mA_testing_MSE <- mean(
+  (testing_data$rented_bike_count - mA_testing_predictions)^2
+)
+mA_testing_MSE
+```
+
+Once again, we can also compute the root mean squared error (RMSE):
+
+```{r}
+sqrt(mA_testing_MSE)
+```
+
+Notice how our testing error is much worse than our training error.
+This should make some intuitive sense: the testing data is unseen data not used
+during training.
+We do generally expect the testing error to be worse than the training error.
+
+## Comparing two models
+
+Next, let's train a different type of model to predict `rented_bike_count` as a function of `temperature`, `rainfall`, and `hour`.
+For this, we'll train a regression tree (using the `rpart`) package.
+
+```{r}
+# Use rpart to train a regression tree using the training data
+model_b <- rpart(
+  formula = rented_bike_count ~ temperature + rainfall + hour,
+  data = training_data,
+  parms = list(split="information")
+)
+summary(model_b)
+```
+
+We can look at the regression tree visually:
+
+```{r}
+rpart.plot(model_b)
+```
+
+And then we can look more closely at the training error for our regression tree:
+
+```{r}
+# Use the predict function to compute the output of our model for each training
+# example
+mB_training_predictions <- predict(
+  model_b,
+  data = training_data
+)
+
+# Compute the mean squared error
+mB_training_MSE <- mean(
+  (training_data$rented_bike_count - mB_training_predictions)^2
+)
+mB_training_MSE
+```
+
+RMSE (for the training data):
+
+```{r}
+sqrt(mB_training_MSE)
+```
+
+If you compare the training error for the regression tree to the training error for
+our linear model, you'll see that the regression tree has lower training error.
+But, training error really isn't a great way to compare the quality of two models.
+Remember, we often prefer models that we expect to _generalize_ well to unseen data.
+Comparing each of the two model's error on the testing set can give us a better idea of which model might generalize better.
+
+To do so, we'll need to compute the regression tree's error on the testing set:
+
+```{r}
+mB_testing_predictions <- predict(
+  model_b,
+  data = testing_data
+)
+# Mean squared error
+mB_testing_MSE <- mean(
+  (testing_data$rented_bike_count - mB_testing_predictions)^2
+)
+mB_testing_MSE
+```
+
+RMSE (for the testing data):
+
+```{r}
+sqrt(mB_testing_MSE)
+```
+
+The regression tree's testing error is _much_ worse than the simple linear model's testing error, suggesting that the simple linear model might generalize better to unseen data as compared to our regression tree.
+
+## Exercises
+
+- Identify any lines of code that you do not understand. Use the documentation to figure out what is going on.
+- We did not use all of the attributes in the bike rental data set to build our models.
+  Are there attributes that we didn't use that you think would be useful to include in a predictive model?
+- Try building a couple of different models using the predictor attributes that you think would be most useful.
+  How do their training/testing errors compare?
+- The `modelr` package has all sorts of useful functions for assessing model quality.
+  Read over the `modelr` documentation: <https://modelr.tidyverse.org/>.
+  Try using some of the functions to compute different types of training/testing errors for the models we trained in this lab activity.
+- Think about the structure of the dataset. What kinds of issues might run into when we randomly divide the data into a training and testing set?
+  For example, are we guaranteed to have a good representation of every hour of the day in both our training and testing data if we split the data randomly?
+  What other sampling procedures could we use to perform a training/testing split that might avoid some of these issues?

@@ -1,0 +1,115 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# K-fold cross validation in R
+
+Cross-validation is another method of estimating the quality of prediction of a model.
+Often, you'll want to use cross-validation in situations where your dataset is small,
+in which case splitting the data into two parts -- a training set and a testing set -- does not result in a good prediction.
+That is, your training set might be too small to train a good model, and your testing set might be too small to get a good idea of the quality of your model's predictions on unseen data.
+
+In k-fold cross-validation, you divide the entire data set into `k` equal-size subsets, and use `k-1` parts for training and the remaining part for testing and calculating the prediction error (i.e., prediction quality).
+You repeat this procedure `k` times (one for each of the `k` "folds"), and report the average quality of prediction from the `k` runs.
+
+Fortunately, R has a variety of tools that help you to perform a k-fold cross validation.
+In this lab activity, we will use functions from the tidyverse collection of packages to perform a k-fold cross validation.
+
+## Dependencies
+
+We'll use the following packages (you will need to install any that you don't already have installed):
+
+```{r}
+library(tidyverse)
+library(modelr)
+```
+
+
+## Loading the data
+
+In this lab activity, we'll use the `mtcars` dataset, which comes built-in with your R install.
+Read more about it by running `?mtcars` in your R console on RStudio.
+
+```{r}
+data <- mtcars
+```
+
+## Cross-validation with `crossv_kfold`
+
+We can use the `crossv_kfold` function in the [`modelr` package](https://modelr.tidyverse.org/reference/crossv_mc.html) to split our data into `k` exclusive partitions (i.e., `k` folds).
+
+```{r}
+kfolds <- crossv_kfold(
+  data,
+  k=8
+)
+kfolds
+```
+
+Notice that the output of `crossv_kfold` is a tibble (i.e., a fancy data frame) where each row gives a different training/testing split.
+Each one of those resample objects you see in the tibble can be turned back into a data frame using `as.data.frame`.
+For example,
+
+```{r}
+# Convert one of the training samples into a more familiar data object
+as.data.frame(kfolds$train[1])
+```
+
+We can use the `map` function (from the `purrr` tidyverse package) to train a simple linear model (using `lm`) _for each_ of our 8 folds:
+
+```{r}
+# In this code, the map function runs the provided function (lm in this case)
+# on each of the training sets inside of the kfolds tibble we created.
+# After running this line, models_a will contain 8 models, each trained on one
+# of our 8 training sets.
+models_a <- map(kfolds$train, ~lm(mpg ~ wt, data = .))
+```
+
+Next, we can use the `map2_dbl` function (from the `purrr` tidyverse package) to get the testing errors (root mean squared error, rmse in this case) for each model trained on a different fold:
+```{r}
+# In short, the map2_dbl function "loops" over the contents of the first two
+# arguments (models_a and kfolds$test), applying each pair of values (one from
+# models_a and one from kfolds$test) to the function given in the third argument
+# for the map2_dbl function (rmse).
+errors_a <- map2_dbl(models_a, kfolds$test, rmse)
+```
+
+It's common to then report the average error across all folds
+
+```{r}
+mean(errors_a)
+```
+
+Cross-validation is particularly useful for comparing across different models.
+For example, let's train a slightly more complicated linear model (with wt and hp as predictors):
+
+```{r}
+# Again, we use map and map2_dbl to help us train a model and compute its test
+# error.
+models_b <- map(kfolds$train, ~lm(mpg ~ wt + hp, data = .))
+errors_b <- map2_dbl(models_b, kfolds$test, rmse)
+mean(errors_b)
+```
+
+And a regression tree with wt and hp as predictors for mpg:
+
+```{r}
+models_c <- map(kfolds$train, ~rpart(mpg ~ wt + hp, data = .))
+errors_c <- map2_dbl(models_c, kfolds$test, rmse)
+mean(errors_c)
+```
+
+## Exercises
+
+- The `map` family of functions from the `purrr` tidyverse package are pretty powerful.
+  Check your understanding of how they work using the documentation: <https://purrr.tidyverse.org/reference/map.html>
+- Why might k-fold cross validation be a more robust method of evaluation than performing a single training/testing split (as we have done before) when working with small datasets?
+
+## References
+
+- Data mining - a knowledge discovery approach (textbook)
+- [Cross Validation in R example](https://www.r-bloggers.com/2021/10/cross-validation-in-r-with-example-2/)
+- [R for Data Analytics](https://rforanalytics.com/)
+- [modelr documentation](https://modelr.tidyverse.org/)
