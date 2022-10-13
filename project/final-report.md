@@ -141,3 +141,6 @@ Your final report will be graded on the following out of 100:
 | Report is sufficiently professional (few spelling and gramatical errors) | 10 |
 
 I reserve the right to award flex points for exemplary work in any areas of this project.
+
+All components of your final project are subject to GVSU and the School of Computing's academic honesty policies.
+Violations of these policies may result in failure from the course.

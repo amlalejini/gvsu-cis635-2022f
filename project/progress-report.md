@@ -37,3 +37,6 @@ Graded on the following out of 100:
 | Addressed the required points | 80 |
 | Document is clearly organized | 10 |
 | Writing is sufficiently formal and clear | 10 |
+
+All components of your final project are subject to GVSU and the School of Computing's academic honesty policies.
+Violations of these policies may result in failure from the course.

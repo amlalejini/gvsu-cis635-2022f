@@ -90,3 +90,6 @@ The proposal will be graded as follows (out of 100):
 | Proposal is well-formatted | 5 |
 
 I reserve the right to award flex points for exemplary work in any areas of this project.
+
+All components of your final project are subject to GVSU and the School of Computing's academic honesty policies.
+Violations of these policies may result in failure from the course.

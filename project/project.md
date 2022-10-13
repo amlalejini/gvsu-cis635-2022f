@@ -42,6 +42,9 @@ I will assist in forming groups by sending out a survey asking about which topic
 
 Note that you cannot use your homework extensions on project components.
 
+All components of your final project are subject to GVSU and the School of Computing's academic honesty policies.
+Violations of these policies may result in failure from the course.
+
 ## Timeline
 
 | Week    | Project Component |
