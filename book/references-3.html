@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="functions-in-r.html"/>
-<link rel="next" href="tidyverse.html"/>
+<link rel="prev" href="final-project---final-report.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -439,163 +439,19 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="reading-and-writing-data" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Reading and Writing Data<a href="reading-and-writing-data.html#reading-and-writing-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>You can download the R Markdown file used to generate this document (or webpage) <a href="https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-02/read-write-data.Rmd">here</a>.
-I would encourage you to download that Rmd file, open it own your own computer in RStudio, and run the code chunks on your own (and modify things as you wish!).</p>
-<p>In this tutorial:</p>
-<ul>
-<li>I’ll walk you through how to write data stored in a dataframe as a <code>.csv</code> file.</li>
-<li>And, I’ll show you how to load data saved in a <code>.csv</code> file into a dataframe.</li>
-</ul>
-<div id="writing-data" class="section level2 hasAnchor" number="6.1">
-<h2><span class="header-section-number">6.1</span> Writing data<a href="reading-and-writing-data.html#writing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>R comes preloaded with many datasets (for a complete list run <code>library(help="datasets")</code>).
-For example, <code>Orange</code> is a small data set that gives growth data for 5 orange trees.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="reading-and-writing-data.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Orange)</span></code></pre></div>
-<pre><code>##   Tree  age circumference
-## 1    1  118            30
-## 2    1  484            58
-## 3    1  664            87
-## 4    1 1004           115
-## 5    1 1231           120
-## 6    1 1372           142</code></pre>
-<p>If we wanted to write this dataset out to a csv file, we could use the <code>write.csv</code> function.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="reading-and-writing-data.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(<span class="at">x=</span>Orange, <span class="at">file=</span><span class="st">&quot;orange_trees.csv&quot;</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div>
-<p>If you run the above R code, where did <code>orange_trees.csv</code> get saved? (hint: in your current working directory)</p>
-<p><code>write.csv</code> has many options. Run <code>?write.csv</code> in your R console to read the documentation.</p>
-<p><code>write.csv</code> will be very useful when you want to clean up or transform a dataset that you’ll be analyzing/working with.
-If your dataset is large and/or the preprocessing operations you perform are expensive, you don’t want do those operations every time you load your dataset.
-Instead, write a script to process the dataset and save the processed dataset.</p>
-</div>
-<div id="loading-data" class="section level2 hasAnchor" number="6.2">
-<h2><span class="header-section-number">6.2</span> Loading data<a href="reading-and-writing-data.html#loading-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Loading data from a csv file is straightfoward. You’ll use the <code>read.csv</code> function.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="reading-and-writing-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a>pokemon_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span><span class="st">&quot;lecture-material/week-02/data/pokemon.csv&quot;</span>)</span>
-<span id="cb31-2"><a href="reading-and-writing-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pokemon_df)</span></code></pre></div>
-<pre><code>##                     abilities against_bug against_dark against_dragon
-## 1 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 2 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 3 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 4    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 5    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 6    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.25            1              1
-##   against_electric against_fairy against_fight against_fire against_flying
-## 1              0.5           0.5           0.5          2.0              2
-## 2              0.5           0.5           0.5          2.0              2
-## 3              0.5           0.5           0.5          2.0              2
-## 4              1.0           0.5           1.0          0.5              1
-## 5              1.0           0.5           1.0          0.5              1
-## 6              2.0           0.5           0.5          0.5              1
-##   against_ghost against_grass against_ground against_ice against_normal
-## 1             1          0.25              1         2.0              1
-## 2             1          0.25              1         2.0              1
-## 3             1          0.25              1         2.0              1
-## 4             1          0.50              2         0.5              1
-## 5             1          0.50              2         0.5              1
-## 6             1          0.25              0         1.0              1
-##   against_poison against_psychic against_rock against_steel against_water
-## 1              1               2            1           1.0           0.5
-## 2              1               2            1           1.0           0.5
-## 3              1               2            1           1.0           0.5
-## 4              1               1            2           0.5           2.0
-## 5              1               1            2           0.5           2.0
-## 6              1               1            4           0.5           2.0
-##   attack base_egg_steps base_happiness base_total capture_rate  classfication
-## 1     49           5120             70        318           45   Seed Pokémon
-## 2     62           5120             70        405           45   Seed Pokémon
-## 3    100           5120             70        625           45   Seed Pokémon
-## 4     52           5120             70        309           45 Lizard Pokémon
-## 5     64           5120             70        405           45  Flame Pokémon
-## 6    104           5120             70        634           45  Flame Pokémon
-##   defense experience_growth height_m hp         japanese_name       name
-## 1      49           1059860      0.7 45 Fushigidaneフシギダネ  Bulbasaur
-## 2      63           1059860      1.0 60  Fushigisouフシギソウ    Ivysaur
-## 3     123           1059860      2.0 80 Fushigibanaフシギバナ   Venusaur
-## 4      43           1059860      0.6 39      Hitokageヒトカゲ Charmander
-## 5      58           1059860      1.1 58       Lizardoリザード Charmeleon
-## 6      78           1059860      1.7 78    Lizardonリザードン  Charizard
-##   percentage_male pokedex_number sp_attack sp_defense speed type1  type2
-## 1            88.1              1        65         65    45 grass poison
-## 2            88.1              2        80         80    60 grass poison
-## 3            88.1              3       122        120    80 grass poison
-## 4            88.1              4        60         50    65  fire       
-## 5            88.1              5        80         65    80  fire       
-## 6            88.1              6       159        115   100  fire flying
-##   weight_kg generation is_legendary
-## 1       6.9          1            0
-## 2      13.0          1            0
-## 3     100.0          1            0
-## 4       8.5          1            0
-## 5      19.0          1            0
-## 6      90.5          1            0</code></pre>
-<p>One slightly tricky thing to keep in mind about loading data is where R will look for the data you’re loading.
-This affects how you specify the <code>file</code> argument when you call <code>read.csv</code>.
-You can always specify the complete file path, for example (on <em>my</em> computer):</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="reading-and-writing-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>pokemon_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span><span class="st">&quot;/Users/lalejina/class_ws/CIS635-f22/gvsu-cis635-2022f/lecture-material/week-02/data/pokemon.csv&quot;</span>)</span>
-<span id="cb33-2"><a href="reading-and-writing-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pokemon_df)</span></code></pre></div>
-<pre><code>##                     abilities against_bug against_dark against_dragon
-## 1 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 2 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 3 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 4    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 5    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 6    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.25            1              1
-##   against_electric against_fairy against_fight against_fire against_flying
-## 1              0.5           0.5           0.5          2.0              2
-## 2              0.5           0.5           0.5          2.0              2
-## 3              0.5           0.5           0.5          2.0              2
-## 4              1.0           0.5           1.0          0.5              1
-## 5              1.0           0.5           1.0          0.5              1
-## 6              2.0           0.5           0.5          0.5              1
-##   against_ghost against_grass against_ground against_ice against_normal
-## 1             1          0.25              1         2.0              1
-## 2             1          0.25              1         2.0              1
-## 3             1          0.25              1         2.0              1
-## 4             1          0.50              2         0.5              1
-## 5             1          0.50              2         0.5              1
-## 6             1          0.25              0         1.0              1
-##   against_poison against_psychic against_rock against_steel against_water
-## 1              1               2            1           1.0           0.5
-## 2              1               2            1           1.0           0.5
-## 3              1               2            1           1.0           0.5
-## 4              1               1            2           0.5           2.0
-## 5              1               1            2           0.5           2.0
-## 6              1               1            4           0.5           2.0
-##   attack base_egg_steps base_happiness base_total capture_rate  classfication
-## 1     49           5120             70        318           45   Seed Pokémon
-## 2     62           5120             70        405           45   Seed Pokémon
-## 3    100           5120             70        625           45   Seed Pokémon
-## 4     52           5120             70        309           45 Lizard Pokémon
-## 5     64           5120             70        405           45  Flame Pokémon
-## 6    104           5120             70        634           45  Flame Pokémon
-##   defense experience_growth height_m hp         japanese_name       name
-## 1      49           1059860      0.7 45 Fushigidaneフシギダネ  Bulbasaur
-## 2      63           1059860      1.0 60  Fushigisouフシギソウ    Ivysaur
-## 3     123           1059860      2.0 80 Fushigibanaフシギバナ   Venusaur
-## 4      43           1059860      0.6 39      Hitokageヒトカゲ Charmander
-## 5      58           1059860      1.1 58       Lizardoリザード Charmeleon
-## 6      78           1059860      1.7 78    Lizardonリザードン  Charizard
-##   percentage_male pokedex_number sp_attack sp_defense speed type1  type2
-## 1            88.1              1        65         65    45 grass poison
-## 2            88.1              2        80         80    60 grass poison
-## 3            88.1              3       122        120    80 grass poison
-## 4            88.1              4        60         50    65  fire       
-## 5            88.1              5        80         65    80  fire       
-## 6            88.1              6       159        115   100  fire flying
-##   weight_kg generation is_legendary
-## 1       6.9          1            0
-## 2      13.0          1            0
-## 3     100.0          1            0
-## 4       8.5          1            0
-## 5      19.0          1            0
-## 6      90.5          1            0</code></pre>
-<p>Often, it’ll be easier to specify a <em>relative</em> path.
-In RStudio, when you do not specify a complete path, paths are relative to your current working directory.
-Run <code>getwd()</code> to see what your current working directory is set to.
-Use <code>setwd</code> to change your working directory.
-Read more about project management and R working directories here: <a href="https://r4ds.had.co.nz/workflow-projects.html" class="uri">https://r4ds.had.co.nz/workflow-projects.html</a></p>
+<div id="references-3" class="section level1 unnumbered hasAnchor">
+<h1>References<a href="references-3.html#references-3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+R Core Team. 2022. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div class="csl-entry">
+Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with <span>R</span> Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
+</div>
+<div class="csl-entry">
+———. 2022. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>.
+</div>
 </div>
 </div>
             </section>
@@ -603,8 +459,8 @@ Read more about project management and R working directories here: <a href="http
           </div>
         </div>
       </div>
-<a href="functions-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tidyverse.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="final-project---final-report.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -635,7 +491,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-02/read-write-data.Rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/tail.Rmd",
 "text": "Edit"
 },
 "history": {

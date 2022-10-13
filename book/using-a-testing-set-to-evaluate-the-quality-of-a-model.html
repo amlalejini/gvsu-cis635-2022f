@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 21 Using a testing set to evaluate the quality of a model | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 21 Using a testing set to evaluate the quality of a model | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 21 Using a testing set to evaluate the quality of a model | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Reading and Writing Data | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 21 Using a testing set to evaluate the quality of a model | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="functions-in-r.html"/>
-<link rel="next" href="tidyverse.html"/>
+<link rel="prev" href="linear-regression-in-r.html"/>
+<link rel="next" href="k-fold-cross-validation-in-r.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -439,162 +439,363 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="reading-and-writing-data" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Reading and Writing Data<a href="reading-and-writing-data.html#reading-and-writing-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>You can download the R Markdown file used to generate this document (or webpage) <a href="https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-02/read-write-data.Rmd">here</a>.
-I would encourage you to download that Rmd file, open it own your own computer in RStudio, and run the code chunks on your own (and modify things as you wish!).</p>
-<p>In this tutorial:</p>
-<ul>
-<li>I’ll walk you through how to write data stored in a dataframe as a <code>.csv</code> file.</li>
-<li>And, I’ll show you how to load data saved in a <code>.csv</code> file into a dataframe.</li>
-</ul>
-<div id="writing-data" class="section level2 hasAnchor" number="6.1">
-<h2><span class="header-section-number">6.1</span> Writing data<a href="reading-and-writing-data.html#writing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>R comes preloaded with many datasets (for a complete list run <code>library(help="datasets")</code>).
-For example, <code>Orange</code> is a small data set that gives growth data for 5 orange trees.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="reading-and-writing-data.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Orange)</span></code></pre></div>
-<pre><code>##   Tree  age circumference
-## 1    1  118            30
-## 2    1  484            58
-## 3    1  664            87
-## 4    1 1004           115
-## 5    1 1231           120
-## 6    1 1372           142</code></pre>
-<p>If we wanted to write this dataset out to a csv file, we could use the <code>write.csv</code> function.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="reading-and-writing-data.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(<span class="at">x=</span>Orange, <span class="at">file=</span><span class="st">&quot;orange_trees.csv&quot;</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div>
-<p>If you run the above R code, where did <code>orange_trees.csv</code> get saved? (hint: in your current working directory)</p>
-<p><code>write.csv</code> has many options. Run <code>?write.csv</code> in your R console to read the documentation.</p>
-<p><code>write.csv</code> will be very useful when you want to clean up or transform a dataset that you’ll be analyzing/working with.
-If your dataset is large and/or the preprocessing operations you perform are expensive, you don’t want do those operations every time you load your dataset.
-Instead, write a script to process the dataset and save the processed dataset.</p>
+<div id="using-a-testing-set-to-evaluate-the-quality-of-a-model" class="section level1 hasAnchor" number="21">
+<h1><span class="header-section-number">Chapter 21</span> Using a testing set to evaluate the quality of a model<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#using-a-testing-set-to-evaluate-the-quality-of-a-model" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this lab activity, we will do the following:
+- load a dataset
+- randomly divide the dataset into training and testing data
+- train a linear model and a regression tree using the training set
+- compute training error
+- compute testing error</p>
+<div id="dependencies-and-setup-5" class="section level2 hasAnchor" number="21.1">
+<h2><span class="header-section-number">21.1</span> Dependencies and setup<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#dependencies-and-setup-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll use the following packages in this lab activity:</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb209-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb209-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelr)</span>
+<span id="cb209-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb209-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)      <span class="co"># Used to build a regression tree</span></span>
+<span id="cb209-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb209-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot) <span class="co"># Used to visualize trees</span></span></code></pre></div>
+<p>You’ll need to install any packages that you don’t already have installed.</p>
 </div>
-<div id="loading-data" class="section level2 hasAnchor" number="6.2">
-<h2><span class="header-section-number">6.2</span> Loading data<a href="reading-and-writing-data.html#loading-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Loading data from a csv file is straightfoward. You’ll use the <code>read.csv</code> function.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="reading-and-writing-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a>pokemon_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span><span class="st">&quot;lecture-material/week-02/data/pokemon.csv&quot;</span>)</span>
-<span id="cb31-2"><a href="reading-and-writing-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pokemon_df)</span></code></pre></div>
-<pre><code>##                     abilities against_bug against_dark against_dragon
-## 1 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 2 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 3 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 4    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 5    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 6    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.25            1              1
-##   against_electric against_fairy against_fight against_fire against_flying
-## 1              0.5           0.5           0.5          2.0              2
-## 2              0.5           0.5           0.5          2.0              2
-## 3              0.5           0.5           0.5          2.0              2
-## 4              1.0           0.5           1.0          0.5              1
-## 5              1.0           0.5           1.0          0.5              1
-## 6              2.0           0.5           0.5          0.5              1
-##   against_ghost against_grass against_ground against_ice against_normal
-## 1             1          0.25              1         2.0              1
-## 2             1          0.25              1         2.0              1
-## 3             1          0.25              1         2.0              1
-## 4             1          0.50              2         0.5              1
-## 5             1          0.50              2         0.5              1
-## 6             1          0.25              0         1.0              1
-##   against_poison against_psychic against_rock against_steel against_water
-## 1              1               2            1           1.0           0.5
-## 2              1               2            1           1.0           0.5
-## 3              1               2            1           1.0           0.5
-## 4              1               1            2           0.5           2.0
-## 5              1               1            2           0.5           2.0
-## 6              1               1            4           0.5           2.0
-##   attack base_egg_steps base_happiness base_total capture_rate  classfication
-## 1     49           5120             70        318           45   Seed Pokémon
-## 2     62           5120             70        405           45   Seed Pokémon
-## 3    100           5120             70        625           45   Seed Pokémon
-## 4     52           5120             70        309           45 Lizard Pokémon
-## 5     64           5120             70        405           45  Flame Pokémon
-## 6    104           5120             70        634           45  Flame Pokémon
-##   defense experience_growth height_m hp         japanese_name       name
-## 1      49           1059860      0.7 45 Fushigidaneフシギダネ  Bulbasaur
-## 2      63           1059860      1.0 60  Fushigisouフシギソウ    Ivysaur
-## 3     123           1059860      2.0 80 Fushigibanaフシギバナ   Venusaur
-## 4      43           1059860      0.6 39      Hitokageヒトカゲ Charmander
-## 5      58           1059860      1.1 58       Lizardoリザード Charmeleon
-## 6      78           1059860      1.7 78    Lizardonリザードン  Charizard
-##   percentage_male pokedex_number sp_attack sp_defense speed type1  type2
-## 1            88.1              1        65         65    45 grass poison
-## 2            88.1              2        80         80    60 grass poison
-## 3            88.1              3       122        120    80 grass poison
-## 4            88.1              4        60         50    65  fire       
-## 5            88.1              5        80         65    80  fire       
-## 6            88.1              6       159        115   100  fire flying
-##   weight_kg generation is_legendary
-## 1       6.9          1            0
-## 2      13.0          1            0
-## 3     100.0          1            0
-## 4       8.5          1            0
-## 5      19.0          1            0
-## 6      90.5          1            0</code></pre>
-<p>One slightly tricky thing to keep in mind about loading data is where R will look for the data you’re loading.
-This affects how you specify the <code>file</code> argument when you call <code>read.csv</code>.
-You can always specify the complete file path, for example (on <em>my</em> computer):</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="reading-and-writing-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>pokemon_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span><span class="st">&quot;/Users/lalejina/class_ws/CIS635-f22/gvsu-cis635-2022f/lecture-material/week-02/data/pokemon.csv&quot;</span>)</span>
-<span id="cb33-2"><a href="reading-and-writing-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pokemon_df)</span></code></pre></div>
-<pre><code>##                     abilities against_bug against_dark against_dragon
-## 1 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 2 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 3 [&#39;Overgrow&#39;, &#39;Chlorophyll&#39;]        1.00            1              1
-## 4    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 5    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.50            1              1
-## 6    [&#39;Blaze&#39;, &#39;Solar Power&#39;]        0.25            1              1
-##   against_electric against_fairy against_fight against_fire against_flying
-## 1              0.5           0.5           0.5          2.0              2
-## 2              0.5           0.5           0.5          2.0              2
-## 3              0.5           0.5           0.5          2.0              2
-## 4              1.0           0.5           1.0          0.5              1
-## 5              1.0           0.5           1.0          0.5              1
-## 6              2.0           0.5           0.5          0.5              1
-##   against_ghost against_grass against_ground against_ice against_normal
-## 1             1          0.25              1         2.0              1
-## 2             1          0.25              1         2.0              1
-## 3             1          0.25              1         2.0              1
-## 4             1          0.50              2         0.5              1
-## 5             1          0.50              2         0.5              1
-## 6             1          0.25              0         1.0              1
-##   against_poison against_psychic against_rock against_steel against_water
-## 1              1               2            1           1.0           0.5
-## 2              1               2            1           1.0           0.5
-## 3              1               2            1           1.0           0.5
-## 4              1               1            2           0.5           2.0
-## 5              1               1            2           0.5           2.0
-## 6              1               1            4           0.5           2.0
-##   attack base_egg_steps base_happiness base_total capture_rate  classfication
-## 1     49           5120             70        318           45   Seed Pokémon
-## 2     62           5120             70        405           45   Seed Pokémon
-## 3    100           5120             70        625           45   Seed Pokémon
-## 4     52           5120             70        309           45 Lizard Pokémon
-## 5     64           5120             70        405           45  Flame Pokémon
-## 6    104           5120             70        634           45  Flame Pokémon
-##   defense experience_growth height_m hp         japanese_name       name
-## 1      49           1059860      0.7 45 Fushigidaneフシギダネ  Bulbasaur
-## 2      63           1059860      1.0 60  Fushigisouフシギソウ    Ivysaur
-## 3     123           1059860      2.0 80 Fushigibanaフシギバナ   Venusaur
-## 4      43           1059860      0.6 39      Hitokageヒトカゲ Charmander
-## 5      58           1059860      1.1 58       Lizardoリザード Charmeleon
-## 6      78           1059860      1.7 78    Lizardonリザードン  Charizard
-##   percentage_male pokedex_number sp_attack sp_defense speed type1  type2
-## 1            88.1              1        65         65    45 grass poison
-## 2            88.1              2        80         80    60 grass poison
-## 3            88.1              3       122        120    80 grass poison
-## 4            88.1              4        60         50    65  fire       
-## 5            88.1              5        80         65    80  fire       
-## 6            88.1              6       159        115   100  fire flying
-##   weight_kg generation is_legendary
-## 1       6.9          1            0
-## 2      13.0          1            0
-## 3     100.0          1            0
-## 4       8.5          1            0
-## 5      19.0          1            0
-## 6      90.5          1            0</code></pre>
-<p>Often, it’ll be easier to specify a <em>relative</em> path.
-In RStudio, when you do not specify a complete path, paths are relative to your current working directory.
-Run <code>getwd()</code> to see what your current working directory is set to.
-Use <code>setwd</code> to change your working directory.
-Read more about project management and R working directories here: <a href="https://r4ds.had.co.nz/workflow-projects.html" class="uri">https://r4ds.had.co.nz/workflow-projects.html</a></p>
+<div id="loading-and-preprocessing-the-data" class="section level2 hasAnchor" number="21.2">
+<h2><span class="header-section-number">21.2</span> Loading and preprocessing the data<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#loading-and-preprocessing-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this lab activity, we’ll be using the Seoul bike dataset from the <a href="https://archive.ics.uci.edu/ml/datasets/Seoul+Bike+Sharing+Demand">UCI machine learning repository</a>.
+This dataset contains the number of public bikes rented at each hour in a Seoul bike sharing system.
+In addition to the number of bikes, the data contains other variables, including weather and holiday information.
+Our goal will be to build some simple models that predict the number of bikes rented as a function of other attributes available in the dataset.</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data from file (you will need to adjust the file path to run locally)</span></span>
+<span id="cb210-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb210-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;lecture-material/week-08/data/SeoulBikeData.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 8760 Columns: 14
+## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (4): date, seasons, holiday, functioning_day
+## dbl (10): rented_bike_count, hour, temperature, humidity, wind_speed, visibi...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>We can look at the attributes of our data:</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)</span></code></pre></div>
+<pre><code>##  [1] &quot;date&quot;                  &quot;rented_bike_count&quot;     &quot;hour&quot;                 
+##  [4] &quot;temperature&quot;           &quot;humidity&quot;              &quot;wind_speed&quot;           
+##  [7] &quot;visibility&quot;            &quot;dew_point_temperature&quot; &quot;solar_radiation&quot;      
+## [10] &quot;rainfall&quot;              &quot;snowfall&quot;              &quot;seasons&quot;              
+## [13] &quot;holiday&quot;               &quot;functioning_day&quot;</code></pre>
+<p>Next, we want to convert categorical attributes into proper factors.</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert categorical variables into factors:</span></span>
+<span id="cb214-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb214-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>holiday <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>holiday)</span>
+<span id="cb214-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb214-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>functioning_day <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>functioning_day)</span>
+<span id="cb214-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb214-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>seasons <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>seasons)</span></code></pre></div>
+</div>
+<div id="creating-training-and-testing-sets" class="section level2 hasAnchor" number="21.3">
+<h2><span class="header-section-number">21.3</span> Creating training and testing sets<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#creating-training-and-testing-sets" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Next, we want to split our full data set into a training set and a testing set.
+We’ll use the training set to train/build our models, and then we can use the testing set to evaluate the performance of our model on data unseen during training.</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First assign ID to each row to help us make the split.</span></span>
+<span id="cb215-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb215-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">row_number</span>())</span>
+<span id="cb215-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb215-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Size (as a proportion) of our training set.</span></span>
+<span id="cb215-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-6" aria-hidden="true" tabindex="-1"></a>training_set_size <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb215-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb215-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Use slice sample create a training set comprising a sample of the rows from</span></span>
+<span id="cb215-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-9" aria-hidden="true" tabindex="-1"></a><span class="co"># the full dataset.</span></span>
+<span id="cb215-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-10" aria-hidden="true" tabindex="-1"></a>training_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb215-11"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> training_set_size)</span>
+<span id="cb215-12"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb215-13"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-13" aria-hidden="true" tabindex="-1"></a><span class="co"># The testing set should be all of the rows in data not in the training set</span></span>
+<span id="cb215-14"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-14" aria-hidden="true" tabindex="-1"></a><span class="co"># For this, we can use the &#39;anti_join&#39; dplyr function</span></span>
+<span id="cb215-15"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-15" aria-hidden="true" tabindex="-1"></a>testing_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb215-16"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(training_data, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span>
+<span id="cb215-17"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb215-18"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, we could have used the filter function to do the same thing</span></span>
+<span id="cb215-19"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-19" aria-hidden="true" tabindex="-1"></a><span class="co"># testing_data &lt;- data %&gt;%</span></span>
+<span id="cb215-20"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb215-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(!(id %in% training_data$id))</span></span></code></pre></div>
+</div>
+<div id="training-a-simple-linear-model" class="section level2 hasAnchor" number="21.4">
+<h2><span class="header-section-number">21.4</span> Training a simple linear model<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#training-a-simple-linear-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Next, we’ll use linear regression to estimate a simple model of <code>rented_bike_count</code> as a function of the <code>temperature</code>, <code>rainfall</code>, and <code>hour</code> attributes.
+That is, <code>rented_bike_count</code> will be our response variable, and <code>temperature</code>, <code>rainfall</code>, and <code>hour</code> are our predictor attributes.
+Note that I picked these variables somewhat arbitrarily, so I do not necessarily have a strong intuition for whether these are good predictor attributes for this particular problem.</p>
+<p>Recall from previous lab activities that we can use the <code>lm</code> function to train a linear model in R.</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train a linear model of rented_bike_count as a function of the temperature,</span></span>
+<span id="cb216-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rainfall, and hour attributes.</span></span>
+<span id="cb216-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-3" aria-hidden="true" tabindex="-1"></a>model_a <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb216-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> rented_bike_count <span class="sc">~</span> temperature <span class="sc">+</span> rainfall <span class="sc">+</span> hour,</span>
+<span id="cb216-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> training_data</span>
+<span id="cb216-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb216-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb216-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_a)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = rented_bike_count ~ temperature + rainfall + hour, 
+##     data = training_data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1309.1  -296.0   -42.9   235.8  2329.2 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -9.0390    15.8931  -0.569     0.57    
+## temperature  27.2004     0.6225  43.693   &lt;2e-16 ***
+## rainfall    -78.1028     6.0270 -12.959   &lt;2e-16 ***
+## hour         32.2400     1.0692  30.154   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 486.5 on 4376 degrees of freedom
+## Multiple R-squared:  0.4254, Adjusted R-squared:  0.425 
+## F-statistic:  1080 on 3 and 4376 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div id="computing-training-and-testing-error" class="section level3 hasAnchor" number="21.4.1">
+<h3><span class="header-section-number">21.4.1</span> Computing training and testing error<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#computing-training-and-testing-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The summary output for our model already gives a lot of useful information about model’s training error (see the <code>Residual standard error</code>).
+We can also calculate the training error manually:</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the predict function to get the model&#39;s output for each row of the</span></span>
+<span id="cb218-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-2" aria-hidden="true" tabindex="-1"></a><span class="co"># training data</span></span>
+<span id="cb218-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-3" aria-hidden="true" tabindex="-1"></a>mA_training_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb218-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-4" aria-hidden="true" tabindex="-1"></a>  model_a,</span>
+<span id="cb218-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> training_data</span>
+<span id="cb218-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb218-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the training prediction values, we can compute the mean squared error</span></span>
+<span id="cb218-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-8" aria-hidden="true" tabindex="-1"></a><span class="co"># for the model on the training data.</span></span>
+<span id="cb218-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-9" aria-hidden="true" tabindex="-1"></a>mA_training_MSE <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
+<span id="cb218-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-10" aria-hidden="true" tabindex="-1"></a>  (training_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mA_training_predictions)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb218-11"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb218-12"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-12" aria-hidden="true" tabindex="-1"></a>mA_training_MSE</span></code></pre></div>
+<pre><code>## [1] 236450.2</code></pre>
+<p>On it’s own, the mean squared error (MSE) for a model is a bit hard to interpret.
+We can also compute the root mean squared error (RMSE):</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mA_training_MSE)</span></code></pre></div>
+<pre><code>## [1] 486.2614</code></pre>
+<p>which gives us a better idea of the average error in the same units as the response variable (i.e., <code>rented_bike_count</code>).</p>
+<p>Next, let’s compute the testing error of our model.</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the predict function to get the model&#39;s output for each testing example</span></span>
+<span id="cb222-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-2" aria-hidden="true" tabindex="-1"></a>mA_testing_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb222-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-3" aria-hidden="true" tabindex="-1"></a>  model_a,</span>
+<span id="cb222-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> testing_data</span>
+<span id="cb222-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb222-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the mean squared error</span></span>
+<span id="cb222-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-7" aria-hidden="true" tabindex="-1"></a>mA_testing_MSE <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
+<span id="cb222-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-8" aria-hidden="true" tabindex="-1"></a>  (testing_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mA_testing_predictions)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb222-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb222-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-10" aria-hidden="true" tabindex="-1"></a>mA_testing_MSE</span></code></pre></div>
+<pre><code>## [1] 589760.9</code></pre>
+<p>Once again, we can also compute the root mean squared error (RMSE):</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mA_testing_MSE)</span></code></pre></div>
+<pre><code>## [1] 767.9589</code></pre>
+<p>Notice how our testing error is much worse than our training error.
+This should make some intuitive sense: the testing data is unseen data not used
+during training.
+We do generally expect the testing error to be worse than the training error.</p>
+</div>
+</div>
+<div id="comparing-two-models" class="section level2 hasAnchor" number="21.5">
+<h2><span class="header-section-number">21.5</span> Comparing two models<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#comparing-two-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Next, let’s train a different type of model to predict <code>rented_bike_count</code> as a function of <code>temperature</code>, <code>rainfall</code>, and <code>hour</code>.
+For this, we’ll train a regression tree (using the <code>rpart</code>) package.</p>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use rpart to train a regression tree using the training data</span></span>
+<span id="cb226-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-2" aria-hidden="true" tabindex="-1"></a>model_b <span class="ot">&lt;-</span> <span class="fu">rpart</span>(</span>
+<span id="cb226-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> rented_bike_count <span class="sc">~</span> temperature <span class="sc">+</span> rainfall <span class="sc">+</span> hour,</span>
+<span id="cb226-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> training_data,</span>
+<span id="cb226-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">parms =</span> <span class="fu">list</span>(<span class="at">split=</span><span class="st">&quot;information&quot;</span>)</span>
+<span id="cb226-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb226-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb226-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_b)</span></code></pre></div>
+<pre><code>## Call:
+## rpart(formula = rented_bike_count ~ temperature + rainfall + 
+##     hour, data = training_data, parms = list(split = &quot;information&quot;))
+##   n= 4380 
+## 
+##           CP nsplit rel error    xerror       xstd
+## 1 0.23888001      0 1.0000000 1.0003644 0.02638010
+## 2 0.16887807      1 0.7611200 0.7635802 0.02124149
+## 3 0.05841906      2 0.5922419 0.5997641 0.01773956
+## 4 0.04475648      3 0.5338229 0.5491704 0.01692279
+## 5 0.02582571      4 0.4890664 0.4963636 0.01617363
+## 6 0.02120487      5 0.4632407 0.4726986 0.01558642
+## 7 0.01788781      6 0.4420358 0.4454372 0.01525361
+## 8 0.01665016      7 0.4241480 0.4351338 0.01515334
+## 9 0.01000000     10 0.3741975 0.3979573 0.01378081
+## 
+## Variable importance
+##        hour temperature    rainfall 
+##          45          44          12 
+## 
+## Node number 1: 4380 observations,    complexity param=0.23888
+##   mean=707.2998, MSE=411532.2 
+##   left son=2 (2110 obs) right son=3 (2270 obs)
+##   Primary splits:
+##       temperature &lt; 13.05 to the left,  improve=0.23888000, (0 missing)
+##       hour        &lt; 7.5   to the left,  improve=0.16352350, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.04268341, (0 missing)
+##   Surrogate splits:
+##       hour &lt; 8.5   to the left,  agree=0.563, adj=0.093, (0 split)
+## 
+## Node number 2: 2110 observations,    complexity param=0.02582571
+##   mean=382.09, MSE=134015.1 
+##   left son=4 (1108 obs) right son=5 (1002 obs)
+##   Primary splits:
+##       temperature &lt; 3.75  to the left,  improve=0.1646243, (0 missing)
+##       hour        &lt; 6.5   to the left,  improve=0.1393630, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.0234693, (0 missing)
+##   Surrogate splits:
+##       rainfall &lt; 0.35  to the left,  agree=0.538, adj=0.027, (0 split)
+## 
+## Node number 3: 2270 observations,    complexity param=0.1688781
+##   mean=1009.587, MSE=479804.1 
+##   left son=6 (1452 obs) right son=7 (818 obs)
+##   Primary splits:
+##       hour        &lt; 15.5  to the left,  improve=0.27948690, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.11558780, (0 missing)
+##       temperature &lt; 22.05 to the left,  improve=0.05636255, (0 missing)
+##   Surrogate splits:
+##       temperature &lt; 31.95 to the left,  agree=0.643, adj=0.010, (0 split)
+##       rainfall    &lt; 12    to the left,  agree=0.641, adj=0.002, (0 split)
+## 
+## Node number 4: 1108 observations
+##   mean=240.8403, MSE=44474.72 
+## 
+## Node number 5: 1002 observations,    complexity param=0.02120487
+##   mean=538.2824, MSE=186569.7 
+##   left son=10 (319 obs) right son=11 (683 obs)
+##   Primary splits:
+##       hour        &lt; 6.5   to the left,  improve=0.20445830, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.05605750, (0 missing)
+##       temperature &lt; 7.45  to the left,  improve=0.03634657, (0 missing)
+## 
+## Node number 6: 1452 observations,    complexity param=0.04475648
+##   mean=734.7307, MSE=230231 
+##   left son=12 (547 obs) right son=13 (905 obs)
+##   Primary splits:
+##       hour        &lt; 6.5   to the left,  improve=0.2413257, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.1193684, (0 missing)
+##       temperature &lt; 22.65 to the left,  improve=0.0592649, (0 missing)
+## 
+## Node number 7: 818 observations,    complexity param=0.05841906
+##   mean=1497.474, MSE=550678.9 
+##   left son=14 (65 obs) right son=15 (753 obs)
+##   Primary splits:
+##       rainfall    &lt; 0.05  to the right, improve=0.23376570, (0 missing)
+##       temperature &lt; 21.95 to the left,  improve=0.07825659, (0 missing)
+##       hour        &lt; 22.5  to the right, improve=0.06047566, (0 missing)
+## 
+## Node number 10: 319 observations
+##   mean=252.4984, MSE=35960.51 
+## 
+## Node number 11: 683 observations
+##   mean=671.7599, MSE=200950.8 
+## 
+## Node number 12: 547 observations
+##   mean=431.5411, MSE=87751.21 
+## 
+## Node number 13: 905 observations,    complexity param=0.01788781
+##   mean=917.9845, MSE=227206 
+##   left son=26 (59 obs) right son=27 (846 obs)
+##   Primary splits:
+##       rainfall    &lt; 0.15  to the right, improve=0.15680750, (0 missing)
+##       temperature &lt; 21.55 to the left,  improve=0.03790796, (0 missing)
+##       hour        &lt; 11.5  to the left,  improve=0.01517168, (0 missing)
+## 
+## Node number 14: 65 observations
+##   mean=276.2923, MSE=208981.4 
+## 
+## Node number 15: 753 observations,    complexity param=0.01665016
+##   mean=1602.888, MSE=440332.7 
+##   left son=30 (90 obs) right son=31 (663 obs)
+##   Primary splits:
+##       hour        &lt; 22.5  to the right, improve=0.08542023, (0 missing)
+##       temperature &lt; 21.85 to the left,  improve=0.08449043, (0 missing)
+## 
+## Node number 26: 59 observations
+##   mean=203.2373, MSE=48106.55 
+## 
+## Node number 27: 846 observations
+##   mean=967.831, MSE=201584.1 
+## 
+## Node number 30: 90 observations
+##   mean=1076.5, MSE=125012.7 
+## 
+## Node number 31: 663 observations,    complexity param=0.01665016
+##   mean=1674.344, MSE=440417.1 
+##   left son=62 (104 obs) right son=63 (559 obs)
+##   Primary splits:
+##       hour        &lt; 16.5  to the left,  improve=0.10536770, (0 missing)
+##       temperature &lt; 19.95 to the left,  improve=0.08434274, (0 missing)
+##   Surrogate splits:
+##       temperature &lt; 36.35 to the right, agree=0.848, adj=0.029, (0 split)
+## 
+## Node number 62: 104 observations
+##   mean=1174.913, MSE=242538.4 
+## 
+## Node number 63: 559 observations,    complexity param=0.01665016
+##   mean=1767.261, MSE=422192.5 
+##   left son=126 (236 obs) right son=127 (323 obs)
+##   Primary splits:
+##       temperature &lt; 21.55 to the left,  improve=0.1311260, (0 missing)
+##       hour        &lt; 19.5  to the right, improve=0.0444098, (0 missing)
+## 
+## Node number 126: 236 observations
+##   mean=1492, MSE=403467.1 
+## 
+## Node number 127: 323 observations
+##   mean=1968.381, MSE=340064.6</code></pre>
+<p>We can look at the regression tree visually:</p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model_b)</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-125-1.png" width="672" /></p>
+<p>And then we can look more closely at the training error for our regression tree:</p>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the predict function to compute the output of our model for each training</span></span>
+<span id="cb229-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-2" aria-hidden="true" tabindex="-1"></a><span class="co"># example</span></span>
+<span id="cb229-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-3" aria-hidden="true" tabindex="-1"></a>mB_training_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb229-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-4" aria-hidden="true" tabindex="-1"></a>  model_b,</span>
+<span id="cb229-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> training_data</span>
+<span id="cb229-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb229-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb229-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the mean squared error</span></span>
+<span id="cb229-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-9" aria-hidden="true" tabindex="-1"></a>mB_training_MSE <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
+<span id="cb229-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-10" aria-hidden="true" tabindex="-1"></a>  (training_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mB_training_predictions)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb229-11"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb229-12"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-12" aria-hidden="true" tabindex="-1"></a>mB_training_MSE</span></code></pre></div>
+<pre><code>## [1] 153994.3</code></pre>
+<p>RMSE (for the training data):</p>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mB_training_MSE)</span></code></pre></div>
+<pre><code>## [1] 392.4211</code></pre>
+<p>If you compare the training error for the regression tree to the training error for
+our linear model, you’ll see that the regression tree has lower training error.
+But, training error really isn’t a great way to compare the quality of two models.
+Remember, we often prefer models that we expect to <em>generalize</em> well to unseen data.
+Comparing each of the two model’s error on the testing set can give us a better idea of which model might generalize better.</p>
+<p>To do so, we’ll need to compute the regression tree’s error on the testing set:</p>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-1" aria-hidden="true" tabindex="-1"></a>mB_testing_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb233-2"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-2" aria-hidden="true" tabindex="-1"></a>  model_b,</span>
+<span id="cb233-3"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> testing_data</span>
+<span id="cb233-4"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb233-5"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean squared error</span></span>
+<span id="cb233-6"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-6" aria-hidden="true" tabindex="-1"></a>mB_testing_MSE <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
+<span id="cb233-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-7" aria-hidden="true" tabindex="-1"></a>  (testing_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mB_testing_predictions)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb233-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb233-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-9" aria-hidden="true" tabindex="-1"></a>mB_testing_MSE</span></code></pre></div>
+<pre><code>## [1] 667264.6</code></pre>
+<p>RMSE (for the testing data):</p>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb235-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mB_testing_MSE)</span></code></pre></div>
+<pre><code>## [1] 816.8627</code></pre>
+<p>The regression tree’s testing error is <em>much</em> worse than the simple linear model’s testing error, suggesting that the simple linear model might generalize better to unseen data as compared to our regression tree.</p>
+</div>
+<div id="exercises-9" class="section level2 hasAnchor" number="21.6">
+<h2><span class="header-section-number">21.6</span> Exercises<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#exercises-9" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>Identify any lines of code that you do not understand. Use the documentation to figure out what is going on.</li>
+<li>We did not use all of the attributes in the bike rental data set to build our models.
+Are there attributes that we didn’t use that you think would be useful to include in a predictive model?</li>
+<li>Try building a couple of different models using the predictor attributes that you think would be most useful.
+How do their training/testing errors compare?</li>
+<li>The <code>modelr</code> package has all sorts of useful functions for assessing model quality.
+Read over the <code>modelr</code> documentation: <a href="https://modelr.tidyverse.org/" class="uri">https://modelr.tidyverse.org/</a>.
+Try using some of the functions to compute different types of training/testing errors for the models we trained in this lab activity.</li>
+<li>Think about the structure of the dataset. What kinds of issues might run into when we randomly divide the data into a training and testing set?
+For example, are we guaranteed to have a good representation of every hour of the day in both our training and testing data if we split the data randomly?
+What other sampling procedures could we use to perform a training/testing split that might avoid some of these issues?</li>
+</ul>
+</div>
+<div id="references" class="section level2 hasAnchor" number="21.7">
+<h2><span class="header-section-number">21.7</span> References<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Dua, D. and Graff, C. (2019). UCI Machine Learning Repository <a href="http://archive.ics.uci.edu/ml" class="uri">http://archive.ics.uci.edu/ml</a>. Irvine, CA: University of California, School of Information and Computer Science.</p>
 
 </div>
 </div>
@@ -603,8 +804,8 @@ Read more about project management and R working directories here: <a href="http
           </div>
         </div>
       </div>
-<a href="functions-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tidyverse.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="linear-regression-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="k-fold-cross-validation-in-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -635,7 +836,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-02/read-write-data.Rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-08/training-testing.Rmd",
 "text": "Edit"
 },
 "history": {
