@@ -238,3 +238,7 @@ The regression tree's testing error is _much_ worse than the simple linear model
 - Think about the structure of the dataset. What kinds of issues might run into when we randomly divide the data into a training and testing set?
   For example, are we guaranteed to have a good representation of every hour of the day in both our training and testing data if we split the data randomly?
   What other sampling procedures could we use to perform a training/testing split that might avoid some of these issues?
+
+## References
+
+Dua, D. and Graff, C. (2019). UCI Machine Learning Repository <http://archive.ics.uci.edu/ml>. Irvine, CA: University of California, School of Information and Computer Science.
