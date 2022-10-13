@@ -32,6 +32,7 @@ rmd_files: [
   "lecture-material/week-08/week-08.md",
   "lecture-material/week-08/training-testing.Rmd",
   "lecture-material/week-08/k-fold-cross-validation.Rmd",
+  "homework/homework-05/homework-05.Rmd",
   "project/project.md",
   # "project/survey.md",
   "project/proposal.md",
