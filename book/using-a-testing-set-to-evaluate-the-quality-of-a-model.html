@@ -530,20 +530,20 @@ Note that I picked these variables somewhat arbitrarily, so I do not necessarily
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -1309.1  -296.0   -42.9   235.8  2329.2 
+## -1280.7  -298.4   -37.6   243.0  2320.9 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  -9.0390    15.8931  -0.569     0.57    
-## temperature  27.2004     0.6225  43.693   &lt;2e-16 ***
-## rainfall    -78.1028     6.0270 -12.959   &lt;2e-16 ***
-## hour         32.2400     1.0692  30.154   &lt;2e-16 ***
+## (Intercept)  -7.8118    15.5598  -0.502    0.616    
+## temperature  26.8649     0.6182  43.456   &lt;2e-16 ***
+## rainfall    -79.2113     5.8232 -13.603   &lt;2e-16 ***
+## hour         33.0832     1.0741  30.802   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 486.5 on 4376 degrees of freedom
-## Multiple R-squared:  0.4254, Adjusted R-squared:  0.425 
-## F-statistic:  1080 on 3 and 4376 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 487.9 on 4376 degrees of freedom
+## Multiple R-squared:  0.4363, Adjusted R-squared:  0.4359 
+## F-statistic:  1129 on 3 and 4376 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div id="computing-training-and-testing-error" class="section level3 hasAnchor" number="21.4.1">
 <h3><span class="header-section-number">21.4.1</span> Computing training and testing error<a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#computing-training-and-testing-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The summary output for our model already gives a lot of useful information about model’s training error (see the <code>Residual standard error</code>).
@@ -560,11 +560,11 @@ We can also calculate the training error manually:</p>
 <span id="cb218-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-10" aria-hidden="true" tabindex="-1"></a>  (training_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mA_training_predictions)<span class="sc">^</span><span class="dv">2</span></span>
 <span id="cb218-11"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb218-12"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb218-12" aria-hidden="true" tabindex="-1"></a>mA_training_MSE</span></code></pre></div>
-<pre><code>## [1] 236450.2</code></pre>
+<pre><code>## [1] 237799.3</code></pre>
 <p>On it’s own, the mean squared error (MSE) for a model is a bit hard to interpret.
 We can also compute the root mean squared error (RMSE):</p>
 <div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mA_training_MSE)</span></code></pre></div>
-<pre><code>## [1] 486.2614</code></pre>
+<pre><code>## [1] 487.6467</code></pre>
 <p>which gives us a better idea of the average error in the same units as the response variable (i.e., <code>rented_bike_count</code>).</p>
 <p>Next, let’s compute the testing error of our model.</p>
 <div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the predict function to get the model&#39;s output for each testing example</span></span>
@@ -577,10 +577,10 @@ We can also compute the root mean squared error (RMSE):</p>
 <span id="cb222-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-8" aria-hidden="true" tabindex="-1"></a>  (testing_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mA_testing_predictions)<span class="sc">^</span><span class="dv">2</span></span>
 <span id="cb222-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb222-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb222-10" aria-hidden="true" tabindex="-1"></a>mA_testing_MSE</span></code></pre></div>
-<pre><code>## [1] 589760.9</code></pre>
+<pre><code>## [1] 596996</code></pre>
 <p>Once again, we can also compute the root mean squared error (RMSE):</p>
 <div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mA_testing_MSE)</span></code></pre></div>
-<pre><code>## [1] 767.9589</code></pre>
+<pre><code>## [1] 772.6552</code></pre>
 <p>Notice how our testing error is much worse than our training error.
 This should make some intuitive sense: the testing data is unseen data not used
 during training.
@@ -603,139 +603,140 @@ For this, we’ll train a regression tree (using the <code>rpart</code>) package
 ##     hour, data = training_data, parms = list(split = &quot;information&quot;))
 ##   n= 4380 
 ## 
-##           CP nsplit rel error    xerror       xstd
-## 1 0.23888001      0 1.0000000 1.0003644 0.02638010
-## 2 0.16887807      1 0.7611200 0.7635802 0.02124149
-## 3 0.05841906      2 0.5922419 0.5997641 0.01773956
-## 4 0.04475648      3 0.5338229 0.5491704 0.01692279
-## 5 0.02582571      4 0.4890664 0.4963636 0.01617363
-## 6 0.02120487      5 0.4632407 0.4726986 0.01558642
-## 7 0.01788781      6 0.4420358 0.4454372 0.01525361
-## 8 0.01665016      7 0.4241480 0.4351338 0.01515334
-## 9 0.01000000     10 0.3741975 0.3979573 0.01378081
+##            CP nsplit rel error    xerror       xstd
+## 1  0.24265908      0 1.0000000 1.0001979 0.02564725
+## 2  0.18420909      1 0.7573409 0.7614166 0.02024678
+## 3  0.05842133      2 0.5731318 0.5814071 0.01722993
+## 4  0.04358428      3 0.5147105 0.5230159 0.01615135
+## 5  0.02192721      4 0.4711262 0.4825167 0.01567009
+## 6  0.02172897      5 0.4491990 0.4697441 0.01550916
+## 7  0.01592025      6 0.4274700 0.4330886 0.01497164
+## 8  0.01578970      7 0.4115498 0.4027772 0.01426713
+## 9  0.01232751      8 0.3957601 0.3953362 0.01430684
+## 10 0.01000000     10 0.3711051 0.3792089 0.01387932
 ## 
 ## Variable importance
 ##        hour temperature    rainfall 
-##          45          44          12 
+##          44          43          13 
 ## 
-## Node number 1: 4380 observations,    complexity param=0.23888
-##   mean=707.2998, MSE=411532.2 
-##   left son=2 (2110 obs) right son=3 (2270 obs)
+## Node number 1: 4380 observations,    complexity param=0.2426591
+##   mean=706.7735, MSE=421826.2 
+##   left son=2 (2000 obs) right son=3 (2380 obs)
 ##   Primary splits:
-##       temperature &lt; 13.05 to the left,  improve=0.23888000, (0 missing)
-##       hour        &lt; 7.5   to the left,  improve=0.16352350, (0 missing)
-##       rainfall    &lt; 0.05  to the right, improve=0.04268341, (0 missing)
+##       temperature &lt; 11.95 to the left,  improve=0.24265910, (0 missing)
+##       hour        &lt; 6.5   to the left,  improve=0.16907290, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.04376318, (0 missing)
 ##   Surrogate splits:
-##       hour &lt; 8.5   to the left,  agree=0.563, adj=0.093, (0 split)
+##       hour &lt; 8.5   to the left,  agree=0.577, adj=0.074, (0 split)
 ## 
-## Node number 2: 2110 observations,    complexity param=0.02582571
-##   mean=382.09, MSE=134015.1 
-##   left son=4 (1108 obs) right son=5 (1002 obs)
+## Node number 2: 2000 observations,    complexity param=0.02192721
+##   mean=357.763, MSE=111832.8 
+##   left son=4 (1117 obs) right son=5 (883 obs)
 ##   Primary splits:
-##       temperature &lt; 3.75  to the left,  improve=0.1646243, (0 missing)
-##       hour        &lt; 6.5   to the left,  improve=0.1393630, (0 missing)
-##       rainfall    &lt; 0.05  to the right, improve=0.0234693, (0 missing)
+##       temperature &lt; 3.65  to the left,  improve=0.18113050, (0 missing)
+##       hour        &lt; 6.5   to the left,  improve=0.14800140, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.02345664, (0 missing)
 ##   Surrogate splits:
-##       rainfall &lt; 0.35  to the left,  agree=0.538, adj=0.027, (0 split)
+##       rainfall &lt; 0.45  to the left,  agree=0.569, adj=0.023, (0 split)
 ## 
-## Node number 3: 2270 observations,    complexity param=0.1688781
-##   mean=1009.587, MSE=479804.1 
-##   left son=6 (1452 obs) right son=7 (818 obs)
+## Node number 3: 2380 observations,    complexity param=0.1842091
+##   mean=1000.06, MSE=493948.1 
+##   left son=6 (1526 obs) right son=7 (854 obs)
 ##   Primary splits:
-##       hour        &lt; 15.5  to the left,  improve=0.27948690, (0 missing)
-##       rainfall    &lt; 0.05  to the right, improve=0.11558780, (0 missing)
-##       temperature &lt; 22.05 to the left,  improve=0.05636255, (0 missing)
+##       hour        &lt; 15.5  to the left,  improve=0.28950790, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.12115900, (0 missing)
+##       temperature &lt; 22.45 to the left,  improve=0.05788261, (0 missing)
 ##   Surrogate splits:
-##       temperature &lt; 31.95 to the left,  agree=0.643, adj=0.010, (0 split)
-##       rainfall    &lt; 12    to the left,  agree=0.641, adj=0.002, (0 split)
+##       rainfall    &lt; 17.75 to the left,  agree=0.642, adj=0.004, (0 split)
+##       temperature &lt; 36.95 to the left,  agree=0.642, adj=0.002, (0 split)
 ## 
-## Node number 4: 1108 observations
-##   mean=240.8403, MSE=44474.72 
+## Node number 4: 1117 observations
+##   mean=231.2211, MSE=40238.54 
 ## 
-## Node number 5: 1002 observations,    complexity param=0.02120487
-##   mean=538.2824, MSE=186569.7 
-##   left son=10 (319 obs) right son=11 (683 obs)
+## Node number 5: 883 observations,    complexity param=0.0157897
+##   mean=517.8392, MSE=156519.3 
+##   left son=10 (298 obs) right son=11 (585 obs)
 ##   Primary splits:
-##       hour        &lt; 6.5   to the left,  improve=0.20445830, (0 missing)
-##       rainfall    &lt; 0.05  to the right, improve=0.05605750, (0 missing)
-##       temperature &lt; 7.45  to the left,  improve=0.03634657, (0 missing)
+##       hour        &lt; 6.5   to the left,  improve=0.21108280, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.06427710, (0 missing)
+##       temperature &lt; 8.35  to the left,  improve=0.03505113, (0 missing)
 ## 
-## Node number 6: 1452 observations,    complexity param=0.04475648
-##   mean=734.7307, MSE=230231 
-##   left son=12 (547 obs) right son=13 (905 obs)
+## Node number 6: 1526 observations,    complexity param=0.04358428
+##   mean=717.1664, MSE=237181.1 
+##   left son=12 (587 obs) right son=13 (939 obs)
 ##   Primary splits:
-##       hour        &lt; 6.5   to the left,  improve=0.2413257, (0 missing)
-##       rainfall    &lt; 0.05  to the right, improve=0.1193684, (0 missing)
-##       temperature &lt; 22.65 to the left,  improve=0.0592649, (0 missing)
+##       hour        &lt; 6.5   to the left,  improve=0.22248610, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.12138960, (0 missing)
+##       temperature &lt; 18.85 to the left,  improve=0.05571893, (0 missing)
 ## 
-## Node number 7: 818 observations,    complexity param=0.05841906
-##   mean=1497.474, MSE=550678.9 
-##   left son=14 (65 obs) right son=15 (753 obs)
+## Node number 7: 854 observations,    complexity param=0.05842133
+##   mean=1505.557, MSE=554231.4 
+##   left son=14 (62 obs) right son=15 (792 obs)
 ##   Primary splits:
-##       rainfall    &lt; 0.05  to the right, improve=0.23376570, (0 missing)
-##       temperature &lt; 21.95 to the left,  improve=0.07825659, (0 missing)
-##       hour        &lt; 22.5  to the right, improve=0.06047566, (0 missing)
+##       rainfall    &lt; 0.05  to the right, improve=0.22805000, (0 missing)
+##       temperature &lt; 22.45 to the left,  improve=0.08195246, (0 missing)
+##       hour        &lt; 22.5  to the right, improve=0.04930249, (0 missing)
 ## 
-## Node number 10: 319 observations
-##   mean=252.4984, MSE=35960.51 
+## Node number 10: 298 observations
+##   mean=263.1678, MSE=36113.24 
 ## 
-## Node number 11: 683 observations
-##   mean=671.7599, MSE=200950.8 
+## Node number 11: 585 observations
+##   mean=647.5692, MSE=167985.9 
 ## 
-## Node number 12: 547 observations
-##   mean=431.5411, MSE=87751.21 
+## Node number 12: 587 observations
+##   mean=426.6269, MSE=87924.03 
 ## 
-## Node number 13: 905 observations,    complexity param=0.01788781
-##   mean=917.9845, MSE=227206 
-##   left son=26 (59 obs) right son=27 (846 obs)
+## Node number 13: 939 observations,    complexity param=0.02172897
+##   mean=898.7923, MSE=244729.1 
+##   left son=26 (75 obs) right son=27 (864 obs)
 ##   Primary splits:
-##       rainfall    &lt; 0.15  to the right, improve=0.15680750, (0 missing)
-##       temperature &lt; 21.55 to the left,  improve=0.03790796, (0 missing)
-##       hour        &lt; 11.5  to the left,  improve=0.01517168, (0 missing)
+##       rainfall    &lt; 0.15  to the right, improve=0.17470110, (0 missing)
+##       temperature &lt; 18.65 to the left,  improve=0.04192521, (0 missing)
+##       hour        &lt; 8.5   to the right, improve=0.02237514, (0 missing)
 ## 
-## Node number 14: 65 observations
-##   mean=276.2923, MSE=208981.4 
+## Node number 14: 62 observations
+##   mean=234.9032, MSE=185791.4 
 ## 
-## Node number 15: 753 observations,    complexity param=0.01665016
-##   mean=1602.888, MSE=440332.7 
-##   left son=30 (90 obs) right son=31 (663 obs)
+## Node number 15: 792 observations,    complexity param=0.01592025
+##   mean=1605.028, MSE=446787.1 
+##   left son=30 (271 obs) right son=31 (521 obs)
 ##   Primary splits:
-##       hour        &lt; 22.5  to the right, improve=0.08542023, (0 missing)
-##       temperature &lt; 21.85 to the left,  improve=0.08449043, (0 missing)
+##       temperature &lt; 19.95 to the left,  improve=0.08312503, (0 missing)
+##       hour        &lt; 22.5  to the right, improve=0.07817436, (0 missing)
 ## 
-## Node number 26: 59 observations
-##   mean=203.2373, MSE=48106.55 
+## Node number 26: 75 observations
+##   mean=196.9867, MSE=51089.27 
 ## 
-## Node number 27: 846 observations
-##   mean=967.831, MSE=201584.1 
+## Node number 27: 864 observations
+##   mean=959.713, MSE=215072.4 
 ## 
-## Node number 30: 90 observations
-##   mean=1076.5, MSE=125012.7 
+## Node number 30: 271 observations
+##   mean=1337.819, MSE=408639.6 
 ## 
-## Node number 31: 663 observations,    complexity param=0.01665016
-##   mean=1674.344, MSE=440417.1 
-##   left son=62 (104 obs) right son=63 (559 obs)
+## Node number 31: 521 observations,    complexity param=0.01232751
+##   mean=1744.017, MSE=410172.3 
+##   left son=62 (57 obs) right son=63 (464 obs)
 ##   Primary splits:
-##       hour        &lt; 16.5  to the left,  improve=0.10536770, (0 missing)
-##       temperature &lt; 19.95 to the left,  improve=0.08434274, (0 missing)
+##       hour        &lt; 22.5  to the right, improve=0.09070141, (0 missing)
+##       temperature &lt; 34.05 to the right, improve=0.05246267, (0 missing)
+## 
+## Node number 62: 57 observations
+##   mean=1193.702, MSE=83770.38 
+## 
+## Node number 63: 464 observations,    complexity param=0.01232751
+##   mean=1811.621, MSE=408495.7 
+##   left son=126 (82 obs) right son=127 (382 obs)
+##   Primary splits:
+##       hour        &lt; 16.5  to the left,  improve=0.13806810, (0 missing)
+##       temperature &lt; 33.35 to the right, improve=0.07613736, (0 missing)
 ##   Surrogate splits:
-##       temperature &lt; 36.35 to the right, agree=0.848, adj=0.029, (0 split)
+##       temperature &lt; 36.55 to the right, agree=0.828, adj=0.024, (0 split)
 ## 
-## Node number 62: 104 observations
-##   mean=1174.913, MSE=242538.4 
+## Node number 126: 82 observations
+##   mean=1299.037, MSE=275914.2 
 ## 
-## Node number 63: 559 observations,    complexity param=0.01665016
-##   mean=1767.261, MSE=422192.5 
-##   left son=126 (236 obs) right son=127 (323 obs)
-##   Primary splits:
-##       temperature &lt; 21.55 to the left,  improve=0.1311260, (0 missing)
-##       hour        &lt; 19.5  to the right, improve=0.0444098, (0 missing)
-## 
-## Node number 126: 236 observations
-##   mean=1492, MSE=403467.1 
-## 
-## Node number 127: 323 observations
-##   mean=1968.381, MSE=340064.6</code></pre>
+## Node number 127: 382 observations
+##   mean=1921.652, MSE=368448.5</code></pre>
 <p>We can look at the regression tree visually:</p>
 <div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model_b)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-125-1.png" width="672" /></p>
@@ -752,10 +753,10 @@ For this, we’ll train a regression tree (using the <code>rpart</code>) package
 <span id="cb229-10"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-10" aria-hidden="true" tabindex="-1"></a>  (training_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mB_training_predictions)<span class="sc">^</span><span class="dv">2</span></span>
 <span id="cb229-11"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb229-12"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb229-12" aria-hidden="true" tabindex="-1"></a>mB_training_MSE</span></code></pre></div>
-<pre><code>## [1] 153994.3</code></pre>
+<pre><code>## [1] 156541.8</code></pre>
 <p>RMSE (for the training data):</p>
 <div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mB_training_MSE)</span></code></pre></div>
-<pre><code>## [1] 392.4211</code></pre>
+<pre><code>## [1] 395.6537</code></pre>
 <p>If you compare the training error for the regression tree to the training error for
 our linear model, you’ll see that the regression tree has lower training error.
 But, training error really isn’t a great way to compare the quality of two models.
@@ -771,10 +772,10 @@ Comparing each of the two model’s error on the testing set can give us a bette
 <span id="cb233-7"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-7" aria-hidden="true" tabindex="-1"></a>  (testing_data<span class="sc">$</span>rented_bike_count <span class="sc">-</span> mB_testing_predictions)<span class="sc">^</span><span class="dv">2</span></span>
 <span id="cb233-8"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb233-9"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb233-9" aria-hidden="true" tabindex="-1"></a>mB_testing_MSE</span></code></pre></div>
-<pre><code>## [1] 667264.6</code></pre>
+<pre><code>## [1] 684616.8</code></pre>
 <p>RMSE (for the testing data):</p>
 <div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="using-a-testing-set-to-evaluate-the-quality-of-a-model.html#cb235-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(mB_testing_MSE)</span></code></pre></div>
-<pre><code>## [1] 816.8627</code></pre>
+<pre><code>## [1] 827.4157</code></pre>
 <p>The regression tree’s testing error is <em>much</em> worse than the simple linear model’s testing error, suggesting that the simple linear model might generalize better to unseen data as compared to our regression tree.</p>
 </div>
 <div id="exercises-9" class="section level2 hasAnchor" number="21.6">

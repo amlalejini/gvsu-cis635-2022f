@@ -25,8 +25,8 @@ In this assignment, you will reflect on one of the readings from Week 8 on eithe
 - Part A
   - Addresses Q1: 5%
   - Addresses Q2: 10%
-  - Addresses Q2: 35%
   - Addresses Q3: 35%
+  - Addresses Q4: 35%
 
 ### Deliverables
 
