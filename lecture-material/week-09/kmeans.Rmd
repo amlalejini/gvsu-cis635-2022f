@@ -1,0 +1,75 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# K-means clustering in R
+
+In this lab activity, we will....
+
+TODO
+
+```{r}
+library(tidyverse)
+library(cowplot)
+library(khroma)
+theme_set(theme_cowplot())
+```
+
+
+```{r}
+data <- read_csv("lecture-material/week-09/points.csv")
+```
+
+```{r}
+ggplot(
+    data,
+    aes(x=attr0, y=attr1)
+  ) +
+  geom_point()
+```
+
+```{r}
+cluster_results <- kmeans(
+  data,
+  centers = 4,
+  iter.max = 100,
+  algorithm = "Lloyd"
+)
+cluster_results
+```
+
+```{r}
+data$cluster_id <- as.factor(cluster_results$cluster)
+# data$cluster_id
+```
+
+```{r}
+cluster_centers = as.data.frame(cluster_results$centers)
+cluster_centers$cluster_id <- as.factor(cluster_centers$cluster_id)
+ggplot(
+    data,
+    aes(
+      x = attr0,
+      y = attr1,
+      color = cluster_id,
+      fill = cluster_id
+    )
+  ) +
+  geom_point( ) +
+  geom_point(
+    data=cluster_centers,
+    fill="black",
+    color="black",
+    size=5
+  ) +
+  scale_color_bright(
+    name = "Cluster ID"
+  ) +
+  scale_fill_bright(
+    name = "Cluster ID"
+  )
+```
+
+// kmeans on some "real" data
