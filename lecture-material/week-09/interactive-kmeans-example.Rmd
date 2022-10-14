@@ -1,0 +1,29 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Interactive k-means clustering example
+
+```{r,echo=FALSE}
+demo_url <- "https://lalejini.com/my_empirical_examples/KMeansClusteringExample/web/kmeans_clustering.html"
+```
+
+Below is an interactive k-means clustering demo. [You may also access the demo here](https://lalejini.com/my_empirical_examples/KMeansClusteringExample/web/kmeans_clustering.html).
+
+In the demo, the black square is your data "canvas".
+Click the "drop points" button to populate the canvas with random points.
+You can also place points on the canvas manually by clicking to drop a point.
+The clear button will clear all of the currently drawn points.
+Configure `k` to set the number of clusters.
+
+Press "cluster mode" to cluster.
+You can run kmeans step-by-step by repeatedly pressing the "step" button.
+You can tell the demo to just run kmeans continuously with the "run" button.
+You can still add points to the canvas by clicking in cluster mode.
+Press "data mode" to go back to configuring.
+
+```{r,echo=FALSE}
+knitr::include_url(demo_url, height="800px")
+```

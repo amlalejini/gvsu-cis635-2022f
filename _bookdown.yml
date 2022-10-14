@@ -33,6 +33,8 @@ rmd_files: [
   "lecture-material/week-08/training-testing.Rmd",
   "lecture-material/week-08/k-fold-cross-validation.Rmd",
   "homework/homework-05/homework-05.Rmd",
+  "lecture-material/week-09/week-09.md",
+  "lecture-material/week-09/interactive-kmeans-example.Rmd",
   "project/project.md",
   # "project/survey.md",
   "project/proposal.md",
