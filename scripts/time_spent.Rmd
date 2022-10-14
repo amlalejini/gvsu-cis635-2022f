@@ -33,7 +33,7 @@ ggplot(
   ) +
   facet_wrap(
     ~week,
-    ncol=1,
+    # ncol=1,
     labeller=label_both
   ) +
   labs(
