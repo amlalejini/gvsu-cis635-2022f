@@ -30,7 +30,6 @@ In this lab activity, we'll be using some toy data in `points.csv`, which you ca
 # Load data from file into a tibble (a fancy data frame).
 # You will need to adjust the file path to run this locally.
 data <- read_csv("lecture-material/week-09/points.csv")
-# data <- read_csv("points.csv")
 ```
 
 This dataset has `r nrow(data)` with two numeric attributes: `attr0` and `attr1`.
