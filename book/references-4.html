@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 14 Dealing with missing values | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 14 Dealing with missing values | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 14 Dealing with missing values | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 14 Dealing with missing values | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="References | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="simple-denoising-examples.html"/>
-<link rel="next" href="sampling-objects-in-a-dataset.html"/>
+<link rel="prev" href="final-project---final-report.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -451,455 +451,19 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="dealing-with-missing-values" class="section level1 hasAnchor" number="14">
-<h1><span class="header-section-number">Chapter 14</span> Dealing with missing values<a href="dealing-with-missing-values.html#dealing-with-missing-values" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this lab activity, we will use R to deal with missing values in a dataset.
-There are many methods of dealing with missing values in a dataset.
-Here, we’ll cover how to apply a few simple/basic approaches in R:</p>
-<ul>
-<li>Feature elimination (remove columns with missing values)</li>
-<li>Object elimination (remove rows with missing values)</li>
-<li>Mean imputation</li>
-<li>Median imputation</li>
-</ul>
-<p>This activity is meant to server as a “how to” guide and does not discuss <em>when</em> different methods of handling missing values should be applied.
-Whether or not a particular approach is appropriate will depend on your particular dataset and domain.</p>
-<div id="dependencies-and-setup" class="section level2 hasAnchor" number="14.1">
-<h2><span class="header-section-number">14.1</span> Dependencies and setup<a href="dealing-with-missing-values.html#dependencies-and-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We’ll need to load the tidyverse packages for this lab activity:</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="dealing-with-missing-values.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-</div>
-<div id="testing-for-missing-values" class="section level2 hasAnchor" number="14.2">
-<h2><span class="header-section-number">14.2</span> Testing for missing values<a href="dealing-with-missing-values.html#testing-for-missing-values" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In R, missing values are often represented by <code>NA</code> (or some other value particular to your data; e.g., -1, none, etc).
-You can identify missing values using <code>is.na()</code> (run <code>?is.na</code> to see documentation).</p>
-<p>In this demo, we’ll play with the <code>airquality</code> dataset, which comes loaded automatically in R.</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="dealing-with-missing-values.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airquality)</span></code></pre></div>
-<pre><code>##   Ozone Solar.R Wind Temp Month Day
-## 1    41     190  7.4   67     5   1
-## 2    36     118  8.0   72     5   2
-## 3    12     149 12.6   74     5   3
-## 4    18     313 11.5   62     5   4
-## 5    NA      NA 14.3   56     5   5
-## 6    28      NA 14.9   66     5   6</code></pre>
-<p>There are <code>NA</code> values in the <code>airquality</code> dataset.
-To get a binary dataframe that indicates which positions have <code>NA</code> values, you can:</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="dealing-with-missing-values.html#cb121-1" aria-hidden="true" tabindex="-1"></a>airquality_na <span class="ot">&lt;-</span> <span class="fu">is.na</span>(airquality)</span>
-<span id="cb121-2"><a href="dealing-with-missing-values.html#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airquality_na)</span></code></pre></div>
-<pre><code>##      Ozone Solar.R  Wind  Temp Month   Day
-## [1,] FALSE   FALSE FALSE FALSE FALSE FALSE
-## [2,] FALSE   FALSE FALSE FALSE FALSE FALSE
-## [3,] FALSE   FALSE FALSE FALSE FALSE FALSE
-## [4,] FALSE   FALSE FALSE FALSE FALSE FALSE
-## [5,]  TRUE    TRUE FALSE FALSE FALSE FALSE
-## [6,] FALSE    TRUE FALSE FALSE FALSE FALSE</code></pre>
-</div>
-<div id="dropping-columns-with-missing-values-feature-elimination" class="section level2 hasAnchor" number="14.3">
-<h2><span class="header-section-number">14.3</span> Dropping columns with missing values (feature elimination)<a href="dealing-with-missing-values.html#dropping-columns-with-missing-values-feature-elimination" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>First, let’s get a list of columns that contain missing values.</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="dealing-with-missing-values.html#cb123-1" aria-hidden="true" tabindex="-1"></a>columns_with_na <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb123-2"><a href="dealing-with-missing-values.html#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(airquality)) {</span>
-<span id="cb123-3"><a href="dealing-with-missing-values.html#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="cn">NA</span> <span class="sc">%in%</span> airquality[,col]) {</span>
-<span id="cb123-4"><a href="dealing-with-missing-values.html#cb123-4" aria-hidden="true" tabindex="-1"></a>    columns_with_na <span class="ot">&lt;-</span> <span class="fu">c</span>(columns_with_na, col)</span>
-<span id="cb123-5"><a href="dealing-with-missing-values.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb123-6"><a href="dealing-with-missing-values.html#cb123-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb123-7"><a href="dealing-with-missing-values.html#cb123-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(columns_with_na)</span></code></pre></div>
-<pre><code>## [1] &quot;Ozone&quot;   &quot;Solar.R&quot;</code></pre>
-<p>You can verify that against the <code>airquality_na</code> matrix we created earlier.</p>
-<p>To drop columns, we can use the <code>select</code> function in dplyr.</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="dealing-with-missing-values.html#cb125-1" aria-hidden="true" tabindex="-1"></a>dropped_cols_data <span class="ot">&lt;-</span> airquality <span class="sc">%&gt;%</span></span>
-<span id="cb125-2"><a href="dealing-with-missing-values.html#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb125-3"><a href="dealing-with-missing-values.html#cb125-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">all_of</span>(columns_with_na)</span>
-<span id="cb125-4"><a href="dealing-with-missing-values.html#cb125-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb125-5"><a href="dealing-with-missing-values.html#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dropped_cols_data)</span></code></pre></div>
-<pre><code>##   Wind Temp Month Day
-## 1  7.4   67     5   1
-## 2  8.0   72     5   2
-## 3 12.6   74     5   3
-## 4 11.5   62     5   4
-## 5 14.3   56     5   5
-## 6 14.9   66     5   6</code></pre>
-</div>
-<div id="dropping-rows-with-missing-values-object-elimination" class="section level2 hasAnchor" number="14.4">
-<h2><span class="header-section-number">14.4</span> Dropping rows with missing values (object elimination)<a href="dealing-with-missing-values.html#dropping-rows-with-missing-values-object-elimination" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>If you know exactly what columns have missing values in them, you can use <code>filter</code> to filter out rows where those columns have NA.</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="dealing-with-missing-values.html#cb127-1" aria-hidden="true" tabindex="-1"></a>dropped_rows_data <span class="ot">&lt;-</span> airquality <span class="sc">%&gt;%</span></span>
-<span id="cb127-2"><a href="dealing-with-missing-values.html#cb127-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb127-3"><a href="dealing-with-missing-values.html#cb127-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>(<span class="fu">is.na</span>(Ozone) <span class="sc">|</span> <span class="fu">is.na</span>(Solar.R))</span>
-<span id="cb127-4"><a href="dealing-with-missing-values.html#cb127-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb127-5"><a href="dealing-with-missing-values.html#cb127-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dropped_rows_data)</span></code></pre></div>
-<pre><code>##   Ozone Solar.R Wind Temp Month Day
-## 1    41     190  7.4   67     5   1
-## 2    36     118  8.0   72     5   2
-## 3    12     149 12.6   74     5   3
-## 4    18     313 11.5   62     5   4
-## 5    23     299  8.6   65     5   7
-## 6    19      99 13.8   59     5   8</code></pre>
-<p>A little bit more generic, we can use the matrix we generated earlier, <code>airquality_na</code>.</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="dealing-with-missing-values.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First, let&#39;s figure out all of the row ids that we want to drop</span></span>
-<span id="cb129-2"><a href="dealing-with-missing-values.html#cb129-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb129-3"><a href="dealing-with-missing-values.html#cb129-3" aria-hidden="true" tabindex="-1"></a>drop_rows <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb129-4"><a href="dealing-with-missing-values.html#cb129-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ri <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(airquality_na)) {</span>
-<span id="cb129-5"><a href="dealing-with-missing-values.html#cb129-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="cn">TRUE</span> <span class="sc">%in%</span> <span class="fu">as.vector</span>(airquality_na[ri,])) {</span>
-<span id="cb129-6"><a href="dealing-with-missing-values.html#cb129-6" aria-hidden="true" tabindex="-1"></a>    drop_rows <span class="ot">&lt;-</span> <span class="fu">c</span>(drop_rows, ri)</span>
-<span id="cb129-7"><a href="dealing-with-missing-values.html#cb129-7" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb129-8"><a href="dealing-with-missing-values.html#cb129-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb129-9"><a href="dealing-with-missing-values.html#cb129-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb129-10"><a href="dealing-with-missing-values.html#cb129-10" aria-hidden="true" tabindex="-1"></a><span class="co"># We can use filter to drop all of the row ids in drop_rows</span></span>
-<span id="cb129-11"><a href="dealing-with-missing-values.html#cb129-11" aria-hidden="true" tabindex="-1"></a>dropped_rows_data2 <span class="ot">&lt;-</span> airquality <span class="sc">%&gt;%</span></span>
-<span id="cb129-12"><a href="dealing-with-missing-values.html#cb129-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb129-13"><a href="dealing-with-missing-values.html#cb129-13" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>(<span class="fu">row_number</span>() <span class="sc">%in%</span> drop_rows)</span>
-<span id="cb129-14"><a href="dealing-with-missing-values.html#cb129-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb129-15"><a href="dealing-with-missing-values.html#cb129-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dropped_rows_data2)</span></code></pre></div>
-<pre><code>##   Ozone Solar.R Wind Temp Month Day
-## 1    41     190  7.4   67     5   1
-## 2    36     118  8.0   72     5   2
-## 3    12     149 12.6   74     5   3
-## 4    18     313 11.5   62     5   4
-## 5    23     299  8.6   65     5   7
-## 6    19      99 13.8   59     5   8</code></pre>
-</div>
-<div id="mean-imputation" class="section level2 hasAnchor" number="14.5">
-<h2><span class="header-section-number">14.5</span> Mean imputation<a href="dealing-with-missing-values.html#mean-imputation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A mean imputation replaces missing values for a particular feature with the mean of other values for that feature.
-We can use <code>dplyr</code> functions to pretty easily perform a mean imputation on a particular column:</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="dealing-with-missing-values.html#cb131-1" aria-hidden="true" tabindex="-1"></a>airquality <span class="sc">%&gt;%</span></span>
-<span id="cb131-2"><a href="dealing-with-missing-values.html#cb131-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb131-3"><a href="dealing-with-missing-values.html#cb131-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ozone=</span><span class="fu">ifelse</span>(<span class="fu">is.na</span>(Ozone), <span class="fu">mean</span>(Ozone, <span class="at">na.rm=</span><span class="cn">TRUE</span>), Ozone)</span>
-<span id="cb131-4"><a href="dealing-with-missing-values.html#cb131-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>##         Ozone Solar.R Wind Temp Month Day
-## 1    41.00000     190  7.4   67     5   1
-## 2    36.00000     118  8.0   72     5   2
-## 3    12.00000     149 12.6   74     5   3
-## 4    18.00000     313 11.5   62     5   4
-## 5    42.12931      NA 14.3   56     5   5
-## 6    28.00000      NA 14.9   66     5   6
-## 7    23.00000     299  8.6   65     5   7
-## 8    19.00000      99 13.8   59     5   8
-## 9     8.00000      19 20.1   61     5   9
-## 10   42.12931     194  8.6   69     5  10
-## 11    7.00000      NA  6.9   74     5  11
-## 12   16.00000     256  9.7   69     5  12
-## 13   11.00000     290  9.2   66     5  13
-## 14   14.00000     274 10.9   68     5  14
-## 15   18.00000      65 13.2   58     5  15
-## 16   14.00000     334 11.5   64     5  16
-## 17   34.00000     307 12.0   66     5  17
-## 18    6.00000      78 18.4   57     5  18
-## 19   30.00000     322 11.5   68     5  19
-## 20   11.00000      44  9.7   62     5  20
-## 21    1.00000       8  9.7   59     5  21
-## 22   11.00000     320 16.6   73     5  22
-## 23    4.00000      25  9.7   61     5  23
-## 24   32.00000      92 12.0   61     5  24
-## 25   42.12931      66 16.6   57     5  25
-## 26   42.12931     266 14.9   58     5  26
-## 27   42.12931      NA  8.0   57     5  27
-## 28   23.00000      13 12.0   67     5  28
-## 29   45.00000     252 14.9   81     5  29
-## 30  115.00000     223  5.7   79     5  30
-## 31   37.00000     279  7.4   76     5  31
-## 32   42.12931     286  8.6   78     6   1
-## 33   42.12931     287  9.7   74     6   2
-## 34   42.12931     242 16.1   67     6   3
-## 35   42.12931     186  9.2   84     6   4
-## 36   42.12931     220  8.6   85     6   5
-## 37   42.12931     264 14.3   79     6   6
-## 38   29.00000     127  9.7   82     6   7
-## 39   42.12931     273  6.9   87     6   8
-## 40   71.00000     291 13.8   90     6   9
-## 41   39.00000     323 11.5   87     6  10
-## 42   42.12931     259 10.9   93     6  11
-## 43   42.12931     250  9.2   92     6  12
-## 44   23.00000     148  8.0   82     6  13
-## 45   42.12931     332 13.8   80     6  14
-## 46   42.12931     322 11.5   79     6  15
-## 47   21.00000     191 14.9   77     6  16
-## 48   37.00000     284 20.7   72     6  17
-## 49   20.00000      37  9.2   65     6  18
-## 50   12.00000     120 11.5   73     6  19
-## 51   13.00000     137 10.3   76     6  20
-## 52   42.12931     150  6.3   77     6  21
-## 53   42.12931      59  1.7   76     6  22
-## 54   42.12931      91  4.6   76     6  23
-## 55   42.12931     250  6.3   76     6  24
-## 56   42.12931     135  8.0   75     6  25
-## 57   42.12931     127  8.0   78     6  26
-## 58   42.12931      47 10.3   73     6  27
-## 59   42.12931      98 11.5   80     6  28
-## 60   42.12931      31 14.9   77     6  29
-## 61   42.12931     138  8.0   83     6  30
-## 62  135.00000     269  4.1   84     7   1
-## 63   49.00000     248  9.2   85     7   2
-## 64   32.00000     236  9.2   81     7   3
-## 65   42.12931     101 10.9   84     7   4
-## 66   64.00000     175  4.6   83     7   5
-## 67   40.00000     314 10.9   83     7   6
-## 68   77.00000     276  5.1   88     7   7
-## 69   97.00000     267  6.3   92     7   8
-## 70   97.00000     272  5.7   92     7   9
-## 71   85.00000     175  7.4   89     7  10
-## 72   42.12931     139  8.6   82     7  11
-## 73   10.00000     264 14.3   73     7  12
-## 74   27.00000     175 14.9   81     7  13
-## 75   42.12931     291 14.9   91     7  14
-## 76    7.00000      48 14.3   80     7  15
-## 77   48.00000     260  6.9   81     7  16
-## 78   35.00000     274 10.3   82     7  17
-## 79   61.00000     285  6.3   84     7  18
-## 80   79.00000     187  5.1   87     7  19
-## 81   63.00000     220 11.5   85     7  20
-## 82   16.00000       7  6.9   74     7  21
-## 83   42.12931     258  9.7   81     7  22
-## 84   42.12931     295 11.5   82     7  23
-## 85   80.00000     294  8.6   86     7  24
-## 86  108.00000     223  8.0   85     7  25
-## 87   20.00000      81  8.6   82     7  26
-## 88   52.00000      82 12.0   86     7  27
-## 89   82.00000     213  7.4   88     7  28
-## 90   50.00000     275  7.4   86     7  29
-## 91   64.00000     253  7.4   83     7  30
-## 92   59.00000     254  9.2   81     7  31
-## 93   39.00000      83  6.9   81     8   1
-## 94    9.00000      24 13.8   81     8   2
-## 95   16.00000      77  7.4   82     8   3
-## 96   78.00000      NA  6.9   86     8   4
-## 97   35.00000      NA  7.4   85     8   5
-## 98   66.00000      NA  4.6   87     8   6
-## 99  122.00000     255  4.0   89     8   7
-## 100  89.00000     229 10.3   90     8   8
-## 101 110.00000     207  8.0   90     8   9
-## 102  42.12931     222  8.6   92     8  10
-## 103  42.12931     137 11.5   86     8  11
-## 104  44.00000     192 11.5   86     8  12
-## 105  28.00000     273 11.5   82     8  13
-## 106  65.00000     157  9.7   80     8  14
-## 107  42.12931      64 11.5   79     8  15
-## 108  22.00000      71 10.3   77     8  16
-## 109  59.00000      51  6.3   79     8  17
-## 110  23.00000     115  7.4   76     8  18
-## 111  31.00000     244 10.9   78     8  19
-## 112  44.00000     190 10.3   78     8  20
-## 113  21.00000     259 15.5   77     8  21
-## 114   9.00000      36 14.3   72     8  22
-## 115  42.12931     255 12.6   75     8  23
-## 116  45.00000     212  9.7   79     8  24
-## 117 168.00000     238  3.4   81     8  25
-## 118  73.00000     215  8.0   86     8  26
-## 119  42.12931     153  5.7   88     8  27
-## 120  76.00000     203  9.7   97     8  28
-## 121 118.00000     225  2.3   94     8  29
-## 122  84.00000     237  6.3   96     8  30
-## 123  85.00000     188  6.3   94     8  31
-## 124  96.00000     167  6.9   91     9   1
-## 125  78.00000     197  5.1   92     9   2
-## 126  73.00000     183  2.8   93     9   3
-## 127  91.00000     189  4.6   93     9   4
-## 128  47.00000      95  7.4   87     9   5
-## 129  32.00000      92 15.5   84     9   6
-## 130  20.00000     252 10.9   80     9   7
-## 131  23.00000     220 10.3   78     9   8
-## 132  21.00000     230 10.9   75     9   9
-## 133  24.00000     259  9.7   73     9  10
-## 134  44.00000     236 14.9   81     9  11
-## 135  21.00000     259 15.5   76     9  12
-## 136  28.00000     238  6.3   77     9  13
-## 137   9.00000      24 10.9   71     9  14
-## 138  13.00000     112 11.5   71     9  15
-## 139  46.00000     237  6.9   78     9  16
-## 140  18.00000     224 13.8   67     9  17
-## 141  13.00000      27 10.3   76     9  18
-## 142  24.00000     238 10.3   68     9  19
-## 143  16.00000     201  8.0   82     9  20
-## 144  13.00000     238 12.6   64     9  21
-## 145  23.00000      14  9.2   71     9  22
-## 146  36.00000     139 10.3   81     9  23
-## 147   7.00000      49 10.3   69     9  24
-## 148  14.00000      20 16.6   63     9  25
-## 149  30.00000     193  6.9   70     9  26
-## 150  42.12931     145 13.2   77     9  27
-## 151  14.00000     191 14.3   75     9  28
-## 152  18.00000     131  8.0   76     9  29
-## 153  20.00000     223 11.5   68     9  30</code></pre>
-<p>In the code above, we mutate the Ozone column. If the value is na, we replace it with the mean of the Ozone column, and otherwise, we leave it as is.</p>
-</div>
-<div id="median-imputation" class="section level2 hasAnchor" number="14.6">
-<h2><span class="header-section-number">14.6</span> Median imputation<a href="dealing-with-missing-values.html#median-imputation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A median imputation replaces missing values for a particular feature with the median of other (non-missing) values for that feature.
-We can do the exact same thing we did for a mean imputation, but swap mean out for median:</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="dealing-with-missing-values.html#cb133-1" aria-hidden="true" tabindex="-1"></a>airquality <span class="sc">%&gt;%</span></span>
-<span id="cb133-2"><a href="dealing-with-missing-values.html#cb133-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb133-3"><a href="dealing-with-missing-values.html#cb133-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ozone=</span><span class="fu">ifelse</span>(<span class="fu">is.na</span>(Ozone), <span class="fu">median</span>(Ozone, <span class="at">na.rm=</span><span class="cn">TRUE</span>), Ozone)</span>
-<span id="cb133-4"><a href="dealing-with-missing-values.html#cb133-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>##     Ozone Solar.R Wind Temp Month Day
-## 1    41.0     190  7.4   67     5   1
-## 2    36.0     118  8.0   72     5   2
-## 3    12.0     149 12.6   74     5   3
-## 4    18.0     313 11.5   62     5   4
-## 5    31.5      NA 14.3   56     5   5
-## 6    28.0      NA 14.9   66     5   6
-## 7    23.0     299  8.6   65     5   7
-## 8    19.0      99 13.8   59     5   8
-## 9     8.0      19 20.1   61     5   9
-## 10   31.5     194  8.6   69     5  10
-## 11    7.0      NA  6.9   74     5  11
-## 12   16.0     256  9.7   69     5  12
-## 13   11.0     290  9.2   66     5  13
-## 14   14.0     274 10.9   68     5  14
-## 15   18.0      65 13.2   58     5  15
-## 16   14.0     334 11.5   64     5  16
-## 17   34.0     307 12.0   66     5  17
-## 18    6.0      78 18.4   57     5  18
-## 19   30.0     322 11.5   68     5  19
-## 20   11.0      44  9.7   62     5  20
-## 21    1.0       8  9.7   59     5  21
-## 22   11.0     320 16.6   73     5  22
-## 23    4.0      25  9.7   61     5  23
-## 24   32.0      92 12.0   61     5  24
-## 25   31.5      66 16.6   57     5  25
-## 26   31.5     266 14.9   58     5  26
-## 27   31.5      NA  8.0   57     5  27
-## 28   23.0      13 12.0   67     5  28
-## 29   45.0     252 14.9   81     5  29
-## 30  115.0     223  5.7   79     5  30
-## 31   37.0     279  7.4   76     5  31
-## 32   31.5     286  8.6   78     6   1
-## 33   31.5     287  9.7   74     6   2
-## 34   31.5     242 16.1   67     6   3
-## 35   31.5     186  9.2   84     6   4
-## 36   31.5     220  8.6   85     6   5
-## 37   31.5     264 14.3   79     6   6
-## 38   29.0     127  9.7   82     6   7
-## 39   31.5     273  6.9   87     6   8
-## 40   71.0     291 13.8   90     6   9
-## 41   39.0     323 11.5   87     6  10
-## 42   31.5     259 10.9   93     6  11
-## 43   31.5     250  9.2   92     6  12
-## 44   23.0     148  8.0   82     6  13
-## 45   31.5     332 13.8   80     6  14
-## 46   31.5     322 11.5   79     6  15
-## 47   21.0     191 14.9   77     6  16
-## 48   37.0     284 20.7   72     6  17
-## 49   20.0      37  9.2   65     6  18
-## 50   12.0     120 11.5   73     6  19
-## 51   13.0     137 10.3   76     6  20
-## 52   31.5     150  6.3   77     6  21
-## 53   31.5      59  1.7   76     6  22
-## 54   31.5      91  4.6   76     6  23
-## 55   31.5     250  6.3   76     6  24
-## 56   31.5     135  8.0   75     6  25
-## 57   31.5     127  8.0   78     6  26
-## 58   31.5      47 10.3   73     6  27
-## 59   31.5      98 11.5   80     6  28
-## 60   31.5      31 14.9   77     6  29
-## 61   31.5     138  8.0   83     6  30
-## 62  135.0     269  4.1   84     7   1
-## 63   49.0     248  9.2   85     7   2
-## 64   32.0     236  9.2   81     7   3
-## 65   31.5     101 10.9   84     7   4
-## 66   64.0     175  4.6   83     7   5
-## 67   40.0     314 10.9   83     7   6
-## 68   77.0     276  5.1   88     7   7
-## 69   97.0     267  6.3   92     7   8
-## 70   97.0     272  5.7   92     7   9
-## 71   85.0     175  7.4   89     7  10
-## 72   31.5     139  8.6   82     7  11
-## 73   10.0     264 14.3   73     7  12
-## 74   27.0     175 14.9   81     7  13
-## 75   31.5     291 14.9   91     7  14
-## 76    7.0      48 14.3   80     7  15
-## 77   48.0     260  6.9   81     7  16
-## 78   35.0     274 10.3   82     7  17
-## 79   61.0     285  6.3   84     7  18
-## 80   79.0     187  5.1   87     7  19
-## 81   63.0     220 11.5   85     7  20
-## 82   16.0       7  6.9   74     7  21
-## 83   31.5     258  9.7   81     7  22
-## 84   31.5     295 11.5   82     7  23
-## 85   80.0     294  8.6   86     7  24
-## 86  108.0     223  8.0   85     7  25
-## 87   20.0      81  8.6   82     7  26
-## 88   52.0      82 12.0   86     7  27
-## 89   82.0     213  7.4   88     7  28
-## 90   50.0     275  7.4   86     7  29
-## 91   64.0     253  7.4   83     7  30
-## 92   59.0     254  9.2   81     7  31
-## 93   39.0      83  6.9   81     8   1
-## 94    9.0      24 13.8   81     8   2
-## 95   16.0      77  7.4   82     8   3
-## 96   78.0      NA  6.9   86     8   4
-## 97   35.0      NA  7.4   85     8   5
-## 98   66.0      NA  4.6   87     8   6
-## 99  122.0     255  4.0   89     8   7
-## 100  89.0     229 10.3   90     8   8
-## 101 110.0     207  8.0   90     8   9
-## 102  31.5     222  8.6   92     8  10
-## 103  31.5     137 11.5   86     8  11
-## 104  44.0     192 11.5   86     8  12
-## 105  28.0     273 11.5   82     8  13
-## 106  65.0     157  9.7   80     8  14
-## 107  31.5      64 11.5   79     8  15
-## 108  22.0      71 10.3   77     8  16
-## 109  59.0      51  6.3   79     8  17
-## 110  23.0     115  7.4   76     8  18
-## 111  31.0     244 10.9   78     8  19
-## 112  44.0     190 10.3   78     8  20
-## 113  21.0     259 15.5   77     8  21
-## 114   9.0      36 14.3   72     8  22
-## 115  31.5     255 12.6   75     8  23
-## 116  45.0     212  9.7   79     8  24
-## 117 168.0     238  3.4   81     8  25
-## 118  73.0     215  8.0   86     8  26
-## 119  31.5     153  5.7   88     8  27
-## 120  76.0     203  9.7   97     8  28
-## 121 118.0     225  2.3   94     8  29
-## 122  84.0     237  6.3   96     8  30
-## 123  85.0     188  6.3   94     8  31
-## 124  96.0     167  6.9   91     9   1
-## 125  78.0     197  5.1   92     9   2
-## 126  73.0     183  2.8   93     9   3
-## 127  91.0     189  4.6   93     9   4
-## 128  47.0      95  7.4   87     9   5
-## 129  32.0      92 15.5   84     9   6
-## 130  20.0     252 10.9   80     9   7
-## 131  23.0     220 10.3   78     9   8
-## 132  21.0     230 10.9   75     9   9
-## 133  24.0     259  9.7   73     9  10
-## 134  44.0     236 14.9   81     9  11
-## 135  21.0     259 15.5   76     9  12
-## 136  28.0     238  6.3   77     9  13
-## 137   9.0      24 10.9   71     9  14
-## 138  13.0     112 11.5   71     9  15
-## 139  46.0     237  6.9   78     9  16
-## 140  18.0     224 13.8   67     9  17
-## 141  13.0      27 10.3   76     9  18
-## 142  24.0     238 10.3   68     9  19
-## 143  16.0     201  8.0   82     9  20
-## 144  13.0     238 12.6   64     9  21
-## 145  23.0      14  9.2   71     9  22
-## 146  36.0     139 10.3   81     9  23
-## 147   7.0      49 10.3   69     9  24
-## 148  14.0      20 16.6   63     9  25
-## 149  30.0     193  6.9   70     9  26
-## 150  31.5     145 13.2   77     9  27
-## 151  14.0     191 14.3   75     9  28
-## 152  18.0     131  8.0   76     9  29
-## 153  20.0     223 11.5   68     9  30</code></pre>
-</div>
-<div id="exercises-2" class="section level2 hasAnchor" number="14.7">
-<h2><span class="header-section-number">14.7</span> Exercises<a href="dealing-with-missing-values.html#exercises-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ul>
-<li>Describe a procedure for replacing an object’s missing value for a particular feature with the value from its “nearest neighbor”?
-<ul>
-<li>What does it mean for one object (i.e., row) to be “near” another object? How could you quantify how close two objects are to one another?</li>
-<li>How would you implement this approach in R? (either from scratch or using an existing function in a library you install/load)</li>
-</ul></li>
-<li>Assume that you have a dataset where each object has two features: a continuous feature (where some of the values are missing) and a categorical feature.
-In this dataset, objects of the same category are more similar to each other than to objects in different categories.
-You want to apply a mean imputation to this dataset to replace the missing values in the continuous feature.
-How could you use each object’s category to improve your mean imputation?</li>
-</ul>
+<div id="references-4" class="section level1 unnumbered hasAnchor">
+<h1>References<a href="references-4.html#references-4" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+R Core Team. 2022. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div class="csl-entry">
+Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with <span>R</span> Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
+</div>
+<div class="csl-entry">
+———. 2022. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>.
+</div>
 </div>
 </div>
             </section>
@@ -907,8 +471,8 @@ How could you use each object’s category to improve your mean imputation?</li>
           </div>
         </div>
       </div>
-<a href="simple-denoising-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="sampling-objects-in-a-dataset.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="final-project---final-report.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -939,7 +503,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-04/missing-values.rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/tail.Rmd",
 "text": "Edit"
 },
 "history": {

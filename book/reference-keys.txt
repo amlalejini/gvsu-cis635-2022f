@@ -143,6 +143,15 @@ grading-3
 deliverables-2
 formatting-1
 part-a.
+interactive-k-means-clustering-example
+simple-k-means-clustering-in-r
+dependencies-and-setup-6
+loading-and-preprocessing-the-data-1
+running-k-means
+what-if-you-dont-know-the-best-number-of-clusters-a-priori
+exercises-11
+other-useful-r-packages-when-performing-k-means-clustering
+references-2
 final-project-overview
 problem-statement
 learning-objectives
@@ -168,6 +177,6 @@ methods
 results-and-discussion
 conclusion
 data-and-software-availability
-references-2
+references-3
 deliverables-3
 grading-8
