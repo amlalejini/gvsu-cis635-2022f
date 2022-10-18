@@ -23,7 +23,7 @@
 <meta name="author" content="Instructor: Dr. Alexander Lalejini" />
 
 
-<meta name="date" content="2022-10-17" />
+<meta name="date" content="2022-10-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -511,14 +511,14 @@ For example, we could generate 500 different models for our <code>sim1</code> da
 <span id="cb186-4"><a href="linear-regression-in-r.html#cb186-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb186-5"><a href="linear-regression-in-r.html#cb186-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(models)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 2
-##       a1    a2
-##    &lt;dbl&gt; &lt;dbl&gt;
-## 1  19.2   3.40
-## 2 -13.4  -1.40
-## 3  34.7  -3.74
-## 4  24.1  -3.65
-## 5  -2.52 -4.38
-## 6  38.2   1.56</code></pre>
+##      a1     a2
+##   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 21.9  -1.90 
+## 2  1.38  0.239
+## 3 38.8  -3.58 
+## 4 18.2  -1.58 
+## 5  5.58  4.18 
+## 6 -1.06 -4.78</code></pre>
 <p>Let’s plot all 500 of those random models on top of our <code>sim1</code> data:</p>
 <div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="linear-regression-in-r.html#cb188-1" aria-hidden="true" tabindex="-1"></a>rand_search_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(sim1, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
 <span id="cb188-2"><a href="linear-regression-in-r.html#cb188-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
@@ -575,18 +575,18 @@ So, we need a way to assess the quality of each model.</p>
 <span id="cb195-11"><a href="linear-regression-in-r.html#cb195-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb195-12"><a href="linear-regression-in-r.html#cb195-12" aria-hidden="true" tabindex="-1"></a>models</span></code></pre></div>
 <pre><code>## # A tibble: 500 × 3
-##        a1       a2  error
-##     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-##  1  19.2   3.40    15647.
-##  2 -13.4  -1.40    43195.
-##  3  34.7  -3.74     8495.
-##  4  24.1  -3.65    12133.
-##  5  -2.52 -4.38    63625.
-##  6  38.2   1.56    29559.
-##  7  34.4   3.32    41971.
-##  8   3.98  4.99     9868.
-##  9  30.2  -0.00971  7576.
-## 10  37.6   4.87    73799.
+##        a1     a2  error
+##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1  21.9  -1.90   4485.
+##  2   1.38  0.239  5871.
+##  3  38.8  -3.58   8373.
+##  4  18.2  -1.58   4488.
+##  5   5.58  4.18   6385.
+##  6  -1.06 -4.78  66844.
+##  7 -17.2  -4.03  99549.
+##  8  35.4   4.81  66615.
+##  9 -13.3  -0.481 31467.
+## 10  13.7  -2.97  16216.
 ## # … with 490 more rows</code></pre>
 <p>Notice that <code>models</code> describes 500 models (i.e., defines 500 pairs of values for a1 and a2), <em>and</em> now gives the error for each model.
 With those error values, we can start to look at the best of our 500 models.</p>

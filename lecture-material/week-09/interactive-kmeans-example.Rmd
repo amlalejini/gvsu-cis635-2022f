@@ -7,10 +7,10 @@ output:
 # Interactive k-means clustering example
 
 ```{r,echo=FALSE}
-demo_url <- "https://lalejini.com/my_empirical_examples/KMeansClusteringExample/web/kmeans_clustering.html"
+demo_url <- "https://lalejini.com/k-means-web-demo/web/kmeans_clustering.html"
 ```
 
-Below is an interactive k-means clustering demo. [You may also access the demo here](https://lalejini.com/my_empirical_examples/KMeansClusteringExample/web/kmeans_clustering.html).
+Below is an interactive k-means clustering demo. [You may also access the demo here](https://lalejini.com/k-means-web-demo/web/kmeans_clustering.html).
 
 In the demo, the black square is your data "canvas".
 Click the "drop points" button to populate the canvas with random points.
