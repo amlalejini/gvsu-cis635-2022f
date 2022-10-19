@@ -24,6 +24,7 @@ We'll use the following packages (you will need to install any that you don't al
 ```{r}
 library(tidyverse)
 library(modelr)
+library(rpart)
 ```
 
 
