@@ -23,7 +23,7 @@
 <meta name="author" content="Instructor: Dr. Alexander Lalejini" />
 
 
-<meta name="date" content="2022-10-18" />
+<meta name="date" content="2022-10-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -474,7 +474,7 @@ If you do not have these packages installed, you will need to do so (use the <co
 <strong>Depending on your working directory, you may need to adjust the path to the data file.</strong></p>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="building-a-decision-tree-in-r.html#cb164-1" aria-hidden="true" tabindex="-1"></a>senator_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;lecture-material/week-06/senate-data.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 100 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (3): first, last, pol
 ## dbl (11): age, law, mil, soc, edu, med, bus, agr, fin, years, approval
@@ -555,8 +555,8 @@ In the formula used to build our decision tree model, <code>approval</code> is o
 ## 
 ##           CP nsplit rel error   xerror      xstd
 ## 1 0.07317073      0 1.0000000 1.000000 0.1199593
-## 2 0.02439024      2 0.8536585 1.390244 0.1207502
-## 3 0.01000000      4 0.8048780 1.292683 0.1217315
+## 2 0.02439024      2 0.8536585 1.292683 0.1217315
+## 3 0.01000000      4 0.8048780 1.487805 0.1189634
 ## 
 ## Variable importance
 ## years   age   pol   agr   law   edu   mil 

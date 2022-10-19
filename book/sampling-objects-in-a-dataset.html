@@ -23,7 +23,7 @@
 <meta name="author" content="Instructor: Dr. Alexander Lalejini" />
 
 
-<meta name="date" content="2022-10-18" />
+<meta name="date" content="2022-10-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -494,24 +494,24 @@ In this example, we’ll sample without replacement: we don’t want to characte
 <pre><code>## # A tibble: 18 × 14
 ##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
 ##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
-##  1 Bib Fortuna    180    NA none    pale    pink         NA male  mascu… Ryloth 
-##  2 Ackbar         180    83 none    brown … orange       41 male  mascu… Mon Ca…
-##  3 Ki-Adi-Mun…    198    82 white   pale    yellow       92 male  mascu… Cerea  
-##  4 Greedo         173    74 &lt;NA&gt;    green   black        44 male  mascu… Rodia  
-##  5 Grievous       216   159 none    brown,… green,…      NA male  mascu… Kalee  
-##  6 R4-P17          96    NA none    silver… red, b…      NA none  femin… &lt;NA&gt;   
-##  7 Plo Koon       188    80 none    orange  black        22 male  mascu… Dorin  
-##  8 Sebulba        112    40 none    grey, … orange       NA male  mascu… Malast…
-##  9 Jocasta Nu     167    NA white   fair    blue         NA fema… femin… Corusc…
-## 10 Watto          137    NA black   blue, … yellow       NA male  mascu… Toydar…
-## 11 Yarael Poof    264    NA none    white   yellow       NA male  mascu… Quermia
-## 12 Zam Wesell     168    55 blonde  fair, … yellow       NA fema… femin… Zolan  
-## 13 R2-D2           96    32 &lt;NA&gt;    white,… red          33 none  mascu… Naboo  
-## 14 Darth Maul     175    80 none    red     yellow       54 male  mascu… Dathom…
-## 15 Quarsh Pan…    183    NA black   dark    brown        62 &lt;NA&gt;  &lt;NA&gt;   Naboo  
-## 16 Shmi Skywa…    163    NA black   fair    brown        72 fema… femin… Tatooi…
-## 17 Luke Skywa…    172    77 blond   fair    blue         19 male  mascu… Tatooi…
-## 18 Sly Moore      178    48 none    pale    white        NA &lt;NA&gt;  &lt;NA&gt;   Umbara 
+##  1 Wedge Anti…    170  77   brown   fair    hazel      21   male  mascu… Corell…
+##  2 Dud Bolt        94  45   none    blue, … yellow     NA   male  mascu… Vulpter
+##  3 Ric Olié       183  NA   brown   fair    blue       NA   &lt;NA&gt;  &lt;NA&gt;   Naboo  
+##  4 Yarael Poof    264  NA   none    white   yellow     NA   male  mascu… Quermia
+##  5 Ki-Adi-Mun…    198  82   white   pale    yellow     92   male  mascu… Cerea  
+##  6 Obi-Wan Ke…    182  77   auburn… fair    blue-g…    57   male  mascu… Stewjon
+##  7 R4-P17          96  NA   none    silver… red, b…    NA   none  femin… &lt;NA&gt;   
+##  8 Kit Fisto      196  87   none    green   black      NA   male  mascu… Glee A…
+##  9 Nien Nunb      160  68   none    grey    black      NA   male  mascu… Sullust
+## 10 Dormé          165  NA   brown   light   brown      NA   fema… femin… Naboo  
+## 11 Ben Quadin…    163  65   none    grey, … orange     NA   male  mascu… Tund   
+## 12 Raymus Ant…    188  79   brown   light   brown      NA   male  mascu… Aldera…
+## 13 Biggs Dark…    183  84   black   light   brown      24   male  mascu… Tatooi…
+## 14 Beru White…    165  75   brown   light   blue       47   fema… femin… Tatooi…
+## 15 Dexter Jet…    198 102   none    brown   yellow     NA   male  mascu… Ojom   
+## 16 Gregar Typ…    185  85   black   dark    brown      NA   male  mascu… Naboo  
+## 17 Boba Fett      183  78.2 black   fair    brown      31.5 male  mascu… Kamino 
+## 18 Zam Wesell     168  55   blonde  fair, … yellow     NA   fema… femin… Zolan  
 ## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
 ## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
 ## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
@@ -643,8 +643,8 @@ In this example, I’ll randomly sample each species independently, guaranteeing
 ##  3 Ki-Adi-Mun…    198    82 white   pale    yellow       92 male  mascu… Cerea  
 ##  4 Mas Amedda     196    NA none    blue    blue         NA male  mascu… Champa…
 ##  5 Zam Wesell     168    55 blonde  fair, … yellow       NA fema… femin… Zolan  
-##  6 BB8             NA    NA none    none    black        NA none  mascu… &lt;NA&gt;   
-##  7 IG-88          200   140 none    metal   red          15 none  mascu… &lt;NA&gt;   
+##  6 R5-D4           97    32 &lt;NA&gt;    white,… red          NA none  mascu… Tatooi…
+##  7 C-3PO          167    75 &lt;NA&gt;    gold    yellow      112 none  mascu… Tatooi…
 ##  8 Sebulba        112    40 none    grey, … orange       NA male  mascu… Malast…
 ##  9 Wicket Sys…     88    20 brown   brown   brown         8 male  mascu… Endor  
 ## 10 Poggle the…    183    80 none    green   yellow       NA male  mascu… Geonos…
