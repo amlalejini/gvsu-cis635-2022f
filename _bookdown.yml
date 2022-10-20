@@ -38,6 +38,7 @@ rmd_files: [
   "lecture-material/week-09/basic-kmeans.Rmd",
   "lecture-material/week-10/week-10.md",
   "lecture-material/week-10/hierarchical-clustering.Rmd",
+  "lecture-material/week-10/dbscan.Rmd",
   "project/project.md",
   "project/proposal.md",
   "project/progress-report.md",
