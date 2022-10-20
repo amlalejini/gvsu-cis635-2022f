@@ -36,6 +36,8 @@ rmd_files: [
   "lecture-material/week-09/week-09.md",
   "lecture-material/week-09/interactive-kmeans-example.Rmd",
   "lecture-material/week-09/basic-kmeans.Rmd",
+  "lecture-material/week-10/week-10.md",
+  "lecture-material/week-10/hierarchical-clustering.Rmd",
   "project/project.md",
   "project/proposal.md",
   "project/progress-report.md",

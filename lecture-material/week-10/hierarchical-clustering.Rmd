@@ -1,0 +1,226 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Hierarchical clustering in R
+
+Portions of this lab activity are adapted from [this Hierarchical Cluster Analysis tutorial](http://uc-r.github.io/hc_clustering) from the UC Business Analytics R Programming Guide.
+
+In this lab activity, we will
+
+- apply agglomerative and divisive hierarchical clustering techniques to a dataset
+- visualize the resulting dendrograms
+- cut the dendrograms to extract K clusters
+
+## Dependencies
+
+We'll use the following packages in this lab activity (you will need to install any that you don't already have installed):
+
+```{r}
+library(tidyverse)  # For data wrangling
+library(cluster)    # For clustering algorithms
+```
+
+## Data preparation
+
+In this lab, we'll cluster the iris dataset, which comes built-in with R.
+The iris dataset gives measurements (in cm) for 150 flowers, each of which belongs to one of three species of iris:
+_Iris setosa_, _versicolor_, and _virginica_.
+Run `?iris` to learn more about the iris dataset.
+
+```{r}
+data <- read_csv("lecture-material/week-10/iris_data.csv")
+head(data)
+```
+
+In general, when you perform clustering in R, your data should almost always be prepared as follows:
+
+- Rows are observations/objects that you want to cluster, columns are attributes
+- Missing values should be removed or estimated
+- Each column (attribute) should be standardized to make attributes comparable.
+  E.g., you might standardize an attribute by tranforming the variables such that they have a mean of 0 and a standard deviation of 1.
+
+The iris dataset doesn't have missing values, but if it did, we could remove rows with missing values using the `na.omit` function.
+
+```{r}
+data <- na.omit(data)
+```
+
+Next, we'll scale each attribute that we plan to use for clustering.
+
+```{r}
+data$Sepal.Length <- scale(data$Sepal.Length)
+data$Sepal.Width <- scale(data$Sepal.Width)
+data$Petal.Length <- scale(data$Petal.Length)
+data$Petal.Width <- scale(data$Petal.Width)
+head(data)
+```
+
+Finally, we'll tweak the label for each row of our data to include the flower species name.
+This is not required to perform clustering, but it will make it easier to read the dendrograms that we eventually generate.
+
+```{r}
+# Gen label takes a row ID and a species name and outputs a string that combines
+# the two.
+gen_label <- function(row_i, species) {
+  return(paste0(species,"_",row_i))
+}
+# Rename each row using the gen_label function we wrote.
+rownames(data) <- mapply(
+  gen_label,
+  row.names(data),
+  data$Species
+)
+```
+
+## Hierarchical clustering
+
+Common functions for performing hierarchical clustering in R include:
+
+- `hclust` [in `stats` package] for aggolmerative hierarchical clustering
+- `agnes` [in `cluster` package] for agglomerative hierarchical clustering
+- `diana` [in `cluster` package] for divisive hierarchical clustering
+
+### Agglomerative clustering
+
+We'll use the `agnes` function to perform agglomerative clustering on our data.
+Run `?agnes` to see how you can parameterize it.
+Notice that we can specify the proximity method using the `method` argument.
+Below, we'll perform clustering using complete linkage, single linkage, group average, and Ward's method.
+
+#### Complete linkage clustering
+
+Here, we use the `agnes` function to perform clustering using complete linkage proximity.
+In complete linkage clustering, the proximity of two clusters is measured as the distance between the two furthest points in the two different clusters.
+
+```{r}
+hc_agg_complete <- agnes(
+  data,
+  method = "complete"
+)
+```
+
+We can use the `pltree` function in the `cluster` package to draw the resulting dendrogram.
+
+```{r}
+pltree(
+  hc_agg_complete,
+  cex=0.5,
+  hang=-1,
+  main="Complete linkage"
+)
+```
+
+#### Single linkage clustering
+
+In single linkage clustering, the proximity of two clusters is measured as the distance between the two nearest points in the two different clusters.
+
+```{r}
+hc_agg_single <- agnes(
+  data,
+  method = "single"
+)
+
+pltree(
+  hc_agg_single,
+  cex=0.5,
+  hang=-1,
+  main="Single linkage"
+)
+```
+
+#### Group average clustering
+
+In group average agglomerative clustering, the proximity of two clusters is measured as the average pairwise proximity between points in the two clusters.
+
+```{r}
+hc_agg_avg <- agnes(
+  data,
+  method = "average"
+)
+
+pltree(
+  hc_agg_avg,
+  cex=0.5,
+  hang=-1,
+  main="Group average"
+)
+```
+
+#### Ward's method clustering
+
+Ward's method of agglomerative clustering uses the potential increase in sum of squared error if two clusters were to be merged in order to measure the proximity of two clusters.
+
+```{r}
+hc_agg_ward <- agnes(
+  data,
+  method = "ward"
+)
+
+pltree(
+  hc_agg_ward,
+  cex=0.5,
+  hang=-1,
+  main="Ward's Method"
+)
+```
+
+### Divisive clustering
+
+We can use the `diana` function to perform divisive hierarchical clustering.
+
+```{r}
+hc_divisive <- diana(data)
+
+pltree(
+  hc_divisive,
+  cex=0.5,
+  hang=-1,
+  main="Dendrogram from divisive clustering"
+)
+```
+
+## Extracting K clusters from dendrograms
+
+You can use the `cutree` function to extract K clusters from a dendrogram produced by hierarchical clustering.
+Run `?cutree` to read more about its usage.
+
+```{r}
+sub_grp <- cutree(hc_agg_complete, k=3)
+table(sub_grp)
+```
+
+`sub_grp` now associates a cluster ID with each row ID in our data.
+We can use dplyr to add an attribute to our original dataframe that labels each row with its associated cluster id (gotten from running cutree on our dendrogram).
+
+```{r}
+data <- data %>%
+  mutate(
+    cluster=sub_grp
+  )
+```
+
+## Exercises
+
+- Compare the dendrograms produced by each of the hierarchical clustering methods used in this lab.
+  Do you see any differences?
+- Load the data we used for Week 9's K-means clustering lab activity.
+  Apply a hierarchical clustering method of your choice to those data.
+  Compare the results to using K-means clustering. Describe any differences and/or similarities.
+
+## Further exploration
+
+This lab is intended to introduce you to the functions you can use to perform hierarchical clustering in R.
+For a more in-depth tutorial of hierarchical clustering analysis with R, see [the Hierarchical Cluster Analysis tutorial](http://uc-r.github.io/hc_clustering) from the UC Business Analytics R Programming Guide.
+
+In this lab we used the `pltree` function (from the `cluster` package) to visualize dendrograms.
+However, there are more nifty tools for visualizing/analyzing dendrograms in R; for example:
+
+- [The `ggdendro` package helps you visualize dendrograms with ggplot](https://cran.r-project.org/web/packages/ggdendro/vignettes/ggdendro.html)
+- [The dendextend package](https://cran.r-project.org/web/packages/dendextend/vignettes/Cluster_Analysis.html)
+
+## References
+
+- [Hierarchical Cluster Analysis tutorial, UC Business Analytics R Programming Guide](http://uc-r.github.io/hc_clustering)
