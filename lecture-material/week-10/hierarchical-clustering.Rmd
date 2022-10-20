@@ -25,10 +25,11 @@ library(cluster)    # For clustering algorithms
 
 ## Data preparation
 
-In this lab, we'll cluster the iris dataset, which comes built-in with R.
+In this lab, we'll cluster a down-sampled version of the iris dataset.
 The iris dataset gives measurements (in cm) for 150 flowers, each of which belongs to one of three species of iris:
 _Iris setosa_, _versicolor_, and _virginica_.
-Run `?iris` to learn more about the iris dataset.
+
+You may need to adjust the file path when you run this R markdown document locally.
 
 ```{r}
 data <- read_csv("lecture-material/week-10/iris_data.csv")
