@@ -39,8 +39,7 @@ We can use the `read.transactions` function from the `arules` package to read a 
 ```{r}
 # You will need to adjust the file path to run this lab activity locally.
 transactions <- read.transactions(
-  # "lecture-material/week-11/transactions.dat",
-  "transactions.dat",
+  "lecture-material/week-11/transactions.dat",
   sep = ",",
   skip = 1
 )
@@ -161,6 +160,6 @@ grocery_trans <- Groceries
 
 ## References and further exploration
 
-- [Introduction to Association Rule Mining in R by Jan Kirenz](https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/#implementation-in-r)
+- [Introduction to Association Rule Mining in R by Jan Kirenz](https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/)
 - [`arules` package usage documentation](https://cran.r-project.org/web/packages/arules/vignettes/arules.pdf)
 - [Association rule mining with R by Selva Prabhakaran](http://r-statistics.co/Association-M.ining-With-R.html)
