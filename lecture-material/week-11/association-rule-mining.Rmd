@@ -1,0 +1,166 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Association rule mining in R
+
+This lab activity is adapted from the following tutorials/guides:
+- [Association mining (Market Basket Analysis)](http://r-statistics.co/Association-Mining-With-R.html)
+- [Introduction to Association Rule Mining in R](https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/)
+
+In this lab activity, we will
+
+- use the `arules` package to perform association rule mining
+- load our transaction data from file (with the appropriate format for the `arules` package)
+
+## Dependencies
+
+We'll use the following packages in this lab activity (you will need to install any that you do not already have installed):
+
+```{r}
+library(tidyverse)  # For data wrangling
+library(arules)     # Association rule mining algorithms/functions
+library(arulesViz)  # Contains visualizations for association rule mining
+```
+
+## Data preparation and inspection
+
+In this lab, we'll load our transaction data from file: `transactions.dat`, which you can download on blackboard or you can access it online [here](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-11/transactions.dat).
+
+Before continuing on with loading these data, take a look at `transactions.dat`.
+Notice that each line (after the first) contains a comma separated list of items.
+Each line describes a single transaction.
+For example, the line `B,E,C` describes a transaction containing the items B, C, and E.
+
+We can use the `read.transactions` function from the `arules` package to read a our data file containing transactions.
+
+```{r}
+# You will need to adjust the file path to run this lab activity locally.
+transactions <- read.transactions(
+  # "lecture-material/week-11/transactions.dat",
+  "transactions.dat",
+  sep = ",",
+  skip = 1
+)
+```
+
+In your R console, run `?read.transactions` to see more information about loading transaction data from file.
+
+The `arules` packages provides some useful functions for inspecting our transaction data:
+
+To view the different items represented across all transactions in your data, you can use the `itemLabels` function:
+
+```{r}
+itemLabels(transactions)
+```
+
+To view the sizes of each transaction in our dataset, we can use the `size` function:
+
+```{r}
+# "arules::" before calling the size function tells R that we want to use the
+# size function provided by the arules package.
+arules::size(transactions)
+```
+
+If you wanted to get a list object containing all transactions, you could use the `LIST` function:
+
+```{r}
+transaction_list <- LIST(transactions)
+# For brevity, we'll just show the first few entries in the list we created.
+head(transaction_list)
+```
+
+The good old `summary` function works with transaction data, too:
+
+```{r}
+summary(transactions)
+```
+
+The `arules` package also provides the `image` function to visually inspect binary incidence matrices describing your data.
+In most cases, you'll have too many transactions for this to be a particularly useful visualization.
+
+```{r}
+# look at all transactions
+image(transactions)
+```
+
+The `arules` package also provides a quick function for visualizing the frequences of individual items in your transaction data:
+
+```{r}
+itemFrequencyPlot(transactions, topN=10, cex.names=1)
+```
+
+In these data, we can see that C is the most frequent and E is the least frequent.
+
+## Generating association rules
+
+The data provided in `transactions.dat` were generated randomly (for demonstrative purposes).
+I.e., I wanted to show off a small example of transaction data formated in a way that works with the functions in the `arules` package.
+Because these data were generated random, the association rules are not going to be particularly meaningful.
+
+We can use the `apriori` function to generate association rules.
+Run `?apriori` in your R consolue for more information about using and parameterizing the `apriori` function.
+
+```{r}
+rules <- apriori(
+  transactions,
+  parameter = list(
+    supp = 0.3,     # Sets our minimum support threshold
+    conf = 0.5,     # Sets our confidence threshold
+    minlen = 2,     # Rules must have at least two items. Eliminates null rules.
+    target = "rules"  # We'd like rules as our output.
+  )
+)
+summary(rules)
+```
+
+We can use the `inspect` function to display the association rules that we found:
+
+```{r}
+inspect(rules)
+```
+
+### Generating frequent itemsets
+
+What if you _just_ want to generate the set of frequent itemsets using the _apriori_ algorithm?
+You can use the `apriori` function to do that if you change the target parameter:
+
+```{r}
+freq_itemsets <- apriori(
+  transactions,
+  parameter = list(
+    supp = 0.3,     # Sets our minimum support threshold
+    minlen = 1,     # Sets must have at least one item. Eliminates null sets.
+    target = "frequent itemsets"
+  )
+)
+summary(freq_itemsets)
+```
+
+Again, we can use the `inspect` function from the `arules` package to see all of the frequent itemsets:
+
+```{r}
+inspect(freq_itemsets)
+```
+
+## Exercises
+
+- Adjust confidence and support thresholds used for rule generation. What happens if you decrease these thresholds? What about increase these threshold?
+- Apply association rule mining to the Groceries dataset.
+  The Groceries dataset comes with `arules` package. You can load it as follows:
+```{r}
+data("Groceries")
+grocery_trans <- Groceries
+```
+- Describe a type of data that does not describe customer transactions that you could imagine applying association rule mining to.
+  For example, how might you apply association rule mining to generate association rules for characters in a set of words?
+  What other types of data might be useful to apply association rule mining to?
+
+
+## References and further exploration
+
+- [Introduction to Association Rule Mining in R by Jan Kirenz](https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/#implementation-in-r)
+- [`arules` package usage documentation](https://cran.r-project.org/web/packages/arules/vignettes/arules.pdf)
+- [Association rule mining with R by Selva Prabhakaran](http://r-statistics.co/Association-M.ining-With-R.html)
