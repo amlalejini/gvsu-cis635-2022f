@@ -53,12 +53,16 @@ set.seed(1)
 
 ### 1. Load the dataset
 
-Load the dataset. There are no missing values, so you don't need to remove any missing values.
+Download and load the dataset provided on blackboard (data.csv) as a dataframe.
+There are no missing values, so you don't need to remove any missing values.
 Normally, you would standardize each attribute you plan to cluster with, but for this assignment, don't do any scaling/standardizing for the clustering.
 
 ```{r}
 # Your code here.
 ```
+
+These data represent people: their age and how they spend their money (media, food, transportation, housing, and pets).
+In the questions below, You will use the K-means clustering algorithm to cluster these data.
 
 ### 2. Apply K-means clustering to the data
 
