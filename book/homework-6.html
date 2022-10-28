@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 29 Final project overview | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 29 Final project overview | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 28 Homework 6 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 28 Homework 6 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 29 Final project overview | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 28 Homework 6 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 29 Final project overview | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 28 Homework 6 | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="homework-6.html"/>
-<link rel="next" href="final-project---proposal.html"/>
+<link rel="prev" href="dbscan-in-r.html"/>
+<link rel="next" href="final-project-overview.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -499,174 +499,115 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="final-project-overview" class="section level1 hasAnchor" number="29">
-<h1><span class="header-section-number">Chapter 29</span> Final project overview<a href="final-project-overview.html#final-project-overview" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this data mining project, you will choose a data mining application domain and develop a data mining pipeline for a specific problem.</p>
-<div id="problem-statement" class="section level2 hasAnchor" number="29.1">
-<h2><span class="header-section-number">29.1</span> Problem statement<a href="final-project-overview.html#problem-statement" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>One of the goals for this course is for you to be able to design, implement, and evaluate a data mining / knowledge discovery pipeline from start to finish.
-You will propose and implement a data mining project in an application domain of your choice.
-You will be guided on your project through a series of check-in assignments (listed below), culminating in a written final report.</p>
+<div id="homework-6" class="section level1 hasAnchor" number="28">
+<h1><span class="header-section-number">Chapter 28</span> Homework 6<a href="homework-6.html#homework-6" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="overview-6" class="section level2 hasAnchor" number="28.1">
+<h2><span class="header-section-number">28.1</span> Overview<a href="homework-6.html#overview-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this assignment, you will apply K-means clustering to a dataset and interpet the results.</p>
+<p>For this assignment, use this file as the template for your homework assignment.
+You should add new code chunks as needed.</p>
+<div id="objectives-4" class="section level3 hasAnchor" number="28.1.1">
+<h3><span class="header-section-number">28.1.1</span> Objectives<a href="homework-6.html#objectives-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Project survey (see blackboard, under Assignments)</li>
-<li><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---proposal.html">Project proposal</a></li>
-<li><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---mid-project-update.html">Project progress report</a></li>
-<li><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---report-draft.html">Project report draft</a></li>
-<li><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---final-report.html">Project final report</a></li>
+<li>Apply K-means clustering using R</li>
+<li>Interpret the resulting clusters</li>
+<li>Apply a different clustering algorithm of your choice to the dataset and compare its results to the K-means clustering results.</li>
 </ul>
 </div>
-<div id="learning-objectives" class="section level2 hasAnchor" number="29.2">
-<h2><span class="header-section-number">29.2</span> Learning objectives<a href="final-project-overview.html#learning-objectives" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ol style="list-style-type: decimal">
-<li>Design and implement a full data mining pipeline</li>
-<li>Develop skills for planning a data mining project and conducting background research</li>
-<li>Gain proficiency with data mining algorithms and techniques</li>
-<li>Effectively communicate your methodology and results</li>
-</ol>
-</div>
-<div id="groups" class="section level2 hasAnchor" number="29.3">
-<h2><span class="header-section-number">29.3</span> Groups<a href="final-project-overview.html#groups" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>You will be allowed to work in groups of three or work by yourself.
-I will assist in forming groups by sending out a survey asking about which topics interest you, who you would/would not like to work with (if anyone), and your expectations for your final project.</p>
-</div>
-<div id="grading-5" class="section level2 hasAnchor" number="29.4">
-<h2><span class="header-section-number">29.4</span> Grading<a href="final-project-overview.html#grading-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>40% of your grade in this course relates to your final project:</p>
-<table>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Item</th>
-<th>Contribution to grade</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Survey response</td>
-<td>2.5%</td>
-</tr>
-<tr class="even">
-<td><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---proposal.html">Project proposal</a></td>
-<td>10%</td>
-</tr>
-<tr class="odd">
-<td><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---mid-project-update.html">Project update</a></td>
-<td>2.5%</td>
-</tr>
-<tr class="even">
-<td><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---report-draft.html">Draft</a></td>
-<td>5%</td>
-</tr>
-<tr class="odd">
-<td><a href="https://lalejini.com/gvsu-cis635-2022f/book/final-project---final-report.html">Final report</a></td>
-<td>20%</td>
-</tr>
-</tbody>
-</table>
-<p>Note that you cannot use your homework extensions on project components.</p>
-<p>All components of your final project are subject to GVSU and the School of Computing’s academic honesty policies.
-Violations of these policies may result in failure from the course.</p>
-</div>
-<div id="timeline" class="section level2 hasAnchor" number="29.5">
-<h2><span class="header-section-number">29.5</span> Timeline<a href="final-project-overview.html#timeline" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<table>
-<thead>
-<tr class="header">
-<th>Week</th>
-<th>Project Component</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Week 5</td>
-<td>Survey out (Monday, 09/26)</td>
-</tr>
-<tr class="even">
-<td>Week 6</td>
-<td>Survey due (Monday, 10/03)</td>
-</tr>
-<tr class="odd">
-<td>Week 7</td>
-<td>Groups assigned (by Monday, 10/10)</td>
-</tr>
-<tr class="even">
-<td>Week 8</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Week 9</td>
-<td>Project proposal due (Wednesday, 10/26)</td>
-</tr>
-<tr class="even">
-<td>Week 10</td>
-<td>Receive proposal decision and feedback (by Monday, 10/31)</td>
-</tr>
-<tr class="odd">
-<td>Week 11</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Week 12</td>
-<td>Progress report due (Wednesday, 11/16)</td>
-</tr>
-<tr class="odd">
-<td>Week 13</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Week 14</td>
-<td>Project report draft due (Wednesday, 11/30)</td>
-</tr>
-<tr class="odd">
-<td>Week 15</td>
-<td>Receive feedback on draft</td>
-</tr>
-<tr class="even">
-<td>Week 16</td>
-<td>Final project due (Wednesday, 12/14)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="possible-project-ideas" class="section level2 hasAnchor" number="29.6">
-<h2><span class="header-section-number">29.6</span> Possible project ideas<a href="final-project-overview.html#possible-project-ideas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I do understand that we have not covered many data mining techniques at this point in the class.
-However, we have overviewed broad categories of data mining tasks.
-My advice is to start by choosing a domain that is interesting to you and a type of data mining task that you think is applicable (and that you are interested in learning more about). You will then need to do your own research on the specifics.</p>
-<p>Some example types of projects (your project does not need to fall under any of these categories)</p>
+<div id="grading-4" class="section level3 hasAnchor" number="28.1.2">
+<h3><span class="header-section-number">28.1.2</span> Grading<a href="homework-6.html#grading-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Solve a problem
-<ul>
-<li>E.g., Design and apply a data mining pipeline to a particular problem you are interested in, and then evaluate your approach by comparing to another method.</li>
-</ul></li>
-<li>Replicate (and/or extend) a published study
-<ul>
-<li>E.g., identify a published study that you are interested in and independently replicate some portion of it (you must create your own pipeline to do so, not just reuse the original authors’).</li>
-</ul></li>
-<li>Answer a research question
-<ul>
-<li>E.g., formulate a hypothesis and design (and apply) a data mining approach to test your hypothesis.</li>
-</ul></li>
-<li>Analysis
-<ul>
-<li>E.g., design a data mining pipeline for some task (or use an existing pipeline) and analyze how/why it works (or doesn’t work). You might try swapping out individual components of the pipeline for alternative techniques, add noise to the dataset, etc, etc.</li>
-<li>E.g., design an experiment to analyze the properties of different similarity metrics and their effect on a data mining algorithm</li>
-</ul></li>
+<li>Uploaded requested files, 5%</li>
+<li>File is properly formatted, using the template provided, 5%</li>
+<li>Writing is clear and appropriately formal, 5%</li>
+<li>Random number seed set to 1 before clustering (done for you in this file): 5%</li>
+<li>Questions 1-8: 10% each</li>
 </ul>
-<p>You are welcome to drop by office hours to chat about project ideas!</p>
+</div>
+<div id="deliverables-3" class="section level3 hasAnchor" number="28.1.3">
+<h3><span class="header-section-number">28.1.3</span> Deliverables<a href="homework-6.html#deliverables-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>.pdf file (generated by knitting your .Rmd file)</li>
+<li>.Rmd file (used to generate your pdf file)</li>
+</ul>
+</div>
+</div>
+<div id="setup-5" class="section level2 hasAnchor" number="28.2">
+<h2><span class="header-section-number">28.2</span> Setup<a href="homework-6.html#setup-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Load all of the packages you need in the code chunk below (you may need to install some packages that you do not already have installed).
+Feel free to load any extra packages that you want to use for your homework.</p>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="homework-6.html#cb302-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb302-2"><a href="homework-6.html#cb302-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cluster)</span></code></pre></div>
+<p>Set the random number seed to <code>1</code>:</p>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="homework-6.html#cb303-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the random number seed:</span></span>
+<span id="cb303-2"><a href="homework-6.html#cb303-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span></code></pre></div>
+</div>
+<div id="part-a.-running-k-means" class="section level2 hasAnchor" number="28.3">
+<h2><span class="header-section-number">28.3</span> Part A. Running K-means<a href="homework-6.html#part-a.-running-k-means" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="load-the-dataset" class="section level3 hasAnchor" number="28.3.1">
+<h3><span class="header-section-number">28.3.1</span> 1. Load the dataset<a href="homework-6.html#load-the-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Download and load the dataset provided on blackboard (data.csv) as a dataframe.
+There are no missing values, so you don’t need to remove any missing values.
+Normally, you would standardize each attribute you plan to cluster with, but for this assignment, don’t do any scaling/standardizing for the clustering.</p>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="homework-6.html#cb304-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here.</span></span></code></pre></div>
+<p>These data represent people: their age and how they spend their money (media, food, transportation, housing, and pets).
+In the questions below, You will use the K-means clustering algorithm to cluster these data.</p>
+</div>
+<div id="apply-k-means-clustering-to-the-data" class="section level3 hasAnchor" number="28.3.2">
+<h3><span class="header-section-number">28.3.2</span> 2. Apply K-means clustering to the data<a href="homework-6.html#apply-k-means-clustering-to-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Apply K-means clustering with <code>K=5</code>.</p>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="homework-6.html#cb305-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here.</span></span></code></pre></div>
+</div>
+<div id="what-are-the-sizes-of-each-cluster" class="section level3 hasAnchor" number="28.3.3">
+<h3><span class="header-section-number">28.3.3</span> 3. What are the sizes of each cluster?<a href="homework-6.html#what-are-the-sizes-of-each-cluster" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="homework-6.html#cb306-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You code here.</span></span></code></pre></div>
+</div>
+<div id="what-are-the-centroids-for-each-cluster" class="section level3 hasAnchor" number="28.3.4">
+<h3><span class="header-section-number">28.3.4</span> 4. What are the centroids for each cluster?<a href="homework-6.html#what-are-the-centroids-for-each-cluster" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="homework-6.html#cb307-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here.</span></span></code></pre></div>
+</div>
+<div id="in-your-own-words-describe-each-cluster." class="section level3 hasAnchor" number="28.3.5">
+<h3><span class="header-section-number">28.3.5</span> 5. In your own words, describe each cluster.<a href="homework-6.html#in-your-own-words-describe-each-cluster." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Look at the centroids for each cluster.
+Based on the centroids, describe each of the five clusters.
+Are there any obvious details about the people in each cluster that you can see based on the cluster centroids?</p>
+<ul>
+<li>Cluster 1:</li>
+<li>Cluster 2:</li>
+<li>Cluster 3:</li>
+<li>Cluster 4:</li>
+<li>Cluster 5:</li>
+</ul>
+</div>
+<div id="which-cluster-contains-the-most-within-cluster-variation-i.e.-is-the-least-compact" class="section level3 hasAnchor" number="28.3.6">
+<h3><span class="header-section-number">28.3.6</span> 6. Which cluster contains the most within-cluster variation (i.e., is the least compact)?<a href="homework-6.html#which-cluster-contains-the-most-within-cluster-variation-i.e.-is-the-least-compact" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Look at each cluster’s within-cluster sum of squares.
+Use this information to identify which cluster contains the most within-cluster variation.</p>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="homework-6.html#cb308-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code></pre></div>
+</div>
+</div>
+<div id="part-b.-clustering-continued" class="section level2 hasAnchor" number="28.4">
+<h2><span class="header-section-number">28.4</span> Part B. Clustering continued<a href="homework-6.html#part-b.-clustering-continued" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="apply-another-clustering-algorithm-of-your-choice-not-k-means-to-the-dataset-provided-for-this-homework-assignment-data." class="section level3 hasAnchor" number="28.4.1">
+<h3><span class="header-section-number">28.4.1</span> 7. Apply another clustering algorithm of your choice (not K-means) to the dataset provided for this homework assignment (<code>data</code>).<a href="homework-6.html#apply-another-clustering-algorithm-of-your-choice-not-k-means-to-the-dataset-provided-for-this-homework-assignment-data." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="homework-6.html#cb309-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code></pre></div>
+</div>
+<div id="describe-how-the-clustering-results-from-the-clustering-algorithm-you-used-in-7-are-different-from-or-similar-to-the-results-from-k-means." class="section level3 hasAnchor" number="28.4.2">
+<h3><span class="header-section-number">28.4.2</span> 8. Describe how the clustering results from the clustering algorithm you used in #7 are different from (or similar to) the results from K-means.<a href="homework-6.html#describe-how-the-clustering-results-from-the-clustering-algorithm-you-used-in-7-are-different-from-or-similar-to-the-results-from-k-means." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 
 </div>
 </div>
+</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="homework-6.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="final-project---proposal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="dbscan-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-project-overview.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -697,7 +638,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/project/project.md",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/homework/homework-06/homework-06.Rmd",
 "text": "Edit"
 },
 "history": {
