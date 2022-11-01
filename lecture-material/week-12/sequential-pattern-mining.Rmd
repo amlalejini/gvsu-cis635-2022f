@@ -1,0 +1,176 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Sequential pattern mining in R
+
+The main goal of this lab activity is to provide a beginner-friendly introduction to performing sequence pattern mining in R using the `arulesSequences` package.
+In this lab activity, we will
+
+- use the `arulesSequences` package to perform sequential pattern mining
+- load basic sequence data from file (with the appropriate format for the `arulesSequences` package)
+
+## Dependencies
+
+We'll use the following packages in this lab activity (you will need to install any that you don't already have installed):
+
+```{r}
+library(tidyverse)        # For data wrangling, visualization
+library(arulesSequences)  # For sequential pattern mining algorithms
+library(cowplot)          # For a nice ggplot theme
+library(khroma)
+
+theme_set(theme_cowplot()) # Set the cowplot ggplot theme as the default.
+```
+
+Find the documentation for the `arulesSequences` package here: <https://cran.r-project.org/web/packages/arulesSequences/index.html>.
+
+## Data preparation and inspection
+
+In this lab, we'll load our sequences from file: `sequences.dat`, which you can download on blackboard or you can access it online [here](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-12/sequences.dat).
+
+Before continuing on with loading these data, take a look at `sequences.dat`.
+Each line describes _part_ of a sequence.
+Notice that each line is formatted as follows:
+sequence id (sequenceID), itemset id (eventID), itemset size (size), and then all items in the itemset separated by commas.
+
+For example, then line `2,1,1,a,b` describes the first itemset in sequence 2; this itemset is size 2 with the following items: `a` and `b`.
+Notice that you need to look at multiple lines to see all of the itemsets in sequence 2.
+
+This isn't a well-formed .csv file (variable number of items trailing on each line), hence I have opted to use the `.dat` extension instead of a `.csv` extension.
+
+We can use the `read_baskets` function from the `arulesSequences` package to read our file containing itemset sequences.
+
+```{r}
+seqs <- arulesSequences::read_baskets(
+  "lecture-material/week-12/sequences.dat",
+  sep = ",",
+  info = c("sequenceID", "eventID", "size")  # Identities of first N columns
+)
+```
+
+We can use the `inspect` function provided in the `arulesSequences` package to view our data:
+
+```{r}
+arulesSequences::inspect(seqs)
+```
+
+If you want to view the set of items represented across all sequences in our data, you can use the `itemLabels` function:
+
+```{r}
+itemLabels(seqs)
+```
+
+To view the frequency of each item, you can use the `itemFrequency` function:
+
+```{r}
+itemFrequency(seqs)
+```
+
+## Finding frequent subsequences
+
+The `arulesSequences` package provides an implementaiton of the cSPADE algorithm.
+For more information about how the cSPADe algorithm works, see the following paper:
+[Zaki. 2000. Sequence mining in categorical domains: incorporating constraints. In Proceedings of the ninth international conference on Information and knowledge management (CIKM '00). Association for Computing Machinery, New York, NY, USA, 422–429. https://doi.org/10.1145/354756.354849](https://doi.org/10.1145/354756.354849)
+
+Here, we set our minimum support threshold to 0.75; that is, we require that subsequences appear in at least 75% of sequences in our dataset to be considered frequent.
+
+```{r}
+# Apply the cspade algorithm to our seqs dataset
+freq_seqs <- cspade(
+  seqs,
+  parameter = list(
+    support = 0.75
+  )
+)
+```
+
+The inspect function lets us view the frequent subsequences:
+
+```{r}
+inspect(freq_seqs)
+```
+
+We can convert the frequent subsequences into a data frame, which makes it easier to use tidyr and ggplot to further analyze the frequent subsequences.
+
+```{r}
+# Create a dataframe with the frequent subsequences we found
+freq_seqs_df <- as(freq_seqs, "data.frame")
+```
+
+Using the dataframe version of our frequent subsequences, we can more easily use ggplot to visualize support for frequent subsequences in our dataset:
+
+```{r}
+# Adapted from: https://jlaw.netlify.app/2020/11/01/sequence-mining-my-browsing-history-with-arulessequences/
+ggplot(
+    freq_seqs_df,
+    aes(
+      x = fct_reorder(sequence, support),
+      y = support,
+      fill = sequence
+    )
+  ) +
+  geom_col() +
+  geom_label(
+    aes(
+      label = scales::percent(support)
+    ),
+    hjust = 0.5
+  ) +
+  labs(
+    x = "Subsequence",
+    y = "Support",
+    title = "Frequent sequences",
+    caption = "Support gives percent of sequences with given subsequence"
+  ) +
+  scale_fill_vibrant(
+    guide = "none"
+  ) +
+  scale_y_continuous(
+    labels = scales::percent,
+    expand = expansion(mult = c(0, .1))
+  ) +
+  coord_flip()
+```
+
+### Rule generation
+
+We can generate high-confidence rules from the frequent subsequences that we found using the `ruleInduction` function from the `arulesSequences` package.
+Below, we compute all rules with confidence greater than 0.75.
+
+```{r}
+rules <- ruleInduction(
+  freq_seqs,
+  confidence=0.75
+)
+```
+
+Again, we can use the `inspect` function to view the rules we found:
+
+```{r}
+inspect(rules)
+```
+
+## Exercises
+
+- Adjust the support threshold used for finding frequent subsequences.
+  What happens if you increase the support threshold? What happens if you decrease the support threshold?
+- Describe a type of data that you think would be interesting to apply sequential pattern mining to.
+  What do sequences represent? What does each itemset represent? What does each item represent? At a high level (not mathematically), what does it mean for a subsequence to be frequent in the context of your chosen domain?
+- What would it mean to apply frequent subsequence mining to a database of words?
+  You could assume each word is a sequence of size-1 itemsets.
+- Apply sequential pattern mining to wordle data: [world.csv]([here](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-12/wordle.csv))
+  - To use the `cspade` function in `arulesSequences`, you will need to preprocess the data into the expected format (i.e., like `sequences.dat`).
+
+## Further exploration
+
+- In the following blog post, the author uses R to apply sequential pattern mining to their web browsing history: [Sequence Mining My Browsing History with arulesSequences](https://jlaw.netlify.app/2020/11/01/sequence-mining-my-browsing-history-with-arulessequences/)
+- For more information on the cSPADE algorithm, see [Zaki. 2000. Sequence mining in categorical domains: incorporating constraints. In Proceedings of the ninth international conference on Information and knowledge management (CIKM '00). Association for Computing Machinery, New York, NY, USA, 422–429. https://doi.org/10.1145/354756.354849](https://doi.org/10.1145/354756.354849)
+
+## References
+
+- `arulesSequences` Documentation: <https://cran.r-project.org/web/packages/arulesSequences/index.html>
+- [Sequence Mining My Browsing History with arulesSequences](https://jlaw.netlify.app/2020/11/01/sequence-mining-my-browsing-history-with-arulessequences/) by [JLaw](https://jlaw.netlify.app/)
+- Zaki. 2000. Sequence mining in categorical domains: incorporating constraints. In Proceedings of the ninth international conference on Information and knowledge management (CIKM '00). Association for Computing Machinery, New York, NY, USA, 422–429. https://doi.org/10.1145/354756.354849
