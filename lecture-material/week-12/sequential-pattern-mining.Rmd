@@ -44,6 +44,7 @@ This isn't a well-formed .csv file (variable number of items trailing on each li
 We can use the `read_baskets` function from the `arulesSequences` package to read our file containing itemset sequences.
 
 ```{r}
+# You may need to adjust the path to the sequences.dat file.
 seqs <- arulesSequences::read_baskets(
   "lecture-material/week-12/sequences.dat",
   sep = ",",
