@@ -189,6 +189,13 @@ which-cluster-contains-the-most-within-cluster-variation-i.e.-is-the-least-compa
 part-b.-clustering-continued
 apply-another-clustering-algorithm-of-your-choice-not-k-means-to-the-dataset-provided-for-this-homework-assignment-data.
 describe-how-the-clustering-results-from-the-clustering-algorithm-you-used-in-7-are-different-from-or-similar-to-the-results-from-k-means.
+association-rule-mining-in-r
+dependencies-6
+data-preparation-and-inspection
+generating-association-rules
+generating-frequent-itemsets
+exercises-14
+references-and-further-exploration
 final-project-overview
 problem-statement
 learning-objectives

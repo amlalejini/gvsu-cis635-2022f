@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 15 Sampling objects in a dataset | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 15 Sampling objects in a dataset | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 29 Association rule mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 29 Association rule mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 15 Sampling objects in a dataset | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 29 Association rule mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 15 Sampling objects in a dataset | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 29 Association rule mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="dealing-with-missing-values.html"/>
-<link rel="next" href="curse-of-dimensionality-demo.html"/>
+<link rel="prev" href="homework-6.html"/>
+<link rel="next" href="final-project-overview.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -511,224 +511,380 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="sampling-objects-in-a-dataset" class="section level1 hasAnchor" number="15">
-<h1><span class="header-section-number">Chapter 15</span> Sampling objects in a dataset<a href="sampling-objects-in-a-dataset.html#sampling-objects-in-a-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this lab activity, we will demonstrate two methods of sampling objects in a dataset:</p>
+<div id="association-rule-mining-in-r" class="section level1 hasAnchor" number="29">
+<h1><span class="header-section-number">Chapter 29</span> Association rule mining in R<a href="association-rule-mining-in-r.html#association-rule-mining-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This lab activity is adapted from the following tutorials/guides:
+- <a href="http://r-statistics.co/Association-Mining-With-R.html">Association mining (Market Basket Analysis)</a>
+- <a href="https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/">Introduction to Association Rule Mining in R</a></p>
+<p>In this lab activity, we will</p>
 <ul>
-<li>Naive random sampling</li>
-<li>Stratified random sampling</li>
+<li>use the <code>arules</code> package to perform association rule mining</li>
+<li>load our transaction data from file (with the appropriate format for the <code>arules</code> package)</li>
 </ul>
-<p>Sampling is a common method of dealing with a huge number of objects/observations in a dataset.</p>
-<div id="dependencies-and-setup-1" class="section level2 hasAnchor" number="15.1">
-<h2><span class="header-section-number">15.1</span> Dependencies and setup<a href="sampling-objects-in-a-dataset.html#dependencies-and-setup-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In this activity, we’ll be using the following R packages:</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="sampling-objects-in-a-dataset.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<p>We’ll sample from our handy-dandy Star Wars data set:</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="sampling-objects-in-a-dataset.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(starwars)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 14
-##   name         height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
-##   &lt;chr&gt;         &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
-## 1 Luke Skywal…    172    77 blond   fair    blue       19   male  mascu… Tatooi…
-## 2 C-3PO           167    75 &lt;NA&gt;    gold    yellow    112   none  mascu… Tatooi…
-## 3 R2-D2            96    32 &lt;NA&gt;    white,… red        33   none  mascu… Naboo  
-## 4 Darth Vader     202   136 none    white   yellow     41.9 male  mascu… Tatooi…
-## 5 Leia Organa     150    49 brown   light   brown      19   fema… femin… Aldera…
-## 6 Owen Lars       178   120 brown,… light   blue       52   male  mascu… Tatooi…
-## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
-## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
-## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
+<div id="dependencies-6" class="section level2 hasAnchor" number="29.1">
+<h2><span class="header-section-number">29.1</span> Dependencies<a href="association-rule-mining-in-r.html#dependencies-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll use the following packages in this lab activity (you will need to install any that you do not already have installed):</p>
+<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="association-rule-mining-in-r.html#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)  <span class="co"># For data wrangling</span></span>
+<span id="cb310-2"><a href="association-rule-mining-in-r.html#cb310-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arules)     <span class="co"># Association rule mining algorithms/functions</span></span></code></pre></div>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack</code></pre>
+<pre><code>## 
+## Attaching package: &#39;arules&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:khroma&#39;:
+## 
+##     info</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     recode</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     abbreviate, write</code></pre>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="association-rule-mining-in-r.html#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arulesViz)  <span class="co"># Contains visualizations for association rule mining</span></span></code></pre></div>
 </div>
-<div id="random-sampling" class="section level2 hasAnchor" number="15.2">
-<h2><span class="header-section-number">15.2</span> Random sampling<a href="sampling-objects-in-a-dataset.html#random-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In naive random sampling, we simply randomly sample rows from our dataset.
-In this example, we’ll sample without replacement: we don’t want to characters more than once in our down-sampled dataset.</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="sampling-objects-in-a-dataset.html#cb138-1" aria-hidden="true" tabindex="-1"></a>sample_proportion <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># Down-sample down to just this % of our full data set</span></span>
-<span id="cb138-2"><a href="sampling-objects-in-a-dataset.html#cb138-2" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(sample_proportion <span class="sc">*</span> <span class="fu">nrow</span>(starwars)) <span class="co"># Sample size, round up.</span></span></code></pre></div>
-<p>We can use <code>slice_sample</code> from the <code>dplyr</code> package to randomly sample star wars characters.</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="sampling-objects-in-a-dataset.html#cb139-1" aria-hidden="true" tabindex="-1"></a>naive_sampled_data <span class="ot">&lt;-</span> starwars <span class="sc">%&gt;%</span></span>
-<span id="cb139-2"><a href="sampling-objects-in-a-dataset.html#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(</span>
-<span id="cb139-3"><a href="sampling-objects-in-a-dataset.html#cb139-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span>sample_size,</span>
-<span id="cb139-4"><a href="sampling-objects-in-a-dataset.html#cb139-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">replace=</span><span class="cn">FALSE</span></span>
-<span id="cb139-5"><a href="sampling-objects-in-a-dataset.html#cb139-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb139-6"><a href="sampling-objects-in-a-dataset.html#cb139-6" aria-hidden="true" tabindex="-1"></a>naive_sampled_data</span></code></pre></div>
-<pre><code>## # A tibble: 18 × 14
-##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
-##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
-##  1 C-3PO          167    75 &lt;NA&gt;    gold    yellow    112   none  mascu… Tatooi…
-##  2 Mas Amedda     196    NA none    blue    blue       NA   male  mascu… Champa…
-##  3 Plo Koon       188    80 none    orange  black      22   male  mascu… Dorin  
-##  4 Arvel Cryn…     NA    NA brown   fair    brown      NA   male  mascu… &lt;NA&gt;   
-##  5 Jango Fett     183    79 black   tan     brown      66   male  mascu… Concor…
-##  6 Taun We        213    NA none    grey    black      NA   fema… femin… Kamino 
-##  7 Kit Fisto      196    87 none    green   black      NA   male  mascu… Glee A…
-##  8 Wedge Anti…    170    77 brown   fair    hazel      21   male  mascu… Corell…
-##  9 Anakin Sky…    188    84 blond   fair    blue       41.9 male  mascu… Tatooi…
-## 10 Finn            NA    NA black   dark    dark       NA   male  mascu… &lt;NA&gt;   
-## 11 Tarfful        234   136 brown   brown   blue       NA   male  mascu… Kashyy…
-## 12 Greedo         173    74 &lt;NA&gt;    green   black      44   male  mascu… Rodia  
-## 13 Jar Jar Bi…    196    66 none    orange  orange     52   male  mascu… Naboo  
-## 14 Yoda            66    17 white   green   brown     896   male  mascu… &lt;NA&gt;   
-## 15 Saesee Tiin    188    NA none    pale    orange     NA   male  mascu… Iktotch
-## 16 Gregar Typ…    185    85 black   dark    brown      NA   male  mascu… Naboo  
-## 17 Poe Dameron     NA    NA brown   light   brown      NA   male  mascu… &lt;NA&gt;   
-## 18 Bossk          190   113 none    green   red        53   male  mascu… Trando…
-## # … with 4 more variables: species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
-## #   starships &lt;list&gt;, and abbreviated variable names ¹​hair_color, ²​skin_color,
-## #   ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
-<p>Take a look at <code>naive_sampled_data</code>.
-What are some ways that our random sample might not be representative of our larger data set (<code>starwars</code>)?</p>
-<p>For example, we can look at the distribution of homeworlds in our original data.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="sampling-objects-in-a-dataset.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the distribution of homeworlds in full dataset.</span></span>
-<span id="cb141-2"><a href="sampling-objects-in-a-dataset.html#cb141-2" aria-hidden="true" tabindex="-1"></a>orig_homeworlds <span class="ot">&lt;-</span> starwars <span class="sc">%&gt;%</span></span>
-<span id="cb141-3"><a href="sampling-objects-in-a-dataset.html#cb141-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
-<span id="cb141-4"><a href="sampling-objects-in-a-dataset.html#cb141-4" aria-hidden="true" tabindex="-1"></a>    homeworld</span>
-<span id="cb141-5"><a href="sampling-objects-in-a-dataset.html#cb141-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb141-6"><a href="sampling-objects-in-a-dataset.html#cb141-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb141-7"><a href="sampling-objects-in-a-dataset.html#cb141-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="fu">n</span>()</span>
-<span id="cb141-8"><a href="sampling-objects-in-a-dataset.html#cb141-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb141-9"><a href="sampling-objects-in-a-dataset.html#cb141-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb141-10"><a href="sampling-objects-in-a-dataset.html#cb141-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">freq =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n),</span>
-<span id="cb141-11"><a href="sampling-objects-in-a-dataset.html#cb141-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb141-12"><a href="sampling-objects-in-a-dataset.html#cb141-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
-<span id="cb141-13"><a href="sampling-objects-in-a-dataset.html#cb141-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">desc</span>(freq)</span>
-<span id="cb141-14"><a href="sampling-objects-in-a-dataset.html#cb141-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb141-15"><a href="sampling-objects-in-a-dataset.html#cb141-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-16"><a href="sampling-objects-in-a-dataset.html#cb141-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the distribution of homeworlds in the sampled dataset.</span></span>
-<span id="cb141-17"><a href="sampling-objects-in-a-dataset.html#cb141-17" aria-hidden="true" tabindex="-1"></a>sampled_homeworlds <span class="ot">&lt;-</span> naive_sampled_data <span class="sc">%&gt;%</span></span>
-<span id="cb141-18"><a href="sampling-objects-in-a-dataset.html#cb141-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
-<span id="cb141-19"><a href="sampling-objects-in-a-dataset.html#cb141-19" aria-hidden="true" tabindex="-1"></a>    homeworld</span>
-<span id="cb141-20"><a href="sampling-objects-in-a-dataset.html#cb141-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb141-21"><a href="sampling-objects-in-a-dataset.html#cb141-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb141-22"><a href="sampling-objects-in-a-dataset.html#cb141-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="fu">n</span>()</span>
-<span id="cb141-23"><a href="sampling-objects-in-a-dataset.html#cb141-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb141-24"><a href="sampling-objects-in-a-dataset.html#cb141-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb141-25"><a href="sampling-objects-in-a-dataset.html#cb141-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">freq =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n),</span>
-<span id="cb141-26"><a href="sampling-objects-in-a-dataset.html#cb141-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb141-27"><a href="sampling-objects-in-a-dataset.html#cb141-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
-<span id="cb141-28"><a href="sampling-objects-in-a-dataset.html#cb141-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">desc</span>(freq)</span>
-<span id="cb141-29"><a href="sampling-objects-in-a-dataset.html#cb141-29" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<p>Let’s take a look at the distribution of homeworlds from the original dataset:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="sampling-objects-in-a-dataset.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb142-2"><a href="sampling-objects-in-a-dataset.html#cb142-2" aria-hidden="true" tabindex="-1"></a>    orig_homeworlds,</span>
-<span id="cb142-3"><a href="sampling-objects-in-a-dataset.html#cb142-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
-<span id="cb142-4"><a href="sampling-objects-in-a-dataset.html#cb142-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">x=</span><span class="fu">reorder</span>(homeworld, <span class="sc">-</span>freq),</span>
-<span id="cb142-5"><a href="sampling-objects-in-a-dataset.html#cb142-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span>freq</span>
-<span id="cb142-6"><a href="sampling-objects-in-a-dataset.html#cb142-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb142-7"><a href="sampling-objects-in-a-dataset.html#cb142-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb142-8"><a href="sampling-objects-in-a-dataset.html#cb142-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
-<span id="cb142-9"><a href="sampling-objects-in-a-dataset.html#cb142-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb142-10"><a href="sampling-objects-in-a-dataset.html#cb142-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">&quot;Homeworld&quot;</span>,</span>
-<span id="cb142-11"><a href="sampling-objects-in-a-dataset.html#cb142-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">&quot;Frequency&quot;</span>,</span>
-<span id="cb142-12"><a href="sampling-objects-in-a-dataset.html#cb142-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title=</span><span class="st">&quot;Distribution of homeworlds for original dataset&quot;</span></span>
-<span id="cb142-13"><a href="sampling-objects-in-a-dataset.html#cb142-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb142-14"><a href="sampling-objects-in-a-dataset.html#cb142-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb142-15"><a href="sampling-objects-in-a-dataset.html#cb142-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)</span>
-<span id="cb142-16"><a href="sampling-objects-in-a-dataset.html#cb142-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-73-1.png" width="672" /></p>
-<p>And now the sampled dataset:</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="sampling-objects-in-a-dataset.html#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb143-2"><a href="sampling-objects-in-a-dataset.html#cb143-2" aria-hidden="true" tabindex="-1"></a>    sampled_homeworlds,</span>
-<span id="cb143-3"><a href="sampling-objects-in-a-dataset.html#cb143-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
-<span id="cb143-4"><a href="sampling-objects-in-a-dataset.html#cb143-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">x=</span><span class="fu">reorder</span>(homeworld, <span class="sc">-</span>freq),</span>
-<span id="cb143-5"><a href="sampling-objects-in-a-dataset.html#cb143-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span>freq</span>
-<span id="cb143-6"><a href="sampling-objects-in-a-dataset.html#cb143-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb143-7"><a href="sampling-objects-in-a-dataset.html#cb143-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb143-8"><a href="sampling-objects-in-a-dataset.html#cb143-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
-<span id="cb143-9"><a href="sampling-objects-in-a-dataset.html#cb143-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb143-10"><a href="sampling-objects-in-a-dataset.html#cb143-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">&quot;Homeworld&quot;</span>,</span>
-<span id="cb143-11"><a href="sampling-objects-in-a-dataset.html#cb143-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">&quot;Frequency&quot;</span>,</span>
-<span id="cb143-12"><a href="sampling-objects-in-a-dataset.html#cb143-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title=</span><span class="st">&quot;Distribution of homeworlds for sampled dataset&quot;</span></span>
-<span id="cb143-13"><a href="sampling-objects-in-a-dataset.html#cb143-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb143-14"><a href="sampling-objects-in-a-dataset.html#cb143-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb143-15"><a href="sampling-objects-in-a-dataset.html#cb143-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)</span>
-<span id="cb143-16"><a href="sampling-objects-in-a-dataset.html#cb143-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-74-1.png" width="672" /></p>
-<div id="exercises-3" class="section level3 hasAnchor" number="15.2.1">
-<h3><span class="header-section-number">15.2.1</span> Exercises<a href="sampling-objects-in-a-dataset.html#exercises-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="data-preparation-and-inspection" class="section level2 hasAnchor" number="29.2">
+<h2><span class="header-section-number">29.2</span> Data preparation and inspection<a href="association-rule-mining-in-r.html#data-preparation-and-inspection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this lab, we’ll load our transaction data from file: <code>transactions.dat</code>, which you can download on blackboard or you can access it online <a href="https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-11/transactions.dat">here</a>.</p>
+<p>Before continuing on with loading these data, take a look at <code>transactions.dat</code>.
+Notice that each line (after the first) contains a comma separated list of items.
+Each line describes a single transaction.
+For example, the line <code>B,E,C</code> describes a transaction containing the items B, C, and E.</p>
+<p>We can use the <code>read.transactions</code> function from the <code>arules</code> package to read a our data file containing transactions.</p>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="association-rule-mining-in-r.html#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You will need to adjust the file path to run this lab activity locally.</span></span>
+<span id="cb319-2"><a href="association-rule-mining-in-r.html#cb319-2" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> <span class="fu">read.transactions</span>(</span>
+<span id="cb319-3"><a href="association-rule-mining-in-r.html#cb319-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;lecture-material/week-11/transactions.dat&quot;</span>,</span>
+<span id="cb319-4"><a href="association-rule-mining-in-r.html#cb319-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>,</span>
+<span id="cb319-5"><a href="association-rule-mining-in-r.html#cb319-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">1</span></span>
+<span id="cb319-6"><a href="association-rule-mining-in-r.html#cb319-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>In your R console, run <code>?read.transactions</code> to see more information about loading transaction data from file.</p>
+<p>The <code>arules</code> packages provides some useful functions for inspecting our transaction data:</p>
+<p>To view the different items represented across all transactions in your data, you can use the <code>itemLabels</code> function:</p>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="association-rule-mining-in-r.html#cb320-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemLabels</span>(transactions)</span></code></pre></div>
+<pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;</code></pre>
+<p>To view the sizes of each transaction in our dataset, we can use the <code>size</code> function:</p>
+<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="association-rule-mining-in-r.html#cb322-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;arules::&quot; before calling the size function tells R that we want to use the</span></span>
+<span id="cb322-2"><a href="association-rule-mining-in-r.html#cb322-2" aria-hidden="true" tabindex="-1"></a><span class="co"># size function provided by the arules package.</span></span>
+<span id="cb322-3"><a href="association-rule-mining-in-r.html#cb322-3" aria-hidden="true" tabindex="-1"></a>arules<span class="sc">::</span><span class="fu">size</span>(transactions)</span></code></pre></div>
+<pre><code>##   [1] 4 1 1 1 5 3 5 4 5 5 2 5 2 2 2 4 3 1 5 3 5 4 1 1 3 1 5 3 1 1 3 3 5 5 4 2 1
+##  [38] 2 2 3 5 5 4 1 1 5 2 3 5 4 5 2 1 2 3 5 5 2 3 4 1 3 5 3 5 5 1 2 1 5 4 2 5 5
+##  [75] 2 4 1 1 4 4 2 2 4 2 4 3 5 2 3 2 3 1 1 1 5 2 5 2 3 5</code></pre>
+<p>If you wanted to get a list object containing all transactions, you could use the <code>LIST</code> function:</p>
+<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb324-1"><a href="association-rule-mining-in-r.html#cb324-1" aria-hidden="true" tabindex="-1"></a>transaction_list <span class="ot">&lt;-</span> <span class="fu">LIST</span>(transactions)</span>
+<span id="cb324-2"><a href="association-rule-mining-in-r.html#cb324-2" aria-hidden="true" tabindex="-1"></a><span class="co"># For brevity, we&#39;ll just show the first few entries in the list we created.</span></span>
+<span id="cb324-3"><a href="association-rule-mining-in-r.html#cb324-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(transaction_list)</span></code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot;
+## 
+## [[2]]
+## [1] &quot;B&quot;
+## 
+## [[3]]
+## [1] &quot;A&quot;
+## 
+## [[4]]
+## [1] &quot;B&quot;
+## 
+## [[5]]
+## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;
+## 
+## [[6]]
+## [1] &quot;B&quot; &quot;C&quot; &quot;D&quot;</code></pre>
+<p>The good old <code>summary</code> function works with transaction data, too:</p>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="association-rule-mining-in-r.html#cb326-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(transactions)</span></code></pre></div>
+<pre><code>## transactions as itemMatrix in sparse format with
+##  100 rows (elements/itemsets/transactions) and
+##  5 columns (items) and a density of 0.61 
+## 
+## most frequent items:
+##       C       A       B       D       E (Other) 
+##      67      66      63      59      50       0 
+## 
+## element (itemset/transaction) length distribution:
+## sizes
+##  1  2  3  4  5 
+## 21 21 17 14 27 
+## 
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    2.00    3.00    3.05    5.00    5.00 
+## 
+## includes extended item information - examples:
+##   labels
+## 1      A
+## 2      B
+## 3      C</code></pre>
+<p>The <code>arules</code> package also provides the <code>image</code> function to visually inspect binary incidence matrices describing your data.
+In most cases, you’ll have too many transactions for this to be a particularly useful visualization.</p>
+<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="association-rule-mining-in-r.html#cb328-1" aria-hidden="true" tabindex="-1"></a><span class="co"># look at all transactions</span></span>
+<span id="cb328-2"><a href="association-rule-mining-in-r.html#cb328-2" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(transactions)</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-191-1.png" width="672" /></p>
+<p>The <code>arules</code> package also provides a quick function for visualizing the frequences of individual items in your transaction data:</p>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="association-rule-mining-in-r.html#cb329-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemFrequencyPlot</span>(transactions, <span class="at">topN=</span><span class="dv">10</span>, <span class="at">cex.names=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-192-1.png" width="672" /></p>
+<p>In these data, we can see that C is the most frequent and E is the least frequent.</p>
+</div>
+<div id="generating-association-rules" class="section level2 hasAnchor" number="29.3">
+<h2><span class="header-section-number">29.3</span> Generating association rules<a href="association-rule-mining-in-r.html#generating-association-rules" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The data provided in <code>transactions.dat</code> were generated randomly (for demonstrative purposes).
+I.e., I wanted to show off a small example of transaction data formated in a way that works with the functions in the <code>arules</code> package.
+Because these data were generated random, the association rules are not going to be particularly meaningful.</p>
+<p>We can use the <code>apriori</code> function to generate association rules.
+Run <code>?apriori</code> in your R consolue for more information about using and parameterizing the <code>apriori</code> function.</p>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="association-rule-mining-in-r.html#cb330-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">apriori</span>(</span>
+<span id="cb330-2"><a href="association-rule-mining-in-r.html#cb330-2" aria-hidden="true" tabindex="-1"></a>  transactions,</span>
+<span id="cb330-3"><a href="association-rule-mining-in-r.html#cb330-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">parameter =</span> <span class="fu">list</span>(</span>
+<span id="cb330-4"><a href="association-rule-mining-in-r.html#cb330-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">supp =</span> <span class="fl">0.3</span>,     <span class="co"># Sets our minimum support threshold</span></span>
+<span id="cb330-5"><a href="association-rule-mining-in-r.html#cb330-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf =</span> <span class="fl">0.5</span>,     <span class="co"># Sets our confidence threshold</span></span>
+<span id="cb330-6"><a href="association-rule-mining-in-r.html#cb330-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">minlen =</span> <span class="dv">2</span>,     <span class="co"># Rules must have at least two items. Eliminates null rules.</span></span>
+<span id="cb330-7"><a href="association-rule-mining-in-r.html#cb330-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">target =</span> <span class="st">&quot;rules&quot;</span>  <span class="co"># We&#39;d like rules as our output.</span></span>
+<span id="cb330-8"><a href="association-rule-mining-in-r.html#cb330-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb330-9"><a href="association-rule-mining-in-r.html#cb330-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## Apriori
+## 
+## Parameter specification:
+##  confidence minval smax arem  aval originalSupport maxtime support minlen
+##         0.5    0.1    1 none FALSE            TRUE       5     0.3      2
+##  maxlen target  ext
+##      10  rules TRUE
+## 
+## Algorithmic control:
+##  filter tree heap memopt load sort verbose
+##     0.1 TRUE TRUE  FALSE TRUE    2    TRUE
+## 
+## Absolute minimum support count: 30 
+## 
+## set item appearances ...[0 item(s)] done [0.00s].
+## set transactions ...[5 item(s), 100 transaction(s)] done [0.00s].
+## sorting and recoding items ... [5 item(s)] done [0.00s].
+## creating transaction tree ... done [0.00s].
+## checking subsets of size 1 2 3 4 done [0.00s].
+## writing ... [58 rule(s)] done [0.00s].
+## creating S4 object  ... done [0.00s].</code></pre>
+<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="association-rule-mining-in-r.html#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rules)</span></code></pre></div>
+<pre><code>## set of 58 rules
+## 
+## rule length distribution (lhs + rhs):sizes
+##  2  3  4 
+## 20 30  8 
+## 
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   2.000   2.000   3.000   2.793   3.000   4.000 
+## 
+## summary of quality measures:
+##     support         confidence        coverage          lift       
+##  Min.   :0.3000   Min.   :0.5758   Min.   :0.320   Min.   :0.9759  
+##  1st Qu.:0.3200   1st Qu.:0.7234   1st Qu.:0.400   1st Qu.:1.1890  
+##  Median :0.3500   Median :0.7983   Median :0.465   Median :1.2819  
+##  Mean   :0.3671   Mean   :0.7835   Mean   :0.479   Mean   :1.2927  
+##  3rd Qu.:0.4000   3rd Qu.:0.8563   3rd Qu.:0.590   3rd Qu.:1.3719  
+##  Max.   :0.4800   Max.   :0.9375   Max.   :0.670   Max.   :1.7647  
+##      count      
+##  Min.   :30.00  
+##  1st Qu.:32.00  
+##  Median :35.00  
+##  Mean   :36.71  
+##  3rd Qu.:40.00  
+##  Max.   :48.00  
+## 
+## mining info:
+##          data ntransactions support confidence
+##  transactions           100     0.3        0.5
+##                                                                                                  call
+##  apriori(data = transactions, parameter = list(supp = 0.3, conf = 0.5, minlen = 2, target = &quot;rules&quot;))</code></pre>
+<p>We can use the <code>inspect</code> function to display the association rules that we found:</p>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="association-rule-mining-in-r.html#cb334-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(rules)</span></code></pre></div>
+<pre><code>##      lhs          rhs support confidence coverage lift      count
+## [1]  {E}       =&gt; {D} 0.37    0.7400000  0.50     1.2542373 37   
+## [2]  {D}       =&gt; {E} 0.37    0.6271186  0.59     1.2542373 37   
+## [3]  {E}       =&gt; {B} 0.40    0.8000000  0.50     1.2698413 40   
+## [4]  {B}       =&gt; {E} 0.40    0.6349206  0.63     1.2698413 40   
+## [5]  {E}       =&gt; {A} 0.40    0.8000000  0.50     1.2121212 40   
+## [6]  {A}       =&gt; {E} 0.40    0.6060606  0.66     1.2121212 40   
+## [7]  {E}       =&gt; {C} 0.42    0.8400000  0.50     1.2537313 42   
+## [8]  {C}       =&gt; {E} 0.42    0.6268657  0.67     1.2537313 42   
+## [9]  {D}       =&gt; {B} 0.41    0.6949153  0.59     1.1030401 41   
+## [10] {B}       =&gt; {D} 0.41    0.6507937  0.63     1.1030401 41   
+## [11] {D}       =&gt; {A} 0.38    0.6440678  0.59     0.9758603 38   
+## [12] {A}       =&gt; {D} 0.38    0.5757576  0.66     0.9758603 38   
+## [13] {D}       =&gt; {C} 0.47    0.7966102  0.59     1.1889704 47   
+## [14] {C}       =&gt; {D} 0.47    0.7014925  0.67     1.1889704 47   
+## [15] {B}       =&gt; {A} 0.47    0.7460317  0.63     1.1303511 47   
+## [16] {A}       =&gt; {B} 0.47    0.7121212  0.66     1.1303511 47   
+## [17] {B}       =&gt; {C} 0.46    0.7301587  0.63     1.0897891 46   
+## [18] {C}       =&gt; {B} 0.46    0.6865672  0.67     1.0897891 46   
+## [19] {A}       =&gt; {C} 0.48    0.7272727  0.66     1.0854817 48   
+## [20] {C}       =&gt; {A} 0.48    0.7164179  0.67     1.0854817 48   
+## [21] {D, E}    =&gt; {B} 0.32    0.8648649  0.37     1.3728014 32   
+## [22] {B, E}    =&gt; {D} 0.32    0.8000000  0.40     1.3559322 32   
+## [23] {B, D}    =&gt; {E} 0.32    0.7804878  0.41     1.5609756 32   
+## [24] {D, E}    =&gt; {A} 0.32    0.8648649  0.37     1.3104013 32   
+## [25] {A, E}    =&gt; {D} 0.32    0.8000000  0.40     1.3559322 32   
+## [26] {A, D}    =&gt; {E} 0.32    0.8421053  0.38     1.6842105 32   
+## [27] {D, E}    =&gt; {C} 0.34    0.9189189  0.37     1.3715208 34   
+## [28] {C, E}    =&gt; {D} 0.34    0.8095238  0.42     1.3720743 34   
+## [29] {C, D}    =&gt; {E} 0.34    0.7234043  0.47     1.4468085 34   
+## [30] {B, E}    =&gt; {A} 0.35    0.8750000  0.40     1.3257576 35   
+## [31] {A, E}    =&gt; {B} 0.35    0.8750000  0.40     1.3888889 35   
+## [32] {A, B}    =&gt; {E} 0.35    0.7446809  0.47     1.4893617 35   
+## [33] {B, E}    =&gt; {C} 0.35    0.8750000  0.40     1.3059701 35   
+## [34] {C, E}    =&gt; {B} 0.35    0.8333333  0.42     1.3227513 35   
+## [35] {B, C}    =&gt; {E} 0.35    0.7608696  0.46     1.5217391 35   
+## [36] {A, E}    =&gt; {C} 0.36    0.9000000  0.40     1.3432836 36   
+## [37] {C, E}    =&gt; {A} 0.36    0.8571429  0.42     1.2987013 36   
+## [38] {A, C}    =&gt; {E} 0.36    0.7500000  0.48     1.5000000 36   
+## [39] {B, D}    =&gt; {A} 0.32    0.7804878  0.41     1.1825573 32   
+## [40] {A, D}    =&gt; {B} 0.32    0.8421053  0.38     1.3366750 32   
+## [41] {A, B}    =&gt; {D} 0.32    0.6808511  0.47     1.1539849 32   
+## [42] {B, D}    =&gt; {C} 0.35    0.8536585  0.41     1.2741172 35   
+## [43] {C, D}    =&gt; {B} 0.35    0.7446809  0.47     1.1820331 35   
+## [44] {B, C}    =&gt; {D} 0.35    0.7608696  0.46     1.2896094 35   
+## [45] {A, D}    =&gt; {C} 0.34    0.8947368  0.38     1.3354281 34   
+## [46] {C, D}    =&gt; {A} 0.34    0.7234043  0.47     1.0960671 34   
+## [47] {A, C}    =&gt; {D} 0.34    0.7083333  0.48     1.2005650 34   
+## [48] {A, B}    =&gt; {C} 0.38    0.8085106  0.47     1.2067323 38   
+## [49] {B, C}    =&gt; {A} 0.38    0.8260870  0.46     1.2516469 38   
+## [50] {A, C}    =&gt; {B} 0.38    0.7916667  0.48     1.2566138 38   
+## [51] {A, D, E} =&gt; {C} 0.30    0.9375000  0.32     1.3992537 30   
+## [52] {C, D, E} =&gt; {A} 0.30    0.8823529  0.34     1.3368984 30   
+## [53] {A, C, E} =&gt; {D} 0.30    0.8333333  0.36     1.4124294 30   
+## [54] {A, C, D} =&gt; {E} 0.30    0.8823529  0.34     1.7647059 30   
+## [55] {A, B, E} =&gt; {C} 0.32    0.9142857  0.35     1.3646055 32   
+## [56] {B, C, E} =&gt; {A} 0.32    0.9142857  0.35     1.3852814 32   
+## [57] {A, C, E} =&gt; {B} 0.32    0.8888889  0.36     1.4109347 32   
+## [58] {A, B, C} =&gt; {E} 0.32    0.8421053  0.38     1.6842105 32</code></pre>
+<div id="generating-frequent-itemsets" class="section level3 hasAnchor" number="29.3.1">
+<h3><span class="header-section-number">29.3.1</span> Generating frequent itemsets<a href="association-rule-mining-in-r.html#generating-frequent-itemsets" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>What if you <em>just</em> want to generate the set of frequent itemsets using the <em>apriori</em> algorithm?
+You can use the <code>apriori</code> function to do that if you change the target parameter:</p>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="association-rule-mining-in-r.html#cb336-1" aria-hidden="true" tabindex="-1"></a>freq_itemsets <span class="ot">&lt;-</span> <span class="fu">apriori</span>(</span>
+<span id="cb336-2"><a href="association-rule-mining-in-r.html#cb336-2" aria-hidden="true" tabindex="-1"></a>  transactions,</span>
+<span id="cb336-3"><a href="association-rule-mining-in-r.html#cb336-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">parameter =</span> <span class="fu">list</span>(</span>
+<span id="cb336-4"><a href="association-rule-mining-in-r.html#cb336-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">supp =</span> <span class="fl">0.3</span>,     <span class="co"># Sets our minimum support threshold</span></span>
+<span id="cb336-5"><a href="association-rule-mining-in-r.html#cb336-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">minlen =</span> <span class="dv">1</span>,     <span class="co"># Sets must have at least one item. Eliminates null sets.</span></span>
+<span id="cb336-6"><a href="association-rule-mining-in-r.html#cb336-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">target =</span> <span class="st">&quot;frequent itemsets&quot;</span></span>
+<span id="cb336-7"><a href="association-rule-mining-in-r.html#cb336-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb336-8"><a href="association-rule-mining-in-r.html#cb336-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## Apriori
+## 
+## Parameter specification:
+##  confidence minval smax arem  aval originalSupport maxtime support minlen
+##          NA    0.1    1 none FALSE            TRUE       5     0.3      1
+##  maxlen            target  ext
+##      10 frequent itemsets TRUE
+## 
+## Algorithmic control:
+##  filter tree heap memopt load sort verbose
+##     0.1 TRUE TRUE  FALSE TRUE    2    TRUE
+## 
+## Absolute minimum support count: 30 
+## 
+## set item appearances ...[0 item(s)] done [0.00s].
+## set transactions ...[5 item(s), 100 transaction(s)] done [0.00s].
+## sorting and recoding items ... [5 item(s)] done [0.00s].
+## creating transaction tree ... done [0.00s].
+## checking subsets of size 1 2 3 4 done [0.00s].
+## sorting transactions ... done [0.00s].
+## writing ... [27 set(s)] done [0.00s].
+## creating S4 object  ... done [0.00s].</code></pre>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="association-rule-mining-in-r.html#cb338-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(freq_itemsets)</span></code></pre></div>
+<pre><code>## set of 27 itemsets
+## 
+## most frequent items:
+##       A       C       E       B       D (Other) 
+##      13      13      13      12      12       0 
+## 
+## element (itemset/transaction) length distribution:sizes
+##  1  2  3  4 
+##  5 10 10  2 
+## 
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   1.000   2.000   2.000   2.333   3.000   4.000 
+## 
+## summary of quality measures:
+##     support           count      
+##  Min.   :0.3000   Min.   :30.00  
+##  1st Qu.:0.3450   1st Qu.:34.50  
+##  Median :0.3800   Median :38.00  
+##  Mean   :0.4207   Mean   :42.07  
+##  3rd Qu.:0.4700   3rd Qu.:47.00  
+##  Max.   :0.6700   Max.   :67.00  
+## 
+## includes transaction ID lists: FALSE 
+## 
+## mining info:
+##          data ntransactions support confidence
+##  transactions           100     0.3          1
+##                                                                                                  call
+##  apriori(data = transactions, parameter = list(supp = 0.3, minlen = 1, target = &quot;frequent itemsets&quot;))</code></pre>
+<p>Again, we can use the <code>inspect</code> function from the <code>arules</code> package to see all of the frequent itemsets:</p>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="association-rule-mining-in-r.html#cb340-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(freq_itemsets)</span></code></pre></div>
+<pre><code>##      items        support count
+## [1]  {E}          0.50    50   
+## [2]  {D}          0.59    59   
+## [3]  {B}          0.63    63   
+## [4]  {A}          0.66    66   
+## [5]  {C}          0.67    67   
+## [6]  {D, E}       0.37    37   
+## [7]  {B, E}       0.40    40   
+## [8]  {A, E}       0.40    40   
+## [9]  {C, E}       0.42    42   
+## [10] {B, D}       0.41    41   
+## [11] {A, D}       0.38    38   
+## [12] {C, D}       0.47    47   
+## [13] {A, B}       0.47    47   
+## [14] {B, C}       0.46    46   
+## [15] {A, C}       0.48    48   
+## [16] {B, D, E}    0.32    32   
+## [17] {A, D, E}    0.32    32   
+## [18] {C, D, E}    0.34    34   
+## [19] {A, B, E}    0.35    35   
+## [20] {B, C, E}    0.35    35   
+## [21] {A, C, E}    0.36    36   
+## [22] {A, B, D}    0.32    32   
+## [23] {B, C, D}    0.35    35   
+## [24] {A, C, D}    0.34    34   
+## [25] {A, B, C}    0.38    38   
+## [26] {A, C, D, E} 0.30    30   
+## [27] {A, B, C, E} 0.32    32</code></pre>
+</div>
+</div>
+<div id="exercises-14" class="section level2 hasAnchor" number="29.4">
+<h2><span class="header-section-number">29.4</span> Exercises<a href="association-rule-mining-in-r.html#exercises-14" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>What differences do you notice between the distribution of homeworlds in the original dataset and the sampled dataset?</li>
-<li>How could you modify <code>slice_sample</code> to randomly sample, but instead of weighting all rows equally, you weight each row’s likelihood of being included in the sample according to the height attribute?
-Hint: <code>?slice_sample</code></li>
-<li>Adjust the sample proportion parameter and resample. What happens to the distribution of <code>species</code> as you increase or decrease the sample size?</li>
-<li>Read the R code. Identify any lines of code that you don’t understand. Use the documentation to figure out what those lines of code are doing.</li>
+<li>Adjust confidence and support thresholds used for rule generation. What happens if you decrease these thresholds? What about increase these threshold?</li>
+<li>Apply association rule mining to the Groceries dataset.
+The Groceries dataset comes with <code>arules</code> package. You can load it as follows:</li>
+</ul>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="association-rule-mining-in-r.html#cb342-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;Groceries&quot;</span>)</span>
+<span id="cb342-2"><a href="association-rule-mining-in-r.html#cb342-2" aria-hidden="true" tabindex="-1"></a>grocery_trans <span class="ot">&lt;-</span> Groceries</span></code></pre></div>
+<ul>
+<li>Describe a type of data that does not describe customer transactions that you could imagine applying association rule mining to.
+For example, how might you apply association rule mining to generate association rules for characters in a set of words?
+What other types of data might be useful to apply association rule mining to?</li>
 </ul>
 </div>
-</div>
-<div id="stratified-random-sampling" class="section level2 hasAnchor" number="15.3">
-<h2><span class="header-section-number">15.3</span> Stratified random sampling<a href="sampling-objects-in-a-dataset.html#stratified-random-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Stratified sampling can be used in cases where there are predefined groupings of objects.
-In stratified sampling, you enforce the level of representation for each group.</p>
-<p>For example, we might want to ensure that each species among Star Wars characters is represented in our sample.
-There are many ways to implement this, and the particular approach you take will depend on your objective.
-In this example, I’ll randomly sample each species independently, guaranteeing that at least one character of each species is represented in our sample.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="sampling-objects-in-a-dataset.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grab the set of species represented in our original dataset</span></span>
-<span id="cb144-2"><a href="sampling-objects-in-a-dataset.html#cb144-2" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> <span class="fu">levels</span>(<span class="fu">as.factor</span>(starwars<span class="sc">$</span>species))</span>
-<span id="cb144-3"><a href="sampling-objects-in-a-dataset.html#cb144-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an empty data frame that we will store our sample</span></span>
-<span id="cb144-4"><a href="sampling-objects-in-a-dataset.html#cb144-4" aria-hidden="true" tabindex="-1"></a>stratified_sampled_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb144-5"><a href="sampling-objects-in-a-dataset.html#cb144-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(</span>
-<span id="cb144-6"><a href="sampling-objects-in-a-dataset.html#cb144-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol=</span><span class="fu">ncol</span>(starwars),</span>
-<span id="cb144-7"><a href="sampling-objects-in-a-dataset.html#cb144-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow=</span><span class="dv">0</span>,</span>
-<span id="cb144-8"><a href="sampling-objects-in-a-dataset.html#cb144-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">dimnames=</span><span class="fu">list</span>(<span class="cn">NULL</span>,<span class="fu">colnames</span>(starwars))</span>
-<span id="cb144-9"><a href="sampling-objects-in-a-dataset.html#cb144-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb144-10"><a href="sampling-objects-in-a-dataset.html#cb144-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb144-11"><a href="sampling-objects-in-a-dataset.html#cb144-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> species) {</span>
-<span id="cb144-12"><a href="sampling-objects-in-a-dataset.html#cb144-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># First, filter down to the species</span></span>
-<span id="cb144-13"><a href="sampling-objects-in-a-dataset.html#cb144-13" aria-hidden="true" tabindex="-1"></a>  species_sample <span class="ot">&lt;-</span> starwars <span class="sc">%&gt;%</span></span>
-<span id="cb144-14"><a href="sampling-objects-in-a-dataset.html#cb144-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
-<span id="cb144-15"><a href="sampling-objects-in-a-dataset.html#cb144-15" aria-hidden="true" tabindex="-1"></a>      species<span class="sc">==</span>s</span>
-<span id="cb144-16"><a href="sampling-objects-in-a-dataset.html#cb144-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb144-17"><a href="sampling-objects-in-a-dataset.html#cb144-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate sample size, guarantee &gt;= 1</span></span>
-<span id="cb144-18"><a href="sampling-objects-in-a-dataset.html#cb144-18" aria-hidden="true" tabindex="-1"></a>  sample_size <span class="ot">=</span> <span class="fu">max</span>(</span>
-<span id="cb144-19"><a href="sampling-objects-in-a-dataset.html#cb144-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ceiling</span>(<span class="fu">nrow</span>(species_sample)<span class="sc">*</span>sample_proportion),</span>
-<span id="cb144-20"><a href="sampling-objects-in-a-dataset.html#cb144-20" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span></span>
-<span id="cb144-21"><a href="sampling-objects-in-a-dataset.html#cb144-21" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb144-22"><a href="sampling-objects-in-a-dataset.html#cb144-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample from characters of the current species</span></span>
-<span id="cb144-23"><a href="sampling-objects-in-a-dataset.html#cb144-23" aria-hidden="true" tabindex="-1"></a>  species_sample <span class="ot">&lt;-</span> species_sample <span class="sc">%&gt;%</span></span>
-<span id="cb144-24"><a href="sampling-objects-in-a-dataset.html#cb144-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_sample</span>(</span>
-<span id="cb144-25"><a href="sampling-objects-in-a-dataset.html#cb144-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">n=</span>sample_size,</span>
-<span id="cb144-26"><a href="sampling-objects-in-a-dataset.html#cb144-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">replace=</span><span class="cn">FALSE</span></span>
-<span id="cb144-27"><a href="sampling-objects-in-a-dataset.html#cb144-27" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb144-28"><a href="sampling-objects-in-a-dataset.html#cb144-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add sample of this species to larger sample</span></span>
-<span id="cb144-29"><a href="sampling-objects-in-a-dataset.html#cb144-29" aria-hidden="true" tabindex="-1"></a>  stratified_sampled_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb144-30"><a href="sampling-objects-in-a-dataset.html#cb144-30" aria-hidden="true" tabindex="-1"></a>    stratified_sampled_data,</span>
-<span id="cb144-31"><a href="sampling-objects-in-a-dataset.html#cb144-31" aria-hidden="true" tabindex="-1"></a>    species_sample</span>
-<span id="cb144-32"><a href="sampling-objects-in-a-dataset.html#cb144-32" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb144-33"><a href="sampling-objects-in-a-dataset.html#cb144-33" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb144-34"><a href="sampling-objects-in-a-dataset.html#cb144-34" aria-hidden="true" tabindex="-1"></a>stratified_sampled_data</span></code></pre></div>
-<pre><code>## # A tibble: 44 × 14
-##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
-##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
-##  1 Ratts Tyer…     79    15 none    grey, … unknown      NA male  mascu… Aleen …
-##  2 Dexter Jet…    198   102 none    brown   yellow       NA male  mascu… Ojom   
-##  3 Ki-Adi-Mun…    198    82 white   pale    yellow       92 male  mascu… Cerea  
-##  4 Mas Amedda     196    NA none    blue    blue         NA male  mascu… Champa…
-##  5 Zam Wesell     168    55 blonde  fair, … yellow       NA fema… femin… Zolan  
-##  6 IG-88          200   140 none    metal   red          15 none  mascu… &lt;NA&gt;   
-##  7 BB8             NA    NA none    none    black        NA none  mascu… &lt;NA&gt;   
-##  8 Sebulba        112    40 none    grey, … orange       NA male  mascu… Malast…
-##  9 Wicket Sys…     88    20 brown   brown   brown         8 male  mascu… Endor  
-## 10 Poggle the…    183    80 none    green   yellow       NA male  mascu… Geonos…
-## # … with 34 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
-## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
-<div id="exercises-4" class="section level3 hasAnchor" number="15.3.1">
-<h3><span class="header-section-number">15.3.1</span> Exercises<a href="sampling-objects-in-a-dataset.html#exercises-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="references-and-further-exploration" class="section level2 hasAnchor" number="29.5">
+<h2><span class="header-section-number">29.5</span> References and further exploration<a href="association-rule-mining-in-r.html#references-and-further-exploration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Graph the distribution of species in the original <code>starwars</code> dataset and in the stratified sample (just like we did for homeworlds in the naive random sample). What differences do you notice? What might be causing those differences?</li>
-<li>We specified a sample proportion of 0.2. Why might the size of our stratified sample differ from the size of our random sample?</li>
-<li>Read the R code. Identify any lines of code that you don’t understand. Use the documentation to figure out what those lines of code are doing.</li>
+<li><a href="https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/">Introduction to Association Rule Mining in R by Jan Kirenz</a></li>
+<li><a href="https://cran.r-project.org/web/packages/arules/vignettes/arules.pdf"><code>arules</code> package usage documentation</a></li>
+<li><a href="http://r-statistics.co/Association-M.ining-With-R.html">Association rule mining with R by Selva Prabhakaran</a></li>
 </ul>
 
 </div>
 </div>
-</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="dealing-with-missing-values.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="curse-of-dimensionality-demo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="homework-6.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-project-overview.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -759,7 +915,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-04/sampling.rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-11/association-rule-mining.Rmd",
 "text": "Edit"
 },
 "history": {
