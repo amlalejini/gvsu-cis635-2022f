@@ -11,7 +11,9 @@ output:
 In this assignment, you will practice calculating support and confidence,
 and you will use R to apply association rule mining to a "bag of words" dataset.
 
-For this assignment, you will use the provided template file (provided on blackboard) for your homework assignment.
+**For this assignment, you will use the provided template file (provided on blackboard) for your homework assignment.**
+Include your responses to each question under the appropriate header.
+You will need to add code chunks as necessary.
 
 ### Objectives
 
@@ -53,14 +55,14 @@ For example, transaction 3 (id = 3) includes the items A, C, and D, and transact
 | 9 | 0 | 1 | 1 | 1 |
 | 10 | 1 | 0 | 1 | 1 |
 
-Calculate the support for the following itemsets (you may calculate these by hand):
+Calculate the support for the following itemsets. Show your work (you may calculate these by hand):
 
 1. {A, B}
 2. {B, C}
 3. {A, B, C}
 4. {A, B, D}
 
-Calculate the support and confidence for the following rules:
+Calculate the support and confidence for the following rules. Show your work (you may calculate these by hand):
 
 5. {A} --> {B}
 6. {B} --> {A}
