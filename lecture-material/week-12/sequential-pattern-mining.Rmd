@@ -162,7 +162,7 @@ inspect(rules)
   What do sequences represent? What does each itemset represent? What does each item represent? At a high level (not mathematically), what does it mean for a subsequence to be frequent in the context of your chosen domain?
 - What would it mean to apply frequent subsequence mining to a database of words?
   You could assume each word is a sequence of size-1 itemsets.
-- Apply sequential pattern mining to wordle data: [world.csv]([here](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-12/wordle.csv))
+- Apply sequential pattern mining to wordle data: [wordle.csv]([here](https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-12/wordle.csv))
   - To use the `cspade` function in `arulesSequences`, you will need to preprocess the data into the expected format (i.e., like `sequences.dat`).
 
 ## Further exploration

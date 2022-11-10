@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
-  <meta name="description" content="Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <title>Chapter 30 Sequential pattern mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)</title>
+  <meta name="description" content="Chapter 30 Sequential pattern mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta property="og:title" content="Chapter 30 Sequential pattern mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="amlalejini/gvsu-cis635-2022f" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 17 Aggregation | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
+  <meta name="twitter:title" content="Chapter 30 Sequential pattern mining in R | GVSU CIS 635 - Knowledge Discovery and Data Mining (Fall 2022)" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="curse-of-dimensionality-demo.html"/>
-<link rel="next" href="building-a-decision-tree-in-r.html"/>
+<link rel="prev" href="association-rule-mining-in-r.html"/>
+<link rel="next" href="homework-7.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -535,122 +535,191 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="aggregation" class="section level1 hasAnchor" number="17">
-<h1><span class="header-section-number">Chapter 17</span> Aggregation<a href="aggregation.html#aggregation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Sometimes we want to combine multiple objects in a dataset into a single object.
-For example, we often want to combine objects according to some categorical variable.
-We are often interested in the number of objects that go into each aggregate as well as various summary statistics; e.g.,</p>
+<div id="sequential-pattern-mining-in-r" class="section level1 hasAnchor" number="30">
+<h1><span class="header-section-number">Chapter 30</span> Sequential pattern mining in R<a href="sequential-pattern-mining-in-r.html#sequential-pattern-mining-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The main goal of this lab activity is to provide a beginner-friendly introduction to performing sequence pattern mining in R using the <code>arulesSequences</code> package.
+In this lab activity, we will</p>
 <ul>
-<li>mean</li>
-<li>median</li>
-<li>mode</li>
-<li>standard deviation</li>
-<li>variance</li>
-<li>minimum value</li>
-<li>maximum value</li>
-<li>range</li>
+<li>use the <code>arulesSequences</code> package to perform sequential pattern mining</li>
+<li>load basic sequence data from file (with the appropriate format for the <code>arulesSequences</code> package)</li>
 </ul>
-<p>If you are not familiar any of those summary statistics, look them up!</p>
-<div id="dependencies-and-setup-2" class="section level2 hasAnchor" number="17.1">
-<h2><span class="header-section-number">17.1</span> Dependencies and setup<a href="aggregation.html#dependencies-and-setup-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We’ll be using the <code>dplyr</code> package, which comes loaded in the <code>tidyverse</code> collection of packages.</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="aggregation.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div id="dependencies-7" class="section level2 hasAnchor" number="30.1">
+<h2><span class="header-section-number">30.1</span> Dependencies<a href="sequential-pattern-mining-in-r.html#dependencies-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll use the following packages in this lab activity (you will need to install any that you don’t already have installed):</p>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="sequential-pattern-mining-in-r.html#cb343-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)        <span class="co"># For data wrangling, visualization</span></span>
+<span id="cb343-2"><a href="sequential-pattern-mining-in-r.html#cb343-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arulesSequences)  <span class="co"># For sequential pattern mining algorithms</span></span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;arulesSequences&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:arules&#39;:
+## 
+##     itemsets</code></pre>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="sequential-pattern-mining-in-r.html#cb346-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)          <span class="co"># For a nice ggplot theme</span></span>
+<span id="cb346-2"><a href="sequential-pattern-mining-in-r.html#cb346-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(khroma)</span>
+<span id="cb346-3"><a href="sequential-pattern-mining-in-r.html#cb346-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb346-4"><a href="sequential-pattern-mining-in-r.html#cb346-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_cowplot</span>()) <span class="co"># Set the cowplot ggplot theme as the default.</span></span></code></pre></div>
+<p>Find the documentation for the <code>arulesSequences</code> package here: <a href="https://cran.r-project.org/web/packages/arulesSequences/index.html" class="uri">https://cran.r-project.org/web/packages/arulesSequences/index.html</a>.</p>
 </div>
-<div id="exercise" class="section level2 hasAnchor" number="17.2">
-<h2><span class="header-section-number">17.2</span> Exercise<a href="aggregation.html#exercise" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Given the following vector, <code>y</code></p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="aggregation.html#cb154-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="at">min=</span><span class="sc">-</span><span class="dv">1000</span>, <span class="at">max=</span><span class="dv">1000</span>)</span></code></pre></div>
-<p>Write R code to calculate each of the following:</p>
+<div id="data-preparation-and-inspection-1" class="section level2 hasAnchor" number="30.2">
+<h2><span class="header-section-number">30.2</span> Data preparation and inspection<a href="sequential-pattern-mining-in-r.html#data-preparation-and-inspection-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this lab, we’ll load our sequences from file: <code>sequences.dat</code>, which you can download on blackboard or you can access it online <a href="https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-12/sequences.dat">here</a>.</p>
+<p>Before continuing on with loading these data, take a look at <code>sequences.dat</code>.
+Each line describes <em>part</em> of a sequence.
+Notice that each line is formatted as follows:
+sequence id (sequenceID), itemset id (eventID), itemset size (size), and then all items in the itemset separated by commas.</p>
+<p>For example, then line <code>2,1,1,a,b</code> describes the first itemset in sequence 2; this itemset is size 2 with the following items: <code>a</code> and <code>b</code>.
+Notice that you need to look at multiple lines to see all of the itemsets in sequence 2.</p>
+<p>This isn’t a well-formed .csv file (variable number of items trailing on each line), hence I have opted to use the <code>.dat</code> extension instead of a <code>.csv</code> extension.</p>
+<p>We can use the <code>read_baskets</code> function from the <code>arulesSequences</code> package to read our file containing itemset sequences.</p>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="sequential-pattern-mining-in-r.html#cb347-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You may need to adjust the path to the sequences.dat file.</span></span>
+<span id="cb347-2"><a href="sequential-pattern-mining-in-r.html#cb347-2" aria-hidden="true" tabindex="-1"></a>seqs <span class="ot">&lt;-</span> arulesSequences<span class="sc">::</span><span class="fu">read_baskets</span>(</span>
+<span id="cb347-3"><a href="sequential-pattern-mining-in-r.html#cb347-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;lecture-material/week-12/sequences.dat&quot;</span>,</span>
+<span id="cb347-4"><a href="sequential-pattern-mining-in-r.html#cb347-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>,</span>
+<span id="cb347-5"><a href="sequential-pattern-mining-in-r.html#cb347-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">info =</span> <span class="fu">c</span>(<span class="st">&quot;sequenceID&quot;</span>, <span class="st">&quot;eventID&quot;</span>, <span class="st">&quot;size&quot;</span>)  <span class="co"># Identities of first N columns</span></span>
+<span id="cb347-6"><a href="sequential-pattern-mining-in-r.html#cb347-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>We can use the <code>inspect</code> function provided in the <code>arulesSequences</code> package to view our data:</p>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="sequential-pattern-mining-in-r.html#cb348-1" aria-hidden="true" tabindex="-1"></a>arulesSequences<span class="sc">::</span><span class="fu">inspect</span>(seqs)</span></code></pre></div>
+<pre><code>##      items  sequenceID eventID size
+## [1]  {a, b} 1          1       2   
+## [2]  {c}    1          2       1   
+## [3]  {a}    1          3       1   
+## [4]  {a, b} 2          1       2   
+## [5]  {b}    2          2       1   
+## [6]  {c}    2          3       1   
+## [7]  {b}    3          1       1   
+## [8]  {c}    3          2       1   
+## [9]  {d}    3          3       1   
+## [10] {b}    4          1       1   
+## [11] {a, b} 4          2       2   
+## [12] {c}    4          3       1</code></pre>
+<p>If you want to view the set of items represented across all sequences in our data, you can use the <code>itemLabels</code> function:</p>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="sequential-pattern-mining-in-r.html#cb350-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemLabels</span>(seqs)</span></code></pre></div>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;</code></pre>
+<p>To view the frequency of each item, you can use the <code>itemFrequency</code> function:</p>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="sequential-pattern-mining-in-r.html#cb352-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemFrequency</span>(seqs)</span></code></pre></div>
+<pre><code>##          a          b          c          d 
+## 0.33333333 0.50000000 0.33333333 0.08333333</code></pre>
+</div>
+<div id="finding-frequent-subsequences" class="section level2 hasAnchor" number="30.3">
+<h2><span class="header-section-number">30.3</span> Finding frequent subsequences<a href="sequential-pattern-mining-in-r.html#finding-frequent-subsequences" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>arulesSequences</code> package provides an implementaiton of the cSPADE algorithm.
+For more information about how the cSPADe algorithm works, see the following paper:
+<a href="https://doi.org/10.1145/354756.354849">Zaki. 2000. Sequence mining in categorical domains: incorporating constraints. In Proceedings of the ninth international conference on Information and knowledge management (CIKM ’00). Association for Computing Machinery, New York, NY, USA, 422–429. https://doi.org/10.1145/354756.354849</a></p>
+<p>Here, we set our minimum support threshold to 0.75; that is, we require that subsequences appear in at least 75% of sequences in our dataset to be considered frequent.</p>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="sequential-pattern-mining-in-r.html#cb354-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the cspade algorithm to our seqs dataset</span></span>
+<span id="cb354-2"><a href="sequential-pattern-mining-in-r.html#cb354-2" aria-hidden="true" tabindex="-1"></a>freq_seqs <span class="ot">&lt;-</span> <span class="fu">cspade</span>(</span>
+<span id="cb354-3"><a href="sequential-pattern-mining-in-r.html#cb354-3" aria-hidden="true" tabindex="-1"></a>  seqs,</span>
+<span id="cb354-4"><a href="sequential-pattern-mining-in-r.html#cb354-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">parameter =</span> <span class="fu">list</span>(</span>
+<span id="cb354-5"><a href="sequential-pattern-mining-in-r.html#cb354-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">support =</span> <span class="fl">0.75</span></span>
+<span id="cb354-6"><a href="sequential-pattern-mining-in-r.html#cb354-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb354-7"><a href="sequential-pattern-mining-in-r.html#cb354-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>The inspect function lets us view the frequent subsequences:</p>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="sequential-pattern-mining-in-r.html#cb355-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(freq_seqs)</span></code></pre></div>
+<pre><code>##    items support 
+##  1 &lt;{a}&gt;    0.75 
+##  2 &lt;{b}&gt;    1.00 
+##  3 &lt;{c}&gt;    1.00 
+##  4 &lt;{a},  
+##     {c}&gt;    0.75 
+##  5 &lt;{b},  
+##     {c}&gt;    1.00 
+##  6 &lt;{a,   
+##      b},  
+##     {c}&gt;    0.75 
+##  7 &lt;{a,   
+##      b}&gt;    0.75 
+## </code></pre>
+<p>We can convert the frequent subsequences into a data frame, which makes it easier to use tidyr and ggplot to further analyze the frequent subsequences.</p>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="sequential-pattern-mining-in-r.html#cb357-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe with the frequent subsequences we found</span></span>
+<span id="cb357-2"><a href="sequential-pattern-mining-in-r.html#cb357-2" aria-hidden="true" tabindex="-1"></a>freq_seqs_df <span class="ot">&lt;-</span> <span class="fu">as</span>(freq_seqs, <span class="st">&quot;data.frame&quot;</span>)</span></code></pre></div>
+<p>Using the dataframe version of our frequent subsequences, we can more easily use ggplot to visualize support for frequent subsequences in our dataset:</p>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="sequential-pattern-mining-in-r.html#cb358-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adapted from: https://jlaw.netlify.app/2020/11/01/sequence-mining-my-browsing-history-with-arulessequences/</span></span>
+<span id="cb358-2"><a href="sequential-pattern-mining-in-r.html#cb358-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb358-3"><a href="sequential-pattern-mining-in-r.html#cb358-3" aria-hidden="true" tabindex="-1"></a>    freq_seqs_df,</span>
+<span id="cb358-4"><a href="sequential-pattern-mining-in-r.html#cb358-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb358-5"><a href="sequential-pattern-mining-in-r.html#cb358-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">fct_reorder</span>(sequence, support),</span>
+<span id="cb358-6"><a href="sequential-pattern-mining-in-r.html#cb358-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> support,</span>
+<span id="cb358-7"><a href="sequential-pattern-mining-in-r.html#cb358-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> sequence</span>
+<span id="cb358-8"><a href="sequential-pattern-mining-in-r.html#cb358-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb358-9"><a href="sequential-pattern-mining-in-r.html#cb358-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb358-10"><a href="sequential-pattern-mining-in-r.html#cb358-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb358-11"><a href="sequential-pattern-mining-in-r.html#cb358-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb358-12"><a href="sequential-pattern-mining-in-r.html#cb358-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb358-13"><a href="sequential-pattern-mining-in-r.html#cb358-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(support)</span>
+<span id="cb358-14"><a href="sequential-pattern-mining-in-r.html#cb358-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb358-15"><a href="sequential-pattern-mining-in-r.html#cb358-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span></span>
+<span id="cb358-16"><a href="sequential-pattern-mining-in-r.html#cb358-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb358-17"><a href="sequential-pattern-mining-in-r.html#cb358-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb358-18"><a href="sequential-pattern-mining-in-r.html#cb358-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Subsequence&quot;</span>,</span>
+<span id="cb358-19"><a href="sequential-pattern-mining-in-r.html#cb358-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Support&quot;</span>,</span>
+<span id="cb358-20"><a href="sequential-pattern-mining-in-r.html#cb358-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Frequent sequences&quot;</span>,</span>
+<span id="cb358-21"><a href="sequential-pattern-mining-in-r.html#cb358-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Support gives percent of sequences with given subsequence&quot;</span></span>
+<span id="cb358-22"><a href="sequential-pattern-mining-in-r.html#cb358-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb358-23"><a href="sequential-pattern-mining-in-r.html#cb358-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_vibrant</span>(</span>
+<span id="cb358-24"><a href="sequential-pattern-mining-in-r.html#cb358-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">guide =</span> <span class="st">&quot;none&quot;</span></span>
+<span id="cb358-25"><a href="sequential-pattern-mining-in-r.html#cb358-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb358-26"><a href="sequential-pattern-mining-in-r.html#cb358-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb358-27"><a href="sequential-pattern-mining-in-r.html#cb358-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span>percent,</span>
+<span id="cb358-28"><a href="sequential-pattern-mining-in-r.html#cb358-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">1</span>))</span>
+<span id="cb358-29"><a href="sequential-pattern-mining-in-r.html#cb358-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb358-30"><a href="sequential-pattern-mining-in-r.html#cb358-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code></pre></div>
+<p><img src="demo_files/figure-html/unnamed-chunk-206-1.png" width="672" /></p>
+<div id="rule-generation" class="section level3 hasAnchor" number="30.3.1">
+<h3><span class="header-section-number">30.3.1</span> Rule generation<a href="sequential-pattern-mining-in-r.html#rule-generation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can generate high-confidence rules from the frequent subsequences that we found using the <code>ruleInduction</code> function from the <code>arulesSequences</code> package.
+Below, we compute all rules with confidence greater than 0.75.</p>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb359-1"><a href="sequential-pattern-mining-in-r.html#cb359-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">ruleInduction</span>(</span>
+<span id="cb359-2"><a href="sequential-pattern-mining-in-r.html#cb359-2" aria-hidden="true" tabindex="-1"></a>  freq_seqs,</span>
+<span id="cb359-3"><a href="sequential-pattern-mining-in-r.html#cb359-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">confidence=</span><span class="fl">0.75</span></span>
+<span id="cb359-4"><a href="sequential-pattern-mining-in-r.html#cb359-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Again, we can use the <code>inspect</code> function to view the rules we found:</p>
+<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="sequential-pattern-mining-in-r.html#cb360-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(rules)</span></code></pre></div>
+<pre><code>##    lhs      rhs   support confidence lift 
+##  1 &lt;{a}&gt; =&gt; &lt;{c}&gt;    0.75          1    1 
+##  2 &lt;{b}&gt; =&gt; &lt;{c}&gt;    1.00          1    1 
+##  3 &lt;{a,              
+##      b}&gt; =&gt; &lt;{c}&gt;    0.75          1    1 
+## </code></pre>
+</div>
+</div>
+<div id="exercises-15" class="section level2 hasAnchor" number="30.4">
+<h2><span class="header-section-number">30.4</span> Exercises<a href="sequential-pattern-mining-in-r.html#exercises-15" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>mean</li>
-<li>median</li>
-<li>mode</li>
-<li>standard deviation</li>
-<li>variance</li>
-<li>minimum value</li>
-<li>maximum value</li>
-<li>range</li>
-</ul>
-</div>
-<div id="using-dplyr-to-aggregate-objects-in-a-dataset-according-to-a-category" class="section level2 hasAnchor" number="17.3">
-<h2><span class="header-section-number">17.3</span> Using dplyr to aggregate objects in a dataset according to a category<a href="aggregation.html#using-dplyr-to-aggregate-objects-in-a-dataset-according-to-a-category" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In many cases, you will be able to use a combination of the <code>group_by</code> and <code>summarise</code> functions (from <code>dplyr</code>) to aggregate categories of data.</p>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="aggregation.html#cb155-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> starwars</span>
-<span id="cb155-2"><a href="aggregation.html#cb155-2" aria-hidden="true" tabindex="-1"></a>data</span></code></pre></div>
-<pre><code>## # A tibble: 87 × 14
-##    name        height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender homew…⁵
-##    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  
-##  1 Luke Skywa…    172    77 blond   fair    blue       19   male  mascu… Tatooi…
-##  2 C-3PO          167    75 &lt;NA&gt;    gold    yellow    112   none  mascu… Tatooi…
-##  3 R2-D2           96    32 &lt;NA&gt;    white,… red        33   none  mascu… Naboo  
-##  4 Darth Vader    202   136 none    white   yellow     41.9 male  mascu… Tatooi…
-##  5 Leia Organa    150    49 brown   light   brown      19   fema… femin… Aldera…
-##  6 Owen Lars      178   120 brown,… light   blue       52   male  mascu… Tatooi…
-##  7 Beru White…    165    75 brown   light   blue       47   fema… femin… Tatooi…
-##  8 R5-D4           97    32 &lt;NA&gt;    white,… red        NA   none  mascu… Tatooi…
-##  9 Biggs Dark…    183    84 black   light   brown      24   male  mascu… Tatooi…
-## 10 Obi-Wan Ke…    182    77 auburn… fair    blue-g…    57   male  mascu… Stewjon
-## # … with 77 more rows, 4 more variables: species &lt;chr&gt;, films &lt;list&gt;,
-## #   vehicles &lt;list&gt;, starships &lt;list&gt;, and abbreviated variable names
-## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year, ⁵​homeworld</code></pre>
-<p>Let’s aggregate characters in the Star Wars dataset according to their species.
-In this particular example, we’ll focus on summarize the mass values within each species.</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="aggregation.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First let&#39;s filter out all characters with NA for mass or species.</span></span>
-<span id="cb157-2"><a href="aggregation.html#cb157-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>species <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>species)</span>
-<span id="cb157-3"><a href="aggregation.html#cb157-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb157-4"><a href="aggregation.html#cb157-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb157-5"><a href="aggregation.html#cb157-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>(<span class="fu">is.na</span>(species) <span class="sc">|</span> <span class="fu">is.na</span>(mass))</span>
-<span id="cb157-6"><a href="aggregation.html#cb157-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb157-7"><a href="aggregation.html#cb157-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb157-8"><a href="aggregation.html#cb157-8" aria-hidden="true" tabindex="-1"></a>agg_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb157-9"><a href="aggregation.html#cb157-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
-<span id="cb157-10"><a href="aggregation.html#cb157-10" aria-hidden="true" tabindex="-1"></a>    species</span>
-<span id="cb157-11"><a href="aggregation.html#cb157-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb157-12"><a href="aggregation.html#cb157-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb157-13"><a href="aggregation.html#cb157-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_median=</span><span class="fu">median</span>(mass),</span>
-<span id="cb157-14"><a href="aggregation.html#cb157-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_mean=</span><span class="fu">mean</span>(mass),</span>
-<span id="cb157-15"><a href="aggregation.html#cb157-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_sd=</span><span class="fu">sd</span>(mass),</span>
-<span id="cb157-16"><a href="aggregation.html#cb157-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_min=</span><span class="fu">min</span>(mass),</span>
-<span id="cb157-17"><a href="aggregation.html#cb157-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_max=</span><span class="fu">max</span>(mass),</span>
-<span id="cb157-18"><a href="aggregation.html#cb157-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">mass_total=</span><span class="fu">sum</span>(mass),</span>
-<span id="cb157-19"><a href="aggregation.html#cb157-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_characters=</span><span class="fu">n</span>()</span>
-<span id="cb157-20"><a href="aggregation.html#cb157-20" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb157-21"><a href="aggregation.html#cb157-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(agg_data)</span></code></pre></div>
-<pre><code>## # A tibble: 31 × 8
-##    species   mass_median mass_mean mass_sd mass_min mass_max mass_total num_ch…¹
-##    &lt;fct&gt;           &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;int&gt;
-##  1 Aleena           15        15      NA         15       15        15         1
-##  2 Besalisk        102       102      NA        102      102       102         1
-##  3 Cerean           82        82      NA         82       82        82         1
-##  4 Clawdite         55        55      NA         55       55        55         1
-##  5 Droid            53.5      69.8    51.0       32      140       279         4
-##  6 Dug              40        40      NA         40       40        40         1
-##  7 Ewok             20        20      NA         20       20        20         1
-##  8 Geonosian        80        80      NA         80       80        80         1
-##  9 Gungan           74        74      11.3       66       82       148         2
-## 10 Human            79        82.8    19.4       45      136      1821.       22
-## # … with 21 more rows, and abbreviated variable name ¹​num_characters</code></pre>
-</div>
-<div id="exercises-6" class="section level2 hasAnchor" number="17.4">
-<h2><span class="header-section-number">17.4</span> Exercises<a href="aggregation.html#exercises-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<li>Adjust the support threshold used for finding frequent subsequences.
+What happens if you increase the support threshold? What happens if you decrease the support threshold?</li>
+<li>Describe a type of data that you think would be interesting to apply sequential pattern mining to.
+What do sequences represent? What does each itemset represent? What does each item represent? At a high level (not mathematically), what does it mean for a subsequence to be frequent in the context of your chosen domain?</li>
+<li>What would it mean to apply frequent subsequence mining to a database of words?
+You could assume each word is a sequence of size-1 itemsets.</li>
+<li>Apply sequential pattern mining to wordle data: <a href="%5Bhere%5D(https://raw.githubusercontent.com/amlalejini/gvsu-cis635-2022f/main/lecture-material/week-12/wordle.csv)">wordle.csv</a>
 <ul>
-<li>Try loading in some data that you have used in a previous homework assignment (or any dataset of your choice), and combine objects in your dataset using a combination of <code>group_by</code> and <code>summarize</code>.</li>
-<li>Identify any lines of code that you don’t understand. Use the documentation to figure out what those lines of code are doing.</li>
+<li>To use the <code>cspade</code> function in <code>arulesSequences</code>, you will need to preprocess the data into the expected format (i.e., like <code>sequences.dat</code>).</li>
+</ul></li>
+</ul>
+</div>
+<div id="further-exploration-2" class="section level2 hasAnchor" number="30.5">
+<h2><span class="header-section-number">30.5</span> Further exploration<a href="sequential-pattern-mining-in-r.html#further-exploration-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>In the following blog post, the author uses R to apply sequential pattern mining to their web browsing history: <a href="https://jlaw.netlify.app/2020/11/01/sequence-mining-my-browsing-history-with-arulessequences/">Sequence Mining My Browsing History with arulesSequences</a></li>
+<li>For more information on the cSPADE algorithm, see <a href="https://doi.org/10.1145/354756.354849">Zaki. 2000. Sequence mining in categorical domains: incorporating constraints. In Proceedings of the ninth international conference on Information and knowledge management (CIKM ’00). Association for Computing Machinery, New York, NY, USA, 422–429. https://doi.org/10.1145/354756.354849</a></li>
+</ul>
+</div>
+<div id="references-5" class="section level2 hasAnchor" number="30.6">
+<h2><span class="header-section-number">30.6</span> References<a href="sequential-pattern-mining-in-r.html#references-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><code>arulesSequences</code> Documentation: <a href="https://cran.r-project.org/web/packages/arulesSequences/index.html" class="uri">https://cran.r-project.org/web/packages/arulesSequences/index.html</a></li>
+<li><a href="https://jlaw.netlify.app/2020/11/01/sequence-mining-my-browsing-history-with-arulessequences/">Sequence Mining My Browsing History with arulesSequences</a> by <a href="https://jlaw.netlify.app/">JLaw</a></li>
+<li>Zaki. 2000. Sequence mining in categorical domains: incorporating constraints. In Proceedings of the ninth international conference on Information and knowledge management (CIKM ’00). Association for Computing Machinery, New York, NY, USA, 422–429. <a href="https://doi.org/10.1145/354756.354849" class="uri">https://doi.org/10.1145/354756.354849</a></li>
 </ul>
 
 </div>
-</div>
-
-
-
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="curse-of-dimensionality-demo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="building-a-decision-tree-in-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="association-rule-mining-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="homework-7.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -681,7 +750,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-04/aggregation.rmd",
+"link": "https://github.com/amlalejini/gvsu-cis635-2022f/tree/main/lecture-material/week-12/sequential-pattern-mining.Rmd",
 "text": "Edit"
 },
 "history": {
